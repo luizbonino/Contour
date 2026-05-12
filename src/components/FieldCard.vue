@@ -46,15 +46,12 @@ function handleClick(e: MouseEvent) {
   <div
     class="field"
     :class="{ 'is-selected': isSelected, 'is-dragging': isDragging }"
+    draggable="true"
     @click="handleClick"
+    @dragstart="emit('dragstart', $event)"
+    @dragend="emit('dragend')"
   >
-    <div
-      class="field__grip"
-      draggable="true"
-      @dragstart="emit('dragstart', $event)"
-      @dragend="emit('dragend')"
-      @click.stop
-    >
+    <div class="field__grip" @click.stop>
       <Icon name="grip" :size="16" />
     </div>
     <div class="field__icon"><WidgetIcon :char="widget.icon" /></div>

@@ -21,7 +21,7 @@ const emit = defineEmits<{
   selectSchema: [];
 }>();
 
-const { state: dragState, startFieldDrag, endDrag, setHover } = useDrag();
+const { state: dragState, startFieldDrag, endDrag, setHover, isOurDrag } = useDrag();
 
 const totalFields = computed(() =>
   props.schema.groups.reduce((s, g) => s + g.fields.length, 0),
@@ -32,7 +32,7 @@ function onDragOverField(
   groupId: string,
   fieldId: string,
 ) {
-  if (!dragState.payload) return;
+  if (!isOurDrag(e)) return;
   e.preventDefault();
   e.stopPropagation();
   const target = e.currentTarget as HTMLElement;
@@ -40,18 +40,16 @@ function onDragOverField(
   const mid = rect.top + rect.height / 2;
   const position = e.clientY < mid ? 'before' : 'after';
   if (e.dataTransfer) {
-    e.dataTransfer.dropEffect =
-      dragState.payload.type === 'palette' ? 'copy' : 'move';
+    e.dataTransfer.dropEffect = dragState.payload?.type === 'field' ? 'move' : 'copy';
   }
   setHover({ groupId, fieldId, position });
 }
 
 function onDragOverGroup(e: DragEvent, groupId: string) {
-  if (!dragState.payload) return;
+  if (!isOurDrag(e)) return;
   e.preventDefault();
   if (e.dataTransfer) {
-    e.dataTransfer.dropEffect =
-      dragState.payload.type === 'palette' ? 'copy' : 'move';
+    e.dataTransfer.dropEffect = dragState.payload?.type === 'field' ? 'move' : 'copy';
   }
   setHover({ groupId, fieldId: null, position: 'end' });
 }
