@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(gunzip -c /Users/luizbonino/.claude/projects/-Users-luizbonino-Documents-GitHub-ProjectOak/36c8273d-7d45-4a09-a30f-48258415fb54/tool-results/webfetch-1778614128028-yllwiy.bin)",
+      "Read(//tmp/**)",
+      "Bash(mkdir -p /tmp/design)",
+      "Bash(tar -xf /tmp/design.tar -C /tmp/design)",
+      "Bash(find /tmp/design -type f | head -50 && echo \"---\" && ls -la /tmp/design/visual-metadata-schema-editor/)",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx vue-tsc *)",
+      "Bash(npm run *)",
+      "WebFetch(domain:specs.fairdatapoint.org)",
+      "WebFetch(domain:datashapes.org)",
+      "Bash(curl -sL \"https://specs.fairdatapoint.org/images/FAIRDataPoint_logo-small.png\" -o \"/Users/luizbonino/Documents/GitHub/ProjectOak/public/fdp-logo.png\")"
+    ]
+  }
+}
