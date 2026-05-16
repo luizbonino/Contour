@@ -33,6 +33,7 @@ export interface Field {
   nodeKind: NodeKind | null;
   datatype: string | null;
   class: string | null;
+  node: string | null;
   minCount: number | null;
   maxCount: number | null;
   minLength: number | null;
@@ -54,6 +55,13 @@ export interface Prefix {
   uri: string;
 }
 
+export interface NestedShape {
+  id: string;
+  iri: string;
+  targetClass: string;
+  fields: Field[];
+}
+
 export interface Schema {
   schemaName: string;
   schemaDescription: string;
@@ -61,8 +69,9 @@ export interface Schema {
   targetClass: string;
   prefixes: Prefix[];
   groups: Group[];
+  nestedShapes: NestedShape[];
 }
 
-export type SelectedKind = 'schema' | 'field' | 'group';
+export type SelectedKind = 'schema' | 'field' | 'group' | 'nested-shape' | 'nested-field';
 
 export type Mutator = (draft: Schema) => void;

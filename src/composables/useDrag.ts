@@ -3,13 +3,14 @@ import type { Widget } from '../types';
 
 export type DragPayload =
   | { type: 'palette'; widget: Widget }
-  | { type: 'field'; fieldId: string; fromGroup: string }
+  | { type: 'field'; fieldId: string; fromGroup: string; fromNestedShape?: string }
   | null;
 
 export interface HoverTarget {
   groupId: string;
   fieldId: string | null;
   position: 'before' | 'after' | 'end';
+  isNested?: boolean;
 }
 
 interface DragState {
@@ -46,6 +47,15 @@ export function useDrag() {
     }
   }
 
+  function startNestedFieldDrag(e: DragEvent, fieldId: string, fromNestedShape: string) {
+    state.payload = { type: 'field', fieldId, fromGroup: '', fromNestedShape };
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData(DT_FIELD, fieldId);
+      e.dataTransfer.setData('text/plain', fieldId);
+    }
+  }
+
   function endDrag() {
     state.payload = null;
     state.hover = null;
@@ -66,6 +76,7 @@ export function useDrag() {
     state,
     startPaletteDrag,
     startFieldDrag,
+    startNestedFieldDrag,
     endDrag,
     setHover,
     isOurDrag,

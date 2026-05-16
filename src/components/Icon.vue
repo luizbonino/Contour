@@ -84,5 +84,10 @@ const props = withDefaults(defineProps<Props>(), { size: 16 });
     <template v-else-if="name === 'folder'">
       <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
     </template>
+    <template v-else-if="name === 'info'">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" stroke-width="2.5" />
+    </template>
   </svg>
 </template>

@@ -13,7 +13,8 @@
       "Bash(npm run *)",
       "WebFetch(domain:specs.fairdatapoint.org)",
       "WebFetch(domain:datashapes.org)",
-      "Bash(curl -sL \"https://specs.fairdatapoint.org/images/FAIRDataPoint_logo-small.png\" -o \"/Users/luizbonino/Documents/GitHub/ProjectOak/public/fdp-logo.png\")"
+      "Bash(curl -sL \"https://specs.fairdatapoint.org/images/FAIRDataPoint_logo-small.png\" -o \"/Users/luizbonino/Documents/GitHub/ProjectOak/public/fdp-logo.png\")",
+      "Bash(npm test *)"
     ]
   }
 }

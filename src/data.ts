@@ -106,7 +106,7 @@ export const WIDGETS: Widget[] = [
     name: 'Number',
     desc: 'Numeric field',
     category: 'Date & number',
-    editor: 'dash:TextFieldEditor',
+    editor: 'dash:NumberFieldEditor',
     icon: '№',
     defaults: { nodeKind: 'sh:Literal', datatype: 'xsd:integer' },
   },
@@ -142,6 +142,7 @@ export const NODE_KINDS: string[] = [
 ];
 
 export const DEFAULT_PREFIXES: Prefix[] = [
+  { prefix: '', uri: 'http://fairdatapoint.org/' },
   { prefix: 'sh', uri: 'http://www.w3.org/ns/shacl#' },
   { prefix: 'dash', uri: 'http://datashapes.org/dash#' },
   { prefix: 'rdf', uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' },
@@ -159,6 +160,7 @@ export const SEED_SCHEMA: Schema = {
   shapeIri: ':DatasetShape',
   targetClass: 'dcat:Dataset',
   prefixes: DEFAULT_PREFIXES.slice(),
+  nestedShapes: [],
   groups: [
     {
       id: 'g1',
@@ -174,6 +176,7 @@ export const SEED_SCHEMA: Schema = {
           datatype: 'xsd:string',
           nodeKind: 'sh:Literal',
           class: null,
+          node: null,
           minCount: 1,
           maxCount: 1,
           minLength: null,
@@ -192,6 +195,7 @@ export const SEED_SCHEMA: Schema = {
           datatype: 'xsd:string',
           nodeKind: 'sh:Literal',
           class: null,
+          node: null,
           minCount: 1,
           maxCount: null,
           minLength: null,
@@ -210,6 +214,7 @@ export const SEED_SCHEMA: Schema = {
           datatype: 'xsd:date',
           nodeKind: 'sh:Literal',
           class: null,
+          node: null,
           minCount: 0,
           maxCount: 1,
           minLength: null,
@@ -235,6 +240,7 @@ export const SEED_SCHEMA: Schema = {
           nodeKind: 'sh:IRI',
           class: 'foaf:Agent',
           datatype: null,
+          node: null,
           minCount: 1,
           maxCount: 1,
           minLength: null,
@@ -253,6 +259,7 @@ export const SEED_SCHEMA: Schema = {
           datatype: 'xsd:string',
           nodeKind: 'sh:Literal',
           class: null,
+          node: null,
           inValues: ['public', 'restricted', 'private'],
           minCount: 1,
           maxCount: 1,
