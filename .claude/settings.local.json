@@ -14,7 +14,18 @@
       "WebFetch(domain:specs.fairdatapoint.org)",
       "WebFetch(domain:datashapes.org)",
       "Bash(curl -sL \"https://specs.fairdatapoint.org/images/FAIRDataPoint_logo-small.png\" -o \"/Users/luizbonino/Documents/GitHub/ProjectOak/public/fdp-logo.png\")",
-      "Bash(npm test *)"
+      "Bash(npm test *)",
+      "Bash(git -C /Users/luizbonino/Documents/GitHub/ProjectOak status)",
+      "Bash(git -C /Users/luizbonino/Documents/GitHub/ProjectOak remote -v)",
+      "Bash(git -C /Users/luizbonino/Documents/GitHub/ProjectOak log --oneline -5)",
+      "Bash(git -C /Users/luizbonino/Documents/GitHub/ProjectOak ls-files --others --exclude-standard)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git tag *)",
+      "Bash(git push *)",
+      "Bash(gh release create v0.1.0 --title 'v0.1.0 — Initial release' --notes 'First public release of the Visual SHACL Editor. *)",
+      "Bash(brew list *)",
+      "Read(//opt/homebrew/bin/**)"
     ]
   }
 }
