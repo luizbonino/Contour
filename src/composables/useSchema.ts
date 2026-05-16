@@ -14,6 +14,7 @@ export function fieldFromWidget(widget: Widget, order = 0): Field {
     widgetId: widget.id,
     name: widget.name,
     description: '',
+    // Default path: local name derived from widget name; user is expected to replace it.
     path: ':' + widget.name.toLowerCase().replace(/[^a-z0-9]+/g, ''),
     order,
     nodeKind: widget.defaults.nodeKind ?? null,
@@ -33,6 +34,8 @@ export function fieldFromWidget(widget: Widget, order = 0): Field {
 
 export function useSchemaStore() {
   function mutate(mut: Mutator) {
+    // Clone → mutate → assign: keeps _schema reactive while giving callers
+    // a plain-object draft they can freely modify without Vue tracking overhead.
     const draft = deepClone(toRaw(_schema));
     mut(draft);
     Object.assign(_schema, draft);

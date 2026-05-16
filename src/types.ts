@@ -32,8 +32,8 @@ export interface Field {
   order: number;
   nodeKind: NodeKind | null;
   datatype: string | null;
-  class: string | null;
-  node: string | null;
+  class: string | null;  // sh:class — constrains the IRI to instances of this RDF class
+  node: string | null;   // sh:node — references another NodeShape for nested validation
   minCount: number | null;
   maxCount: number | null;
   minLength: number | null;

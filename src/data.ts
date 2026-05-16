@@ -274,6 +274,8 @@ export const SEED_SCHEMA: Schema = {
   ],
 };
 
+// IDs are client-side only and never persisted, so the ~2B collision space of
+// 6 base-36 chars is safe in practice.
 export function newId(prefix = 'id'): string {
   return `${prefix}_${Math.random().toString(36).slice(2, 8)}`;
 }
