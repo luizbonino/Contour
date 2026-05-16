@@ -56,6 +56,32 @@ npm run build
 
 The production build is a single `index.html` file that can be served as a static asset or opened directly in a browser.
 
+## Deployment
+
+The build output is a **single self-contained `index.html`** file — all JavaScript and CSS are inlined. No web server or Node.js runtime is required at runtime.
+
+### Option 1 — Download the release asset
+
+Download `index.html` from the [latest release](https://github.com/luizbonino/ProjectOak/releases/latest) and open it directly in a browser. No installation needed.
+
+### Option 2 — Build from source
+
+```bash
+npm install
+npm run build
+# Output: dist/index.html
+```
+
+Open `dist/index.html` in any modern browser, or serve it from any static host.
+
+### Option 3 — Static hosting (GitHub Pages, Netlify, Vercel, etc.)
+
+Because the entire app lives in one file, any static host works with zero configuration. For GitHub Pages, enable it on the `main` branch and point it to the `dist/` folder after running `npm run build`.
+
+### Browser compatibility
+
+The editor targets evergreen browsers. The **File System Access API** (used for Save / Save As) is supported in Chrome and Edge 86+. Firefox and Safari fall back to a download-prompt automatically.
+
 ## Project structure
 
 ```
