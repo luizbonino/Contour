@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from '../composables/useI18n';
 import Icon from './Icon.vue';
+
+const { t } = useI18n();
 
 interface Props {
   values: string[] | null;
@@ -33,7 +36,7 @@ function onKey(e: KeyboardEvent) {
 
 <template>
   <div class="form-row">
-    <label>Allowed values (sh:in)</label>
+    <label>{{ t('inValues.label') }}</label>
     <div class="tag-row">
       <span v-for="(v, i) in items" :key="i" class="tag">
         {{ v }}
@@ -41,10 +44,10 @@ function onKey(e: KeyboardEvent) {
       </span>
       <input
         v-model="input"
-        placeholder="Add value + Enter"
+        :placeholder="t('inValues.placeholder')"
         @keydown="onKey"
       />
     </div>
-    <div class="hint">Press Enter to add. Stored as sh:in ( "a" "b" "c" ).</div>
+    <div class="hint">{{ t('inValues.hint') }}</div>
   </div>
 </template>

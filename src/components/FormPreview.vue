@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import type { Field, NestedShape, Schema } from '../types';
+import { useI18n } from '../composables/useI18n';
 import FieldInput from './FieldInput.vue';
 import Icon from './Icon.vue';
+
+const { t } = useI18n();
 
 interface Props {
   schema: Schema;
@@ -69,7 +72,7 @@ function sortedNestedFields(nodeIri: string | null | undefined): Field[] {
       v-if="sortedGroups.length === 0"
       style="color: var(--color-text-lighter); text-align: center; padding: 30px"
     >
-      Add fields to see a live preview of the rendered form.
+      {{ t('formPreview.empty') }}
     </div>
     <div v-for="g in sortedGroups" :key="g.id">
       <div class="form-preview__group-title">{{ g.label }}</div>
@@ -117,7 +120,7 @@ function sortedNestedFields(nodeIri: string | null | undefined): Field[] {
                   v-if="isMulti(nf) && getCount(nf.id) > 1"
                   class="form-preview__remove-btn"
                   type="button"
-                  title="Remove this value"
+                  :title="t('formPreview.removeValue')"
                   @click="removeValue(nf.id)"
                 >×</button>
               </div>
@@ -126,11 +129,11 @@ function sortedNestedFields(nodeIri: string | null | undefined): Field[] {
                 class="form-preview__add-btn"
                 type="button"
                 @click="addValue(nf.id)"
-              >+ Add</button>
+              >{{ t('formPreview.add') }}</button>
             </div>
           </div>
           <div v-else class="form-preview__nested">
-            ▢ {{ f.node ? f.node + ' sub-form' : 'Nested sub-form' }}
+            ▢ {{ f.node ? t('formPreview.nestedSubform', { iri: f.node }) : t('formPreview.nestedSubformGeneric') }}
           </div>
         </template>
 
@@ -144,7 +147,7 @@ function sortedNestedFields(nodeIri: string | null | undefined): Field[] {
               v-if="isMulti(f) && getCount(f.id) > 1"
               class="form-preview__remove-btn"
               type="button"
-              title="Remove this value"
+              :title="t('formPreview.removeValue')"
               @click="removeValue(f.id)"
             >×</button>
           </div>
@@ -153,7 +156,7 @@ function sortedNestedFields(nodeIri: string | null | undefined): Field[] {
             class="form-preview__add-btn"
             type="button"
             @click="addValue(f.id)"
-          >+ Add</button>
+          >{{ t('formPreview.add') }}</button>
         </template>
       </div>
     </div>

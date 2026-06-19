@@ -9,9 +9,22 @@ import Palette from './components/Palette.vue';
 import Canvas from './components/Canvas.vue';
 import Inspector from './components/Inspector.vue';
 import FormPreview from './components/FormPreview.vue';
-import fdpLogo from './assets/fdp-logo.png';
+import contourIcon from './assets/contour-icon.svg';
+import { useI18n } from './composables/useI18n';
+import { LOCALES } from './i18n';
 
 const { schema, mutate } = useSchemaStore();
+const { t, plural, locale, setLocale } = useI18n();
+
+// Keep the browser-tab title in sync with the schema being edited and the locale.
+watch(
+  [() => schema.schemaName, locale],
+  ([name]) => {
+    const display = name || t('page.defaultSchemaName');
+    document.title = `${t('page.edit', { name: display })} · Contour`;
+  },
+  { immediate: true },
+);
 
 type Tab = 'definition' | 'visual' | 'preview';
 const tab = ref<Tab>('visual');
@@ -457,24 +470,38 @@ async function saveAsShacl() {
 
 <template>
   <div>
-    <header class="fdp-header">
-      <div class="fdp-header__logo">
-        <img :src="fdpLogo" alt="FAIR Data Point" class="fdp-header__logo-img" />
+    <header class="app-header">
+      <div class="app-header__brand">
+        <img :src="contourIcon" alt="Contour" class="app-header__logo-img" />
+        <div class="brand__text">
+          <span class="brand__wordmark">Contour</span>
+          <span class="brand__tagline">Visual schemas. Clean SHACL.</span>
+        </div>
       </div>
-      <nav class="fdp-header__nav">
-        <a href="#" class="is-active" @click.prevent>Metadata Schemas</a>
+      <nav class="app-header__nav">
+        <a href="#" class="is-active" @click.prevent>{{ t('header.metadataSchemas') }}</a>
       </nav>
-      <div class="fdp-header__spacer" />
-      <div class="fdp-header__file-toolbar">
-        <button class="btn btn-ghost btn-sm" title="Open a SHACL Turtle file" @click="openShacl">
-          <Icon name="folder" :size="13" /> Open…
+      <div class="app-header__spacer" />
+      <div class="app-header__file-toolbar">
+        <div class="lang-switch" role="group" :aria-label="t('header.language')">
+          <button
+            v-for="l in LOCALES"
+            :key="l.code"
+            class="lang-switch__btn"
+            :class="{ 'is-active': locale === l.code }"
+            :aria-pressed="locale === l.code"
+            @click="setLocale(l.code)"
+          >{{ l.label }}</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" :title="t('header.openTitle')" @click="openShacl">
+          <Icon name="folder" :size="13" /> {{ t('common.open') }}
         </button>
-        <button class="btn btn-ghost btn-sm" title="Save to current file (Ctrl+S)" @click="saveShacl">
+        <button class="btn btn-ghost btn-sm" :title="t('header.saveTitle')" @click="saveShacl">
           <Icon name="check" :size="13" />
-          {{ fileSaveStatus === 'saved' ? 'Saved!' : fileSaveStatus === 'error' ? 'Error' : 'Save' }}
+          {{ fileSaveStatus === 'saved' ? t('common.saved') : fileSaveStatus === 'error' ? t('common.error') : t('common.save') }}
         </button>
-        <button class="btn btn-secondary btn-sm" title="Save as a new file" @click="saveAsShacl">
-          <Icon name="duplicate" :size="13" /> Save As…
+        <button class="btn btn-secondary btn-sm" :title="t('header.saveAsTitle')" @click="saveAsShacl">
+          <Icon name="duplicate" :size="13" /> {{ t('common.saveAs') }}
         </button>
         <input
           ref="fileInputRef"
@@ -486,9 +513,9 @@ async function saveAsShacl() {
       </div>
     </header>
 
-    <div class="fdp-page">
-      <h1 class="fdp-page__title">
-        Edit {{ schema.schemaName || 'Metadata Schema' }}
+    <div class="app-page">
+      <h1 class="app-page__title">
+        {{ t('page.edit', { name: schema.schemaName || t('page.defaultSchemaName') }) }}
       </h1>
 
       <ul class="nav-tabs">
@@ -498,7 +525,7 @@ async function saveAsShacl() {
             :class="{ active: tab === 'definition' }"
             @click="tab = 'definition'"
           >
-            <Icon name="code" :size="14" /> Definition
+            <Icon name="code" :size="14" /> {{ t('tabs.definition') }}
           </button>
         </li>
         <li>
@@ -507,8 +534,8 @@ async function saveAsShacl() {
             :class="{ active: tab === 'visual' }"
             @click="tab = 'visual'"
           >
-            <Icon name="wand" :size="14" /> Visual Editor
-            <span class="tag-new">New</span>
+            <Icon name="wand" :size="14" /> {{ t('tabs.visualEditor') }}
+            <span class="tag-new">{{ t('tabs.new') }}</span>
           </button>
         </li>
         <li>
@@ -517,20 +544,14 @@ async function saveAsShacl() {
             :class="{ active: tab === 'preview' }"
             @click="tab = 'preview'"
           >
-            <Icon name="eye" :size="14" /> Form Preview
+            <Icon name="eye" :size="14" /> {{ t('tabs.formPreview') }}
           </button>
         </li>
       </ul>
 
       <!-- Visual editor tab -->
       <template v-if="tab === 'visual'">
-        <div class="tabs-callout">
-          <strong>Visual Editor</strong> — drag DASH form widgets from the left
-          palette onto the canvas. Each widget becomes a SHACL
-          <code>sh:property</code>. The corresponding Turtle is generated live
-          below — you can switch to the <strong>Definition</strong> tab to view
-          or edit it directly.
-        </div>
+        <div class="tabs-callout" v-html="t('visual.calloutHtml')" />
 
         <div class="workbench">
           <Palette />
@@ -559,7 +580,7 @@ async function saveAsShacl() {
         <div v-if="showShaclPreview" class="preview-pane">
           <div class="preview-pane__header">
             <div class="preview-pane__title">
-              {{ previewMode === 'shacl' ? 'Generated SHACL (Turtle)' : 'Form preview' }}
+              {{ previewMode === 'shacl' ? t('preview.generatedShacl') : t('preview.formPreview') }}
             </div>
             <div style="display: flex; align-items: center; gap: 12px">
               <div class="preview-pane__tabs">
@@ -567,22 +588,22 @@ async function saveAsShacl() {
                   class="preview-pane__tab"
                   :class="{ 'is-active': previewMode === 'shacl' }"
                   @click="previewMode = 'shacl'"
-                  >SHACL</span
+                  >{{ t('preview.tabShacl') }}</span
                 >
                 <span
                   class="preview-pane__tab"
                   :class="{ 'is-active': previewMode === 'form' }"
                   @click="previewMode = 'form'"
-                  >Form</span
+                  >{{ t('preview.tabForm') }}</span
                 >
               </div>
               <button
                 v-if="previewMode === 'shacl'"
                 class="btn btn-ghost btn-xs"
-                title="Copy Turtle"
+                :title="t('preview.copyTurtle')"
                 @click="copyShacl"
               >
-                <Icon name="duplicate" :size="12" /> Copy
+                <Icon name="duplicate" :size="12" /> {{ t('common.copy') }}
               </button>
             </div>
           </div>
@@ -599,17 +620,17 @@ async function saveAsShacl() {
         <div class="actions-bar">
           <div class="actions-bar__hint">
             <Icon name="check" :size="12" />
-            <span class="ok">{{ totalFields }} properties · {{ schema.groups.length }} groups</span>
+            <span class="ok">{{ plural('count.properties', totalFields) }} · {{ plural('count.groups', schema.groups.length) }}</span>
           </div>
           <div style="display: flex; gap: 10px">
             <button class="btn btn-ghost btn-sm" @click="copyShacl">
-              <Icon name="duplicate" :size="13" /> Copy SHACL
+              <Icon name="duplicate" :size="13" /> {{ t('common.copyShacl') }}
             </button>
             <button class="btn btn-secondary btn-sm" @click="saveShacl">
-              <Icon name="check" :size="13" /> Save
+              <Icon name="check" :size="13" /> {{ t('common.save') }}
             </button>
             <button class="btn btn-primary btn-sm" @click="saveAsShacl">
-              Save As…
+              {{ t('common.saveAs') }}
             </button>
           </div>
         </div>
@@ -619,7 +640,7 @@ async function saveAsShacl() {
       <template v-else-if="tab === 'definition'">
         <div class="legacy-form">
           <div class="form__group">
-            <label>Name</label>
+            <label>{{ t('definition.name') }}</label>
             <input
               type="text"
               :value="schema.schemaName"
@@ -627,7 +648,7 @@ async function saveAsShacl() {
             />
           </div>
           <div class="form__group">
-            <label>Description</label>
+            <label>{{ t('definition.description') }}</label>
             <textarea
               :value="schema.schemaDescription"
               rows="2"
@@ -639,20 +660,20 @@ async function saveAsShacl() {
               style="display: flex; justify-content: space-between; align-items: center"
             >
               <span>
-                Form Definition (SHACL · Turtle)
-                <span v-if="loadedShaclSource" class="loaded-badge">Loaded from file</span>
+                {{ t('definition.formDefinition') }}
+                <span v-if="loadedShaclSource" class="loaded-badge">{{ t('definition.loadedFromFile') }}</span>
               </span>
               <div style="display: flex; gap: 8px; align-items: center">
                 <button
                   v-if="loadedShaclSource"
                   class="btn btn-ghost btn-sm"
-                  title="Discard loaded file and show generated SHACL"
+                  :title="t('definition.discardLoadedTitle')"
                   @click="discardLoadedSource"
                 >
-                  Discard loaded file
+                  {{ t('definition.discardLoaded') }}
                 </button>
                 <button class="btn btn-secondary btn-sm" @click="tab = 'visual'">
-                  <Icon name="wand" :size="12" /> Open in Visual Editor
+                  <Icon name="wand" :size="12" /> {{ t('definition.openInVisualEditor') }}
                 </button>
               </div>
             </label>
@@ -667,20 +688,20 @@ async function saveAsShacl() {
               @click="dismissAc"
             />
             <p v-if="loadedFileParseError" class="shacl-parse-error">
-              ⚠ Could not import into Visual Editor — {{ loadedFileParseError }}
+              ⚠ {{ t('definition.importError', { error: loadedFileParseError }) }}
             </p>
             <p v-else-if="shaclParseError" class="shacl-parse-error">
               ⚠ {{ shaclParseError }}
             </p>
             <div style="margin-top: 8px; font-size: 12px; color: var(--color-text-lighter)">
-              Edit the Turtle directly — changes are parsed and synced back to the Visual Editor automatically.
+              {{ t('definition.syncHint') }}
             </div>
           </div>
           <div style="margin-top: 18px; display: flex; gap: 10px">
             <button class="btn btn-secondary" @click="saveShacl">
-              <Icon name="check" :size="13" /> Save
+              <Icon name="check" :size="13" /> {{ t('common.save') }}
             </button>
-            <button class="btn btn-primary" @click="saveAsShacl">Save As…</button>
+            <button class="btn btn-primary" @click="saveAsShacl">{{ t('common.saveAs') }}</button>
           </div>
         </div>
       </template>
@@ -689,9 +710,9 @@ async function saveAsShacl() {
       <template v-else>
         <div class="preview-pane" style="margin-top: 20px">
           <div class="preview-pane__header">
-            <div class="preview-pane__title">Rendered form preview</div>
+            <div class="preview-pane__title">{{ t('formPreviewTab.rendered') }}</div>
             <div style="font-size: 12px; color: var(--color-text-lighter)">
-              {{ totalFields }} fields · target
+              {{ plural('count.fields', totalFields) }} · {{ t('formPreviewTab.target') }}
               <span style="font-family: var(--font-mono)">{{ schema.targetClass }}</span>
             </div>
           </div>

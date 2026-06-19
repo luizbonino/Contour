@@ -1,6 +1,12 @@
-# Visual SHACL Editor
+# Contour
 
-A browser-based, drag-and-drop editor for building [SHACL](https://www.w3.org/TR/shacl/) NodeShapes with [DASH form widgets](https://datashapes.org/forms.html). Designed for the [FAIR Data Point](https://fairdatapoint.org/) ecosystem, but usable with any SHACL-aware platform.
+**Visual schemas. Clean SHACL.**
+
+Contour is a browser-based, drag-and-drop editor for building [SHACL](https://www.w3.org/TR/shacl/) NodeShapes with [DASH form widgets](https://datashapes.org/forms.html). Designed for the [FAIR Data Point](https://fairdatapoint.org/) ecosystem, but usable with any SHACL-aware platform.
+
+> **New to the editor?** Data stewards should start with the
+> **[Creating Metadata Schemas guide](docs/data-steward-guide.md)** — a
+> screenshot-driven, step-by-step walkthrough of building a custom schema.
 
 ## Features
 
@@ -62,7 +68,7 @@ The build output is a **single self-contained `index.html`** file — all JavaSc
 
 ### Option 1 — Download the release asset
 
-Download `index.html` from the [latest release](https://github.com/luizbonino/ProjectOak/releases/latest) and open it directly in a browser. No installation needed.
+Download `index.html` from the [latest release](https://github.com/luizbonino/Contour/releases/latest) and open it directly in a browser. No installation needed.
 
 ### Option 2 — Build from source
 
