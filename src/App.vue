@@ -512,6 +512,13 @@ async function saveAsShacl() {
           <span class="brand__tagline">Visual schemas. Clean SHACL.</span>
         </div>
       </div>
+      <a
+        class="app-header__guide"
+        href="./guide/"
+        target="_blank"
+        rel="noopener"
+        :title="t('header.guideTitle')"
+      >{{ t('header.guide') }} ↗</a>
       <div class="app-header__spacer" />
       <div class="app-header__file-toolbar">
         <div class="lang-switch" role="group" :aria-label="t('header.language')">

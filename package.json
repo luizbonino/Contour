@@ -6,7 +6,8 @@
   "description": "Contour — visual SHACL schema editor for the FAIR Data Point ecosystem",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc -b && vite build && npm run build:guide",
+    "build:guide": "node scripts/build-guide.mjs",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "test": "vitest run",
@@ -21,6 +22,8 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/test-utils": "^2.4.10",
     "happy-dom": "^20.9.0",
+    "marked": "^18.0.5",
+    "marked-gfm-heading-id": "^4.1.4",
     "typescript": "~5.6.3",
     "vite": "^6.0.5",
     "vite-plugin-singlefile": "^2.3.3",

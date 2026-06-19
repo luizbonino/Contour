@@ -14,6 +14,8 @@ const en = {
     copyShacl: 'Copy SHACL',
   },
   header: {
+    guide: 'Guide',
+    guideTitle: 'Open the data-steward guide in a new tab',
     newTitle: 'Start a new schema',
     newConfirm: 'Discard the current schema and start a new one?',
     openTitle: 'Open a SHACL Turtle file',
