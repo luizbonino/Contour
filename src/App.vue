@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { useSchemaStore } from './composables/useSchema';
 import { generateShacl, parseShacl } from './shacl';
-import { WIDGET_BY_ID } from './data';
+import { WIDGET_BY_ID, blankSchema } from './data';
 import type { SelectedKind } from './types';
 import Icon from './components/Icon.vue';
 import Palette from './components/Palette.vue';
@@ -16,13 +16,13 @@ import { LOCALES } from './i18n';
 const { schema, mutate } = useSchemaStore();
 const { t, plural, locale, setLocale } = useI18n();
 
-// Keep the browser-tab title in sync with the schema being edited and the locale.
+// "Edit <name>" once the schema is named, otherwise "New metadata schema".
+const pageTitle = computed(() =>
+  schema.schemaName ? t('page.edit', { name: schema.schemaName }) : t('page.newSchema'),
+);
 watch(
-  [() => schema.schemaName, locale],
-  ([name]) => {
-    const display = name || t('page.defaultSchemaName');
-    document.title = `${t('page.edit', { name: display })} · Contour`;
-  },
+  pageTitle,
+  (title) => { document.title = `${title} · Contour`; },
   { immediate: true },
 );
 
@@ -342,6 +342,18 @@ function setSaved() {
   saveStatusTimer = setTimeout(() => (fileSaveStatus.value = 'idle'), 2500);
 }
 
+function newSchema() {
+  const hasContent =
+    totalFields.value > 0 || !!schema.schemaName || (schema.nestedShapes || []).length > 0;
+  if (hasContent && !window.confirm(t('header.newConfirm'))) return;
+  mutate((d) => Object.assign(d, blankSchema()));
+  fileHandle.value = null;
+  loadedShaclSource.value = null;
+  loadedFileParseError.value = null;
+  clearSelection();
+  tab.value = 'visual';
+}
+
 async function openShacl() {
   if ('showOpenFilePicker' in window) {
     try {
@@ -485,6 +497,9 @@ async function saveAsShacl() {
             @click="setLocale(l.code)"
           >{{ l.label }}</button>
         </div>
+        <button class="btn btn-ghost btn-sm" :title="t('header.newTitle')" @click="newSchema">
+          <Icon name="plus" :size="13" /> {{ t('common.new') }}
+        </button>
         <button class="btn btn-ghost btn-sm" :title="t('header.openTitle')" @click="openShacl">
           <Icon name="folder" :size="13" /> {{ t('common.open') }}
         </button>
@@ -507,7 +522,7 @@ async function saveAsShacl() {
 
     <div class="app-page">
       <h1 class="app-page__title">
-        {{ t('page.edit', { name: schema.schemaName || t('page.defaultSchemaName') }) }}
+        {{ pageTitle }}
       </h1>
 
       <ul class="nav-tabs">

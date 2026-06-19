@@ -4,6 +4,7 @@
 
 const en = {
   common: {
+    new: 'New',
     open: 'Open…',
     save: 'Save',
     saved: 'Saved!',
@@ -13,6 +14,8 @@ const en = {
     copyShacl: 'Copy SHACL',
   },
   header: {
+    newTitle: 'Start a new schema',
+    newConfirm: 'Discard the current schema and start a new one?',
     openTitle: 'Open a SHACL Turtle file',
     saveTitle: 'Save to current file (Ctrl+S)',
     saveAsTitle: 'Save as a new file',
@@ -20,7 +23,7 @@ const en = {
   },
   page: {
     edit: 'Edit {name}',
-    defaultSchemaName: 'Metadata Schema',
+    newSchema: 'New metadata schema',
   },
   tabs: {
     definition: 'SHACL Code',

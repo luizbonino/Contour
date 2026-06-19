@@ -153,7 +153,21 @@ export const DEFAULT_PREFIXES: Prefix[] = [
   { prefix: 'foaf', uri: 'http://xmlns.com/foaf/0.1/' },
 ];
 
-// Seed example: a DCAT-style "Dataset" shape
+// A fresh, empty schema — the starting point for a new metadata schema.
+// Keeps the common vocabularies declared so the generated SHACL is valid.
+export function blankSchema(): Schema {
+  return {
+    schemaName: '',
+    schemaDescription: '',
+    shapeIri: ':Shape',
+    targetClass: '',
+    prefixes: DEFAULT_PREFIXES.slice(),
+    groups: [],
+    nestedShapes: [],
+  };
+}
+
+// Seed example: a DCAT-style "Dataset" shape (kept as a reference template)
 export const SEED_SCHEMA: Schema = {
   schemaName: 'Dataset',
   schemaDescription: 'A DCAT-style dataset metadata schema',
