@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Field } from '../types';
+import { useI18n } from '../composables/useI18n';
 
 defineProps<{ field: Field }>();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -10,14 +12,14 @@ defineProps<{ field: Field }>();
   </template>
   <template v-else-if="field.widgetId === 'BooleanSelectEditor'">
     <select>
-      <option value="">— select —</option>
+      <option value="">{{ t('fieldInput.select') }}</option>
       <option>true</option>
       <option>false</option>
     </select>
   </template>
   <template v-else-if="field.widgetId === 'EnumSelectEditor'">
     <select>
-      <option value="">— select —</option>
+      <option value="">{{ t('fieldInput.select') }}</option>
       <option v-for="(v, i) in field.inValues || []" :key="i">{{ v }}</option>
     </select>
   </template>
@@ -43,7 +45,7 @@ defineProps<{ field: Field }>();
     <input
       type="text"
       class="mono"
-      :placeholder="field.widgetId === 'AutoCompleteEditor' ? 'Start typing to search…' : 'http://…'"
+      :placeholder="field.widgetId === 'AutoCompleteEditor' ? t('fieldInput.search') : 'http://…'"
     />
   </template>
   <template v-else>

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { WIDGET_BY_ID } from '../data';
+import { useI18n } from '../composables/useI18n';
 import type { Field } from '../types';
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
+
+const { t } = useI18n();
 
 interface Props {
   field: Field;
@@ -57,9 +60,9 @@ function handleClick(e: MouseEvent) {
     <div class="field__icon"><WidgetIcon :char="widget.icon" /></div>
     <div class="field__main">
       <div class="field__name-row">
-        <span class="field__name">{{ field.name || '(unnamed)' }}</span>
-        <span v-if="required" class="field__req" title="Required">●</span>
-        <span v-if="multi" class="field__badge">multi</span>
+        <span class="field__name">{{ field.name || t('fieldCard.unnamed') }}</span>
+        <span v-if="required" class="field__req" :title="t('fieldCard.required')">●</span>
+        <span v-if="multi" class="field__badge">{{ t('fieldCard.multi') }}</span>
       </div>
       <div class="field__meta">
         <span>{{ field.path }}</span>
@@ -70,14 +73,14 @@ function handleClick(e: MouseEvent) {
     <div class="field__actions">
       <button
         class="btn btn-ghost btn-xs"
-        title="Duplicate"
+        :title="t('fieldCard.duplicate')"
         @click.stop="emit('duplicate')"
       >
         <Icon name="duplicate" :size="13" />
       </button>
       <button
         class="btn btn-danger-ghost btn-xs"
-        title="Delete"
+        :title="t('fieldCard.delete')"
         @click.stop="emit('delete')"
       >
         <Icon name="trash" :size="13" />

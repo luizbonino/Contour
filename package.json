@@ -1,9 +1,9 @@
 {
-  "name": "visual-shacl-editor",
+  "name": "contour",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Visual SHACL schema editor for the FAIR Data Point ecosystem",
+  "description": "Contour — visual SHACL schema editor for the FAIR Data Point ecosystem",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
@@ -13,6 +13,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@fontsource/ibm-plex-sans": "^5.2.8",
     "vue": "^3.5.13"
   },
   "devDependencies": {

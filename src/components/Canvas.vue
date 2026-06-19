@@ -3,9 +3,12 @@ import { computed } from 'vue';
 import { newId } from '../data';
 import { fieldFromWidget } from '../composables/useSchema';
 import { useDrag } from '../composables/useDrag';
+import { useI18n } from '../composables/useI18n';
 import type { Field, Mutator, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
 import FieldCard from './FieldCard.vue';
+
+const { t, plural } = useI18n();
 
 interface Props {
   schema: Schema;
@@ -286,17 +289,17 @@ function onCanvasClick() {
   <div class="panel canvas">
     <div class="panel__header">
       <div>
-        <div class="panel__title">Form canvas</div>
+        <div class="panel__title">{{ t('canvas.formCanvas') }}</div>
         <div class="panel__subtitle">
-          {{ totalFields }} {{ totalFields === 1 ? 'property' : 'properties' }}
-          in {{ schema.groups.length }} {{ schema.groups.length === 1 ? 'group' : 'groups' }}
+          {{ plural('count.properties', totalFields) }}
+          {{ t('canvas.in') }} {{ plural('count.groups', schema.groups.length) }}
           <template v-if="(schema.nestedShapes || []).length">
-            · {{ schema.nestedShapes.length }} nested {{ schema.nestedShapes.length === 1 ? 'shape' : 'shapes' }}
+            · {{ plural('count.nestedShapes', schema.nestedShapes.length) }}
           </template>
         </div>
       </div>
       <button class="btn btn-secondary btn-sm" @click="addGroup">
-        <Icon name="plus" :size="13" /> Add group
+        <Icon name="plus" :size="13" /> {{ t('canvas.addGroup') }}
       </button>
     </div>
     <div class="panel__body panel__body--snug">
@@ -311,19 +314,19 @@ function onCanvasClick() {
           <div class="target-banner__main">
             <div class="target-banner__icon"><Icon name="layers" :size="18" /></div>
             <div style="min-width: 0">
-              <div class="target-banner__name">{{ schema.schemaName || 'Untitled schema' }}</div>
+              <div class="target-banner__name">{{ schema.schemaName || t('canvas.untitledSchema') }}</div>
               <div class="target-banner__sub">sh:NodeShape · sh:targetClass {{ schema.targetClass || '?' }}</div>
             </div>
           </div>
           <button class="btn btn-ghost btn-sm" @click.stop="emit('selectSchema')">
-            <Icon name="gear" :size="13" /> Schema settings
+            <Icon name="gear" :size="13" /> {{ t('canvas.schemaSettings') }}
           </button>
         </div>
 
         <div v-if="schema.groups.length === 0 && totalFields === 0" class="canvas-empty">
           <div class="canvas-empty__icon"><Icon name="wand" :size="36" /></div>
-          <div class="canvas-empty__title">Drop widgets here to design your form</div>
-          <div class="canvas-empty__sub">Drag any widget from the left panel onto this canvas.</div>
+          <div class="canvas-empty__title">{{ t('canvas.emptyTitle') }}</div>
+          <div class="canvas-empty__sub">{{ t('canvas.emptySub') }}</div>
         </div>
 
         <!-- Main shape groups -->
@@ -337,13 +340,13 @@ function onCanvasClick() {
               @click.stop
             />
             <div class="group-card__actions">
-              <button class="btn btn-danger-ghost btn-xs" title="Delete group" @click.stop="deleteGroup(g.id)">
+              <button class="btn btn-danger-ghost btn-xs" :title="t('canvas.deleteGroupTitle')" @click.stop="deleteGroup(g.id)">
                 <Icon name="trash" :size="13" />
               </button>
             </div>
           </div>
           <div class="group-card__body" @dragover="onDragOverGroup($event, g.id)" @drop="onDrop($event, g.id)">
-            <div v-if="g.fields.length === 0" class="group-card__drop-here">Drop a widget here</div>
+            <div v-if="g.fields.length === 0" class="group-card__drop-here">{{ t('canvas.dropWidgetHere') }}</div>
             <template v-for="f in g.fields" :key="f.id">
               <div v-if="showBefore(g.id, f.id)" class="drop-indicator" />
               <div @dragover="onDragOverField($event, g.id, f.id)" @drop="onDrop($event, g.id)">
@@ -366,13 +369,13 @@ function onCanvasClick() {
 
         <div class="canvas-add-group">
           <button class="btn btn-ghost btn-sm" @click="addGroup">
-            <Icon name="plus" :size="13" /> Add another group
+            <Icon name="plus" :size="13" /> {{ t('canvas.addAnotherGroup') }}
           </button>
         </div>
 
         <!-- Nested shapes section -->
         <div v-if="(schema.nestedShapes || []).length > 0" class="nested-shapes-divider">
-          <span>Nested shapes</span>
+          <span>{{ t('canvas.nestedShapes') }}</span>
         </div>
 
         <div
@@ -392,7 +395,7 @@ function onCanvasClick() {
             </div>
             <button
               class="btn btn-danger-ghost btn-xs"
-              title="Delete nested shape"
+              :title="t('canvas.deleteNestedShapeTitle')"
               @click.stop="deleteNestedShape(ns.id)"
             >
               <Icon name="trash" :size="13" />
@@ -403,7 +406,7 @@ function onCanvasClick() {
             @dragover="onDragOverNestedShape($event, ns.id)"
             @drop="onDropToNested($event, ns.id)"
           >
-            <div v-if="ns.fields.length === 0" class="group-card__drop-here">Drop a widget here</div>
+            <div v-if="ns.fields.length === 0" class="group-card__drop-here">{{ t('canvas.dropWidgetHere') }}</div>
             <template v-for="f in [...ns.fields].sort((a, b) => a.order - b.order)" :key="f.id">
               <div v-if="showNestedBefore(ns.id, f.id)" class="drop-indicator" />
               <div @dragover="onDragOverNestedField($event, ns.id, f.id)" @drop="onDropToNested($event, ns.id)">
@@ -426,7 +429,7 @@ function onCanvasClick() {
 
         <div class="canvas-add-group">
           <button class="btn btn-ghost btn-sm" @click="addNestedShape">
-            <Icon name="plus" :size="13" /> Add nested shape
+            <Icon name="plus" :size="13" /> {{ t('canvas.addNestedShape') }}
           </button>
         </div>
 

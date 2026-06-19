@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contour — Brand Sheet</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAE7E0;font-family:'IBM Plex Sans',sans-serif;color:#20222A;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:56px 40px 72px;display:flex;flex-direction:column;gap:36px}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .label{font:500 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.15em;text-transform:uppercase;color:#A6A29A}
+  .card{background:#FCFBF8;border:1px solid #E4E0D6;border-radius:6px;padding:28px;display:flex;flex-direction:column;gap:20px}
+  .grid{display:flex;flex-wrap:wrap;gap:16px}
+  .tile{background:#fff;border:1px solid #ECE8DE;border-radius:4px;padding:22px;display:flex;flex-direction:column;gap:14px}
+  h1{font:600 40px/1 'IBM Plex Sans';letter-spacing:-.025em;margin:0}
+  h2{font:600 18px/1.1 'IBM Plex Sans';letter-spacing:-.01em;margin:0}
+  .sw{display:flex;flex-direction:column;gap:7px;align-items:flex-start}
+  .sw .chip{width:100%;height:54px;border-radius:5px;border:1px solid rgba(0,0,0,.07)}
+  .sw .hx{font:500 10px/1 'IBM Plex Mono';color:#8A8C94}
+  .sw .nm{font:500 11px/1 'IBM Plex Sans';color:#3A3D45}
+  .lock{display:flex;align-items:center;gap:15px}
+  .lock .wm{display:flex;flex-direction:column;gap:4px}
+  .lock .wm b{font:600 30px/1 'IBM Plex Sans';letter-spacing:-.015em;color:#1B2A4A;font-weight:600}
+  .lock .wm span{font:500 9.5px/1 'IBM Plex Mono';letter-spacing:.17em;text-transform:uppercase;color:#0E7C7B}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header style="border-bottom:1px solid #D6D2C8;padding-bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div class="label">Brand sheet · Approved direction — “Linked contours”</div>
+        <h1 style="margin-top:12px">Contour</h1>
+      </div>
+      <div class="mono" style="font-size:14px;color:#2E323B;text-align:right">“Visual schemas.<br>Clean SHACL.”</div>
+    </header>
+
+    <!-- Mark + lockup -->
+    <section class="card">
+      <h2>Mark &amp; lockup</h2>
+      <div class="grid">
+        <div class="tile" style="flex:0 0 220px;align-items:center;justify-content:center">
+          <span class="label" style="align-self:flex-start">Icon</span>
+          <img src="assets/contour-icon.svg" width="108" height="108" alt="Contour icon">
+        </div>
+        <div class="tile" style="flex:1 1 360px;justify-content:center">
+          <span class="label">Horizontal lockup</span>
+          <div class="lock">
+            <img src="assets/contour-icon.svg" width="52" height="52" alt="">
+            <div class="wm"><b>Contour</b><span>Visual schemas. Clean SHACL.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="tile" style="flex:1 1 320px;background:#11151E;border-color:#11151E;justify-content:center">
+          <span class="label" style="color:#5E6470">Dark mode</span>
+          <div class="lock">
+            <img src="assets/favicon.svg" width="46" height="46" alt="" style="border-radius:10px">
+            <div class="wm"><b style="color:#E6E8EE">Contour</b><span style="color:#2BB3AB">Visual schemas. Clean SHACL.</span></div>
+          </div>
+        </div>
+        <div class="tile" style="flex:1 1 300px;justify-content:center">
+          <span class="label">Browser tab / favicon</span>
+          <div style="display:flex;align-items:center;gap:7px;background:#F1EFEA;border:1px solid #E4E0D6;border-radius:7px 7px 0 0;padding:7px 11px;width:max-content">
+            <img src="assets/favicon.svg" width="16" height="16" alt="">
+            <span style="font:500 12px/1 'IBM Plex Sans';color:#3A3D45">Contour — SHACL editor</span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:18px;margin-top:4px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><img src="assets/favicon.svg" width="16" height="16" alt=""><span class="label">16</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><img src="assets/favicon.svg" width="32" height="32" alt=""><span class="label">32</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><img src="assets/favicon.svg" width="48" height="48" alt=""><span class="label">48</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color -->
+    <section class="card">
+      <h2>Color</h2>
+      <div class="grid">
+        <div class="sw" style="flex:1 1 150px"><div class="chip" style="background:#1B2A4A"></div><span class="nm">Ink / primary</span><span class="hx">#1B2A4A</span></div>
+        <div class="sw" style="flex:1 1 150px"><div class="chip" style="background:#0E7C7B"></div><span class="nm">Node / accent</span><span class="hx">#0E7C7B</span></div>
+        <div class="sw" style="flex:1 1 150px"><div class="chip" style="background:#2BB3AB"></div><span class="nm">Accent (on dark)</span><span class="hx">#2BB3AB</span></div>
+        <div class="sw" style="flex:1 1 150px"><div class="chip" style="background:#E6E8EE"></div><span class="nm">Ink (on dark)</span><span class="hx">#E6E8EE</span></div>
+        <div class="sw" style="flex:1 1 150px"><div class="chip" style="background:#141414"></div><span class="nm">Mono dark</span><span class="hx">#141414</span></div>
+      </div>
+    </section>
+
+    <!-- Type -->
+    <section class="card">
+      <h2>Typography</h2>
+      <div class="grid">
+        <div class="tile" style="flex:1 1 320px">
+          <span class="label">Wordmark / headings — IBM Plex Sans</span>
+          <div style="font:600 34px/1.05 'IBM Plex Sans';letter-spacing:-.02em;color:#1B2A4A">Contour</div>
+          <div style="font:500 15px/1.4 'IBM Plex Sans';color:#5C5F68">Schema building, visualised. 0123456789</div>
+        </div>
+        <div class="tile" style="flex:1 1 320px">
+          <span class="label">Tagline / labels — IBM Plex Mono</span>
+          <div style="font:500 13px/1.5 'IBM Plex Mono';letter-spacing:.17em;text-transform:uppercase;color:#0E7C7B">Visual schemas. Clean SHACL.</div>
+          <div style="font:400 12px/1.6 'IBM Plex Mono';color:#5C5F68">shacl:NodeShape → contour()</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="label" style="border-top:1px solid #D6D2C8;padding-top:18px">Contour · SHACL schema editor · See README.md for full tokens, usage rules, and favicon install</footer>
+  </div>
+</body>
+</html>

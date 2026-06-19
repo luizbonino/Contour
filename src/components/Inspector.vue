@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { DATATYPES, NODE_KINDS, WIDGET_BY_ID } from '../data';
+import { useI18n } from '../composables/useI18n';
 import type { Field, Group, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
@@ -16,6 +17,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 const emit = defineEmits<{ clear: [] }>();
+const { t, plural } = useI18n();
 
 // ── Computed selections ────────────────────────────────────────────────────
 
@@ -60,11 +62,11 @@ const activeField = computed<Field | null>(() => {
 // ── Derived presentation ───────────────────────────────────────────────────
 
 const subtitle = computed(() => {
-  if (props.selectedKind === 'field') return 'Property settings';
-  if (props.selectedKind === 'group') return 'Group settings';
-  if (props.selectedKind === 'nested-shape') return 'Nested shape settings';
-  if (props.selectedKind === 'nested-field') return 'Nested field settings';
-  return 'Schema settings';
+  if (props.selectedKind === 'field') return t('inspector.subtitle.field');
+  if (props.selectedKind === 'group') return t('inspector.subtitle.group');
+  if (props.selectedKind === 'nested-shape') return t('inspector.subtitle.nestedShape');
+  if (props.selectedKind === 'nested-field') return t('inspector.subtitle.nestedField');
+  return t('inspector.subtitle.schema');
 });
 
 const fieldWidget = computed(() =>
@@ -176,13 +178,13 @@ function onNumber(e: Event): number | null {
   <div class="panel">
     <div class="panel__header">
       <div>
-        <div class="panel__title">Inspector</div>
+        <div class="panel__title">{{ t('inspector.title') }}</div>
         <div class="panel__subtitle">{{ subtitle }}</div>
       </div>
       <button
         v-if="showCloseBtn"
         class="btn btn-ghost btn-xs"
-        title="Back to schema"
+        :title="t('inspector.backToSchema')"
         @click="emit('clear')"
       >
         <Icon name="x" :size="13" />
@@ -196,16 +198,16 @@ function onNumber(e: Event): number | null {
           <div class="field-head__icon"><WidgetIcon :char="fieldWidget.icon" /></div>
           <div style="flex: 1; min-width: 0">
             <div style="font-weight: 700; color: var(--color-text-dark)">
-              {{ fieldWidget.name }}
+              {{ t(`widget.${fieldWidget.id}.name`) }}
             </div>
             <div class="field-head__editor">{{ fieldWidget.editor }}</div>
           </div>
         </div>
 
         <div class="insp-section">
-          <div class="insp-section__title">Basic</div>
+          <div class="insp-section__title">{{ t('inspector.section.basic') }}</div>
           <div class="form-row">
-            <label class="required">Label (sh:name)</label>
+            <label class="required">{{ t('inspector.label.name') }}</label>
             <input
               type="text"
               :value="activeField.name"
@@ -213,15 +215,15 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div class="form-row">
-            <label>Description</label>
+            <label>{{ t('inspector.label.description') }}</label>
             <textarea
               :value="activeField.description"
-              placeholder="Help text shown to the user"
+              :placeholder="t('inspector.placeholder.descriptionHelp')"
               @input="setField('description', ($event.target as HTMLTextAreaElement).value)"
             />
           </div>
           <div class="form-row">
-            <label class="required">Property path (sh:path)</label>
+            <label class="required">{{ t('inspector.label.path') }}</label>
             <input
               type="text"
               class="mono"
@@ -233,10 +235,10 @@ function onNumber(e: Event): number | null {
         </div>
 
         <div class="insp-section">
-          <div class="insp-section__title">Constraints</div>
+          <div class="insp-section__title">{{ t('inspector.section.constraints') }}</div>
           <div class="form-row-2">
             <div class="form-row">
-              <label>Min count</label>
+              <label>{{ t('inspector.label.minCount') }}</label>
               <input
                 type="number"
                 :value="activeField.minCount ?? ''"
@@ -246,7 +248,7 @@ function onNumber(e: Event): number | null {
               />
             </div>
             <div class="form-row">
-              <label>Max count</label>
+              <label>{{ t('inspector.label.maxCount') }}</label>
               <input
                 type="number"
                 :value="activeField.maxCount ?? ''"
@@ -257,27 +259,27 @@ function onNumber(e: Event): number | null {
             </div>
           </div>
           <div class="form-row">
-            <label>Node kind</label>
+            <label>{{ t('inspector.label.nodeKind') }}</label>
             <select
               :value="activeField.nodeKind || ''"
               @change="setField('nodeKind', (($event.target as HTMLSelectElement).value || null) as Field['nodeKind'])"
             >
-              <option value="">— none —</option>
+              <option value="">{{ t('inspector.none') }}</option>
               <option v-for="o in NODE_KINDS" :key="o" :value="o">{{ o }}</option>
             </select>
           </div>
           <div v-if="isLiteral" class="form-row">
-            <label>Datatype</label>
+            <label>{{ t('inspector.label.datatype') }}</label>
             <select
               :value="activeField.datatype || ''"
               @change="setField('datatype', (($event.target as HTMLSelectElement).value || null))"
             >
-              <option value="">— none —</option>
+              <option value="">{{ t('inspector.none') }}</option>
               <option v-for="o in DATATYPES" :key="o" :value="o">{{ o }}</option>
             </select>
           </div>
           <div v-if="isIRI" class="form-row">
-            <label>Class (sh:class)</label>
+            <label>{{ t('inspector.label.class') }}</label>
             <input
               type="text"
               class="mono"
@@ -287,7 +289,7 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div v-if="fieldWidget?.id === 'DetailsEditor'" class="form-row">
-            <label>Nested shape (sh:node)</label>
+            <label>{{ t('inspector.label.nestedShape') }}</label>
             <input
               type="text"
               class="mono"
@@ -301,12 +303,12 @@ function onNumber(e: Event): number | null {
                 {{ ns.targetClass ? ns.targetClass : '' }}
               </option>
             </datalist>
-            <div class="hint">sh:NodeShape that defines the nested object's fields.</div>
+            <div class="hint">{{ t('inspector.hint.nestedShape') }}</div>
           </div>
           <template v-if="isLiteral">
             <div class="form-row-2">
               <div class="form-row">
-                <label>Min length</label>
+                <label>{{ t('inspector.label.minLength') }}</label>
                 <input
                   type="number"
                   :value="activeField.minLength ?? ''"
@@ -316,7 +318,7 @@ function onNumber(e: Event): number | null {
                 />
               </div>
               <div class="form-row">
-                <label>Max length</label>
+                <label>{{ t('inspector.label.maxLength') }}</label>
                 <input
                   type="number"
                   :value="activeField.maxLength ?? ''"
@@ -327,7 +329,7 @@ function onNumber(e: Event): number | null {
               </div>
             </div>
             <div class="form-row">
-              <label>Pattern (regex)</label>
+              <label>{{ t('inspector.label.pattern') }}</label>
               <input
                 type="text"
                 class="mono"
@@ -348,9 +350,9 @@ function onNumber(e: Event): number | null {
         </div>
 
         <div class="insp-section">
-          <div class="insp-section__title">Defaults & order</div>
+          <div class="insp-section__title">{{ t('inspector.section.defaultsOrder') }}</div>
           <div class="form-row">
-            <label>Default value</label>
+            <label>{{ t('inspector.label.defaultValue') }}</label>
             <input
               type="text"
               :value="activeField.defaultValue"
@@ -359,7 +361,7 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div class="form-row">
-            <label>Order (sh:order)</label>
+            <label>{{ t('inspector.label.order') }}</label>
             <input
               type="number"
               :value="activeField.order"
@@ -368,14 +370,14 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div v-if="selectedKind === 'field'" class="form-row">
-            <label>Group</label>
+            <label>{{ t('inspector.label.group') }}</label>
             <input type="text" disabled :value="currentField?.group.label ?? ''" />
-            <div class="hint">Move the field by dragging it into another group.</div>
+            <div class="hint">{{ t('inspector.hint.moveFieldGroup') }}</div>
           </div>
           <div v-if="selectedKind === 'nested-field'" class="form-row">
-            <label>Nested shape</label>
+            <label>{{ t('inspector.label.nestedShapeRef') }}</label>
             <input type="text" disabled :value="currentNestedShape?.iri ?? ''" />
-            <div class="hint">Move the field by dragging it within the shape.</div>
+            <div class="hint">{{ t('inspector.hint.moveFieldNested') }}</div>
           </div>
         </div>
       </div>
@@ -385,14 +387,14 @@ function onNumber(e: Event): number | null {
         <div class="field-head">
           <div class="field-head__icon"><Icon name="document" :size="18" /></div>
           <div style="flex: 1; min-width: 0">
-            <div style="font-weight: 700; color: var(--color-text-dark)">Nested shape</div>
+            <div style="font-weight: 700; color: var(--color-text-dark)">{{ t('inspector.headingNestedShape') }}</div>
             <div class="field-head__editor">sh:NodeShape</div>
           </div>
         </div>
         <div class="insp-section">
-          <div class="insp-section__title">Properties</div>
+          <div class="insp-section__title">{{ t('inspector.section.properties') }}</div>
           <div class="form-row">
-            <label class="required">Shape IRI</label>
+            <label class="required">{{ t('inspector.label.shapeIri') }}</label>
             <input
               type="text"
               class="mono"
@@ -400,10 +402,10 @@ function onNumber(e: Event): number | null {
               placeholder=":NestedShape1"
               @input="setNestedShapeIri(($event.target as HTMLInputElement).value)"
             />
-            <div class="hint">Renaming updates all sh:node references automatically.</div>
+            <div class="hint">{{ t('inspector.hint.shapeIriRename') }}</div>
           </div>
           <div class="form-row">
-            <label>Target class (sh:targetClass)</label>
+            <label>{{ t('inspector.label.targetClass') }}</label>
             <input
               type="text"
               class="mono"
@@ -413,18 +415,18 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div class="form-row">
-            <label>Fields</label>
+            <label>{{ t('inspector.label.fields') }}</label>
             <input
               type="text"
               disabled
-              :value="currentNestedShape.fields.length + ' field' + (currentNestedShape.fields.length === 1 ? '' : 's')"
+              :value="plural('count.fields', currentNestedShape.fields.length)"
             />
-            <div class="hint">Add fields by dragging widgets from the palette onto this shape.</div>
+            <div class="hint">{{ t('inspector.hint.addFieldsDrag') }}</div>
           </div>
         </div>
         <div class="insp-section">
           <button class="btn btn-danger-ghost btn-sm" @click="deleteCurrentNestedShape">
-            <Icon name="trash" :size="13" /> Delete nested shape
+            <Icon name="trash" :size="13" /> {{ t('inspector.deleteNestedShape') }}
           </button>
         </div>
       </div>
@@ -434,14 +436,14 @@ function onNumber(e: Event): number | null {
         <div class="field-head">
           <div class="field-head__icon"><Icon name="layers" :size="18" /></div>
           <div style="flex: 1">
-            <div style="font-weight: 700; color: var(--color-text-dark)">Group</div>
+            <div style="font-weight: 700; color: var(--color-text-dark)">{{ t('inspector.headingGroup') }}</div>
             <div class="field-head__editor">sh:PropertyGroup</div>
           </div>
         </div>
         <div class="insp-section">
-          <div class="insp-section__title">Properties</div>
+          <div class="insp-section__title">{{ t('inspector.section.properties') }}</div>
           <div class="form-row">
-            <label class="required">Label</label>
+            <label class="required">{{ t('inspector.label.groupLabel') }}</label>
             <input
               type="text"
               :value="currentGroup.label"
@@ -449,7 +451,7 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div class="form-row">
-            <label>Order</label>
+            <label>{{ t('inspector.label.groupOrder') }}</label>
             <input
               type="number"
               :value="currentGroup.order"
@@ -458,7 +460,7 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <button class="btn btn-danger-ghost btn-sm" @click="deleteCurrentGroup">
-            <Icon name="trash" :size="13" /> Delete group
+            <Icon name="trash" :size="13" /> {{ t('inspector.deleteGroup') }}
           </button>
         </div>
       </div>
@@ -469,15 +471,15 @@ function onNumber(e: Event): number | null {
           <div class="field-head__icon"><Icon name="layers" :size="18" /></div>
           <div>
             <div style="font-weight: 700; color: var(--color-text-dark)">
-              Schema settings
+              {{ t('inspector.headingSchema') }}
             </div>
             <div class="field-head__editor">sh:NodeShape</div>
           </div>
         </div>
         <div class="insp-section">
-          <div class="insp-section__title">Identity</div>
+          <div class="insp-section__title">{{ t('inspector.section.identity') }}</div>
           <div class="form-row">
-            <label class="required">Schema name</label>
+            <label class="required">{{ t('inspector.label.schemaName') }}</label>
             <input
               type="text"
               :value="schema.schemaName"
@@ -485,7 +487,7 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div class="form-row">
-            <label>Description</label>
+            <label>{{ t('inspector.label.description') }}</label>
             <textarea
               :value="schema.schemaDescription"
               @input="setSchema('schemaDescription', ($event.target as HTMLTextAreaElement).value)"
@@ -493,9 +495,9 @@ function onNumber(e: Event): number | null {
           </div>
         </div>
         <div class="insp-section">
-          <div class="insp-section__title">Shape definition</div>
+          <div class="insp-section__title">{{ t('inspector.section.shapeDefinition') }}</div>
           <div class="form-row">
-            <label>Shape IRI</label>
+            <label>{{ t('inspector.label.shapeIri') }}</label>
             <input
               type="text"
               class="mono"
@@ -505,7 +507,7 @@ function onNumber(e: Event): number | null {
             />
           </div>
           <div class="form-row">
-            <label class="required">Target class (sh:targetClass)</label>
+            <label class="required">{{ t('inspector.label.targetClass') }}</label>
             <input
               type="text"
               class="mono"
@@ -516,7 +518,7 @@ function onNumber(e: Event): number | null {
           </div>
         </div>
         <div class="insp-section">
-          <div class="insp-section__title">Vocabularies</div>
+          <div class="insp-section__title">{{ t('inspector.section.vocabularies') }}</div>
           <PrefixEditor
             :prefixes="schema.prefixes"
             @change="(v: Prefix[]) => setSchema('prefixes', v)"
