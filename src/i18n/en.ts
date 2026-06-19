@@ -13,7 +13,6 @@ const en = {
     copyShacl: 'Copy SHACL',
   },
   header: {
-    metadataSchemas: 'Metadata Schemas',
     openTitle: 'Open a SHACL Turtle file',
     saveTitle: 'Save to current file (Ctrl+S)',
     saveAsTitle: 'Save as a new file',
@@ -24,18 +23,17 @@ const en = {
     defaultSchemaName: 'Metadata Schema',
   },
   tabs: {
-    definition: 'Definition',
+    definition: 'SHACL Code',
     visualEditor: 'Visual Editor',
     formPreview: 'Form Preview',
-    new: 'New',
   },
   visual: {
     calloutHtml:
       '<strong>Visual Editor</strong> — drag DASH form widgets from the left ' +
       'palette onto the canvas. Each widget becomes a SHACL ' +
-      '<code>sh:property</code>. The corresponding Turtle is generated live ' +
-      'below — you can switch to the <strong>Definition</strong> tab to view ' +
-      'or edit it directly.',
+      '<code>sh:property</code>. Switch to the <strong>SHACL Code</strong> tab ' +
+      'to view or edit the generated Turtle, or <strong>Form Preview</strong> ' +
+      'to see the rendered form.',
   },
   preview: {
     generatedShacl: 'Generated SHACL (Turtle)',

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useSchemaStore } from './composables/useSchema';
-import { generateShacl, highlightTurtle, parseShacl } from './shacl';
+import { generateShacl, parseShacl } from './shacl';
 import { WIDGET_BY_ID } from './data';
 import type { SelectedKind } from './types';
 import Icon from './components/Icon.vue';
@@ -33,12 +33,7 @@ const selectedKind = ref<SelectedKind>('schema');
 const selectedId = ref<string | null>(null);
 const selectedNestedShapeId = ref<string | null>(null);
 
-type PreviewMode = 'shacl' | 'form';
-const previewMode = ref<PreviewMode>('shacl');
-const showShaclPreview = ref(true);
-
 const shacl = computed(() => generateShacl(schema));
-const shaclHtml = computed(() => highlightTurtle(shacl.value));
 
 const shaclDraft = ref(shacl.value);
 const shaclParseError = ref<string | null>(null);
@@ -478,9 +473,6 @@ async function saveAsShacl() {
           <span class="brand__tagline">Visual schemas. Clean SHACL.</span>
         </div>
       </div>
-      <nav class="app-header__nav">
-        <a href="#" class="is-active" @click.prevent>{{ t('header.metadataSchemas') }}</a>
-      </nav>
       <div class="app-header__spacer" />
       <div class="app-header__file-toolbar">
         <div class="lang-switch" role="group" :aria-label="t('header.language')">
@@ -535,7 +527,6 @@ async function saveAsShacl() {
             @click="tab = 'visual'"
           >
             <Icon name="wand" :size="14" /> {{ t('tabs.visualEditor') }}
-            <span class="tag-new">{{ t('tabs.new') }}</span>
           </button>
         </li>
         <li>
@@ -575,46 +566,6 @@ async function saveAsShacl() {
             :selected-nested-shape-id="selectedNestedShapeId"
             @clear="clearSelection"
           />
-        </div>
-
-        <div v-if="showShaclPreview" class="preview-pane">
-          <div class="preview-pane__header">
-            <div class="preview-pane__title">
-              {{ previewMode === 'shacl' ? t('preview.generatedShacl') : t('preview.formPreview') }}
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px">
-              <div class="preview-pane__tabs">
-                <span
-                  class="preview-pane__tab"
-                  :class="{ 'is-active': previewMode === 'shacl' }"
-                  @click="previewMode = 'shacl'"
-                  >{{ t('preview.tabShacl') }}</span
-                >
-                <span
-                  class="preview-pane__tab"
-                  :class="{ 'is-active': previewMode === 'form' }"
-                  @click="previewMode = 'form'"
-                  >{{ t('preview.tabForm') }}</span
-                >
-              </div>
-              <button
-                v-if="previewMode === 'shacl'"
-                class="btn btn-ghost btn-xs"
-                :title="t('preview.copyTurtle')"
-                @click="copyShacl"
-              >
-                <Icon name="duplicate" :size="12" /> {{ t('common.copy') }}
-              </button>
-            </div>
-          </div>
-          <div class="preview-pane__body">
-            <pre
-              v-if="previewMode === 'shacl'"
-              class="shacl-output"
-              v-html="shaclHtml"
-            />
-            <FormPreview v-else :schema="schema" />
-          </div>
         </div>
 
         <div class="actions-bar">
