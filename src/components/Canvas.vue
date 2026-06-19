@@ -76,8 +76,12 @@ function onDrop(e: DragEvent, targetGroupId: string) {
     if (!movedField) return;
 
     const destGroupId = (target && target.groupId) || targetGroupId;
-    const destGroup = draft.groups.find((g) => g.id === destGroupId) || draft.groups[draft.groups.length - 1];
-    if (!destGroup) return;
+    let destGroup = draft.groups.find((g) => g.id === destGroupId) || draft.groups[draft.groups.length - 1];
+    // No group yet (blank canvas): create the first one automatically.
+    if (!destGroup) {
+      destGroup = { id: newId('g'), label: `Section ${draft.groups.length + 1}`, order: draft.groups.length, fields: [] };
+      draft.groups.push(destGroup);
+    }
 
     if (target && target.fieldId) {
       const idx = destGroup.fields.findIndex((f) => f.id === target.fieldId);
@@ -92,6 +96,13 @@ function onDrop(e: DragEvent, targetGroupId: string) {
   if (dr.type === 'palette' && newFieldId) emit('selectField', newFieldId);
   else if (dr.type === 'field') emit('selectField', dr.fieldId);
   endDrag();
+}
+
+// Allow dropping a widget onto the blank canvas (before any group exists).
+function onDragOverEmpty(e: DragEvent) {
+  if (!isOurDrag(e)) return;
+  e.preventDefault();
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
 }
 
 // ── Nested shape drag/drop ─────────────────────────────────────────────────
@@ -323,7 +334,12 @@ function onCanvasClick() {
           </button>
         </div>
 
-        <div v-if="schema.groups.length === 0 && totalFields === 0" class="canvas-empty">
+        <div
+          v-if="schema.groups.length === 0 && totalFields === 0"
+          class="canvas-empty"
+          @dragover="onDragOverEmpty($event)"
+          @drop="onDrop($event, '')"
+        >
           <div class="canvas-empty__icon"><Icon name="wand" :size="36" /></div>
           <div class="canvas-empty__title">{{ t('canvas.emptyTitle') }}</div>
           <div class="canvas-empty__sub">{{ t('canvas.emptySub') }}</div>

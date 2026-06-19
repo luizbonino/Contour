@@ -3,6 +3,7 @@
 
 const ptBR = {
   common: {
+    new: 'Novo',
     open: 'Abrir…',
     save: 'Salvar',
     saved: 'Salvo!',
@@ -12,6 +13,8 @@ const ptBR = {
     copyShacl: 'Copiar SHACL',
   },
   header: {
+    newTitle: 'Começar um novo esquema',
+    newConfirm: 'Descartar o esquema atual e começar um novo?',
     openTitle: 'Abrir um arquivo SHACL Turtle',
     saveTitle: 'Salvar no arquivo atual (Ctrl+S)',
     saveAsTitle: 'Salvar como um novo arquivo',
@@ -19,7 +22,7 @@ const ptBR = {
   },
   page: {
     edit: 'Editar {name}',
-    defaultSchemaName: 'Esquema de metadados',
+    newSchema: 'Novo esquema de metadados',
   },
   tabs: {
     definition: 'Código SHACL',

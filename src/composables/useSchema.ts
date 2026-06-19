@@ -1,12 +1,13 @@
 import { reactive, readonly, toRaw } from 'vue';
-import { SEED_SCHEMA, newId } from '../data';
+import { blankSchema, newId } from '../data';
 import type { Field, Mutator, Schema, Widget } from '../types';
 
 function deepClone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
 }
 
-const _schema = reactive<Schema>(deepClone(SEED_SCHEMA));
+// Start from a blank schema so users build their own from scratch.
+const _schema = reactive<Schema>(blankSchema());
 
 export function fieldFromWidget(widget: Widget, order = 0): Field {
   const f: Field = {
