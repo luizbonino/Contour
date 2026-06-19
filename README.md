@@ -4,7 +4,7 @@
 
 Contour is a browser-based, drag-and-drop editor for building [SHACL](https://www.w3.org/TR/shacl/) NodeShapes with [DASH form widgets](https://datashapes.org/forms.html). Designed for the [FAIR Data Point](https://fairdatapoint.org/) ecosystem, but usable with any SHACL-aware platform.
 
-**▶ Live app: <https://luizbonino.github.io/Contour/>**
+**▶ Live app: <https://contour.fairdatapoint.org/>**
 
 > **New to the editor?** Data stewards should start with the
 > **[Creating Metadata Schemas guide](docs/data-steward-guide.md)** — a
@@ -86,7 +86,7 @@ Open `dist/index.html` in any modern browser, or serve it from any static host.
 
 Because the entire app lives in one file, any static host works with zero configuration — just serve `dist/index.html`.
 
-This repository deploys to **GitHub Pages automatically**: the [`Deploy to GitHub Pages`](.github/workflows/deploy-pages.yml) workflow builds the app and publishes `dist/` on every push to `main` (Pages source = **GitHub Actions**). The live site is <https://luizbonino.github.io/Contour/>.
+This repository deploys to **GitHub Pages automatically**: the [`Deploy to GitHub Pages`](.github/workflows/deploy-pages.yml) workflow builds the app and publishes `dist/` on every push to `main` (Pages source = **GitHub Actions**). The live site is served at the custom domain <https://contour.fairdatapoint.org/> (configured via [`public/CNAME`](public/CNAME)).
 
 To set this up on a fork: in **Settings → Pages**, set the source to **GitHub Actions**, then push to `main`.
 
