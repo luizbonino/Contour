@@ -1,4 +1,4 @@
-import type { Prefix, Schema, Widget } from './types';
+import type { Field, Prefix, Schema, Widget } from './types';
 
 // All DASH form widgets from https://datashapes.org/forms.html
 export const WIDGETS: Widget[] = [
@@ -167,126 +167,147 @@ export function blankSchema(): Schema {
   };
 }
 
-// Seed example: a DCAT-style "Dataset" shape (kept as a reference template)
-export const SEED_SCHEMA: Schema = {
-  schemaName: 'Dataset',
-  schemaDescription: 'A DCAT-style dataset metadata schema',
-  shapeIri: ':DatasetShape',
-  targetClass: 'dcat:Dataset',
-  prefixes: DEFAULT_PREFIXES.slice(),
-  nestedShapes: [],
-  groups: [
-    {
-      id: 'g1',
-      label: 'General information',
-      order: 0,
-      fields: [
+// Concise field factory for the built-in examples — fills the nullable
+// defaults so each example only specifies the props it cares about.
+function f(
+  p: Partial<Field> & { id: string; widgetId: string; name: string; path: string; order: number },
+): Field {
+  return {
+    description: '',
+    nodeKind: null,
+    datatype: null,
+    class: null,
+    node: null,
+    minCount: null,
+    maxCount: null,
+    minLength: null,
+    maxLength: null,
+    pattern: '',
+    defaultValue: '',
+    inValues: null,
+    ...p,
+  };
+}
+
+const PREFIX_SKOS: Prefix = { prefix: 'skos', uri: 'http://www.w3.org/2004/02/skos/core#' };
+const PREFIX_VCARD: Prefix = { prefix: 'vcard', uri: 'http://www.w3.org/2006/vcard/ns#' };
+
+export interface SchemaExample {
+  id: string;
+  schema: Schema;
+}
+
+// Built-in starter templates, surfaced via the "Examples" menu. These mirror
+// the schemas used in the data-steward guide.
+export const EXAMPLES: SchemaExample[] = [
+  {
+    id: 'dataset',
+    schema: {
+      schemaName: 'Dataset',
+      schemaDescription: 'A DCAT-style dataset metadata schema.',
+      shapeIri: ':DatasetShape',
+      targetClass: 'dcat:Dataset',
+      prefixes: [...DEFAULT_PREFIXES, PREFIX_VCARD],
+      groups: [
         {
-          id: 'f1',
-          widgetId: 'TextFieldEditor',
-          name: 'Title',
-          description: 'A human-readable title for the dataset',
-          path: 'dct:title',
-          datatype: 'xsd:string',
-          nodeKind: 'sh:Literal',
-          class: null,
-          node: null,
-          minCount: 1,
-          maxCount: 1,
-          minLength: null,
-          maxLength: null,
-          pattern: '',
-          defaultValue: '',
-          inValues: null,
+          id: 'ds-g1',
+          label: 'General information',
           order: 0,
+          fields: [
+            f({ id: 'ds-f1', widgetId: 'TextFieldEditor', name: 'Title', path: 'dct:title', description: 'A human-readable title for the dataset', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 1, maxCount: 1, order: 0 }),
+            f({ id: 'ds-f2', widgetId: 'TextAreaEditor', name: 'Description', path: 'dct:description', description: 'A free-text account of the dataset', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 1, order: 1 }),
+            f({ id: 'ds-f3', widgetId: 'DatePickerEditor', name: 'Issued', path: 'dct:issued', description: 'Date of formal issuance', nodeKind: 'sh:Literal', datatype: 'xsd:date', minCount: 0, maxCount: 1, order: 2 }),
+            f({ id: 'ds-f4', widgetId: 'TextFieldEditor', name: 'Keyword', path: 'dcat:keyword', description: 'A keyword or tag describing the dataset', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 0, order: 3 }),
+          ],
         },
         {
-          id: 'f2',
-          widgetId: 'TextAreaEditor',
-          name: 'Description',
-          description: 'A free-text account of the dataset',
-          path: 'dct:description',
-          datatype: 'xsd:string',
-          nodeKind: 'sh:Literal',
-          class: null,
-          node: null,
-          minCount: 1,
-          maxCount: null,
-          minLength: null,
-          maxLength: null,
-          pattern: '',
-          defaultValue: '',
-          inValues: null,
+          id: 'ds-g2',
+          label: 'Provenance',
           order: 1,
+          fields: [
+            f({ id: 'ds-f5', widgetId: 'AutoCompleteEditor', name: 'Publisher', path: 'dct:publisher', description: 'The entity responsible for making the dataset available', nodeKind: 'sh:IRI', class: 'foaf:Agent', minCount: 1, maxCount: 1, order: 0 }),
+            f({ id: 'ds-f6', widgetId: 'EnumSelectEditor', name: 'Access rights', path: 'dct:accessRights', description: 'Information about who can access the resource', nodeKind: 'sh:Literal', datatype: 'xsd:string', inValues: ['public', 'restricted', 'private'], minCount: 1, maxCount: 1, order: 1 }),
+          ],
         },
         {
-          id: 'f3',
-          widgetId: 'DatePickerEditor',
-          name: 'Issued',
-          description: 'Date of formal issuance',
-          path: 'dct:issued',
-          datatype: 'xsd:date',
-          nodeKind: 'sh:Literal',
-          class: null,
-          node: null,
-          minCount: 0,
-          maxCount: 1,
-          minLength: null,
-          maxLength: null,
-          pattern: '',
-          defaultValue: '',
-          inValues: null,
+          id: 'ds-g3',
+          label: 'Contact',
           order: 2,
+          fields: [
+            f({ id: 'ds-f7', widgetId: 'DetailsEditor', name: 'Contact point', path: 'dcat:contactPoint', description: 'The person or team to contact about this dataset', nodeKind: 'sh:BlankNodeOrIRI', node: ':ContactShape', minCount: 0, maxCount: 1, order: 0 }),
+          ],
+        },
+      ],
+      nestedShapes: [
+        {
+          id: 'ds-ns1',
+          iri: ':ContactShape',
+          targetClass: 'vcard:Kind',
+          fields: [
+            f({ id: 'ds-nf1', widgetId: 'TextFieldEditor', name: 'Full name', path: 'vcard:fn', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 1, maxCount: 1, order: 0 }),
+            f({ id: 'ds-nf2', widgetId: 'URIEditor', name: 'Email', path: 'vcard:hasEmail', nodeKind: 'sh:IRI', minCount: 0, maxCount: 1, order: 1 }),
+          ],
         },
       ],
     },
-    {
-      id: 'g2',
-      label: 'Provenance',
-      order: 1,
-      fields: [
+  },
+  {
+    id: 'agent',
+    schema: {
+      schemaName: 'Agent',
+      schemaDescription: 'A FOAF agent — a person or organisation.',
+      shapeIri: ':AgentShape',
+      targetClass: 'foaf:Agent',
+      prefixes: DEFAULT_PREFIXES.slice(),
+      groups: [
         {
-          id: 'f4',
-          widgetId: 'AutoCompleteEditor',
-          name: 'Publisher',
-          description: 'The entity responsible for making the dataset available',
-          path: 'dct:publisher',
-          nodeKind: 'sh:IRI',
-          class: 'foaf:Agent',
-          datatype: null,
-          node: null,
-          minCount: 1,
-          maxCount: 1,
-          minLength: null,
-          maxLength: null,
-          pattern: '',
-          defaultValue: '',
-          inValues: null,
+          id: 'ag-g1',
+          label: 'Agent',
           order: 0,
-        },
-        {
-          id: 'f5',
-          widgetId: 'EnumSelectEditor',
-          name: 'Access rights',
-          description: 'Information about who can access the resource',
-          path: 'dct:accessRights',
-          datatype: 'xsd:string',
-          nodeKind: 'sh:Literal',
-          class: null,
-          node: null,
-          inValues: ['public', 'restricted', 'private'],
-          minCount: 1,
-          maxCount: 1,
-          minLength: null,
-          maxLength: null,
-          pattern: '',
-          defaultValue: '',
-          order: 1,
+          fields: [
+            f({ id: 'ag-f1', widgetId: 'TextFieldEditor', name: 'Name', path: 'foaf:name', description: 'Full name of the person or organisation', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 1, maxCount: 1, order: 0 }),
+            f({ id: 'ag-f2', widgetId: 'URIEditor', name: 'Email', path: 'foaf:mbox', description: 'A mailbox, as a mailto: IRI', nodeKind: 'sh:IRI', minCount: 0, order: 1 }),
+            f({ id: 'ag-f3', widgetId: 'URIEditor', name: 'Homepage', path: 'foaf:homepage', nodeKind: 'sh:IRI', minCount: 0, maxCount: 1, order: 2 }),
+            f({ id: 'ag-f4', widgetId: 'URIEditor', name: 'Image', path: 'foaf:img', nodeKind: 'sh:IRI', minCount: 0, maxCount: 1, order: 3 }),
+          ],
         },
       ],
+      nestedShapes: [],
     },
-  ],
-};
+  },
+  {
+    id: 'concept',
+    schema: {
+      schemaName: 'Concept',
+      schemaDescription: 'A SKOS concept for a controlled vocabulary or ontology.',
+      shapeIri: ':ConceptShape',
+      targetClass: 'skos:Concept',
+      prefixes: [...DEFAULT_PREFIXES, PREFIX_SKOS],
+      groups: [
+        {
+          id: 'sk-g1',
+          label: 'Labels',
+          order: 0,
+          fields: [
+            f({ id: 'sk-f1', widgetId: 'TextFieldEditor', name: 'Preferred label', path: 'skos:prefLabel', description: 'The preferred lexical label for the concept', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 1, maxCount: 1, order: 0 }),
+            f({ id: 'sk-f2', widgetId: 'TextFieldEditor', name: 'Alternative label', path: 'skos:altLabel', description: 'Synonyms or alternative labels', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 0, order: 1 }),
+            f({ id: 'sk-f3', widgetId: 'TextAreaEditor', name: 'Definition', path: 'skos:definition', description: 'A complete explanation of the concept', nodeKind: 'sh:Literal', datatype: 'xsd:string', minCount: 0, maxCount: 1, order: 2 }),
+          ],
+        },
+        {
+          id: 'sk-g2',
+          label: 'Relations',
+          order: 1,
+          fields: [
+            f({ id: 'sk-f4', widgetId: 'AutoCompleteEditor', name: 'Broader', path: 'skos:broader', description: 'A broader (more general) concept', nodeKind: 'sh:IRI', class: 'skos:Concept', minCount: 0, order: 0 }),
+            f({ id: 'sk-f5', widgetId: 'AutoCompleteEditor', name: 'Related', path: 'skos:related', description: 'An associated concept', nodeKind: 'sh:IRI', class: 'skos:Concept', minCount: 0, order: 1 }),
+          ],
+        },
+      ],
+      nestedShapes: [],
+    },
+  },
+];
 
 // IDs are client-side only and never persisted, so the ~2B collision space of
 // 6 base-36 chars is safe in practice.
