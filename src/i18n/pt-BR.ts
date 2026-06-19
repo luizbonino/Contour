@@ -12,7 +12,6 @@ const ptBR = {
     copyShacl: 'Copiar SHACL',
   },
   header: {
-    metadataSchemas: 'Esquemas de metadados',
     openTitle: 'Abrir um arquivo SHACL Turtle',
     saveTitle: 'Salvar no arquivo atual (Ctrl+S)',
     saveAsTitle: 'Salvar como um novo arquivo',
@@ -23,18 +22,17 @@ const ptBR = {
     defaultSchemaName: 'Esquema de metadados',
   },
   tabs: {
-    definition: 'Definição',
+    definition: 'Código SHACL',
     visualEditor: 'Editor visual',
     formPreview: 'Pré-visualização',
-    new: 'Novo',
   },
   visual: {
     calloutHtml:
       '<strong>Editor visual</strong> — arraste widgets de formulário DASH da ' +
       'paleta à esquerda para a tela. Cada widget vira uma ' +
-      '<code>sh:property</code> do SHACL. O Turtle correspondente é gerado ao ' +
-      'vivo abaixo — você pode mudar para a aba <strong>Definição</strong> para ' +
-      'visualizá-lo ou editá-lo diretamente.',
+      '<code>sh:property</code> do SHACL. Mude para a aba ' +
+      '<strong>Código SHACL</strong> para visualizar ou editar o Turtle gerado, ' +
+      'ou <strong>Pré-visualização</strong> para ver o formulário renderizado.',
   },
   preview: {
     generatedShacl: 'SHACL gerado (Turtle)',
