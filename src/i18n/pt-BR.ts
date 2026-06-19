@@ -13,6 +13,8 @@ const ptBR = {
     copyShacl: 'Copiar SHACL',
   },
   header: {
+    guide: 'Guia',
+    guideTitle: 'Abrir o guia do data steward em uma nova aba',
     newTitle: 'Começar um novo esquema',
     newConfirm: 'Descartar o esquema atual e começar um novo?',
     openTitle: 'Abrir um arquivo SHACL Turtle',

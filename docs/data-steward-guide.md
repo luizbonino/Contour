@@ -36,7 +36,7 @@ a study, a sample, a software package — without hand-writing Turtle.
    - [Step 11 — Preview the data-entry form](#step-11--preview-the-data-entry-form)
    - [Step 12 — Review the generated SHACL](#step-12--review-the-generated-shacl)
    - [Step 13 — Save and export](#step-13--save-and-export)
-4. [Working directly with Turtle (the Definition tab)](#4-working-directly-with-turtle-the-definition-tab)
+4. [Working directly with Turtle (the SHACL Code tab)](#4-working-directly-with-turtle-the-shacl-code-tab)
 5. [Reference](#5-reference)
    - [Widget catalogue](#widget-catalogue)
    - [Property settings reference](#property-settings-reference)
@@ -70,9 +70,9 @@ You design all of this visually; the tool writes the SHACL for you.
 
 The window has three tabs:
 
-![The three tabs: Definition, Visual Editor, Form Preview](images/tabs.png)
+![The three tabs: SHACL Code, Visual Editor, Form Preview](images/tabs.png)
 
-- **Definition** — the raw SHACL Turtle, with autocomplete. Edits here sync back
+- **SHACL Code** — the raw SHACL Turtle, with autocomplete. Edits here sync back
   to the visual canvas. This is also where files you open are shown.
 - **Visual Editor** — the drag-and-drop workbench (shown above). This is where
   most of your work happens.
@@ -87,13 +87,14 @@ The **Visual Editor** is split into three columns:
 | **Form canvas** (centre) | Your schema: the target banner, groups, properties, and nested shapes. |
 | **Inspector** (right) | Settings for whatever is currently selected — the schema, a group, or a property. |
 
-Below the workbench is a live preview pane that toggles between the generated
-**SHACL** and the rendered **Form**, and an actions bar with a property/group
-counter and Save buttons.
+Below the workbench is an actions bar with a property/group counter and Save
+buttons. To see the generated Turtle, switch to the **SHACL Code** tab; to see
+the rendered form, switch to **Form Preview**.
 
-File operations live in the top-right of the header:
+The header holds the file actions — **New**, **Examples**, **Open**, **Save**,
+**Save As** — plus the language toggle and a **Guide** link:
 
-![Open, Save, and Save As buttons in the header](images/file-toolbar.png)
+![New, Examples, Open, Save, and Save As buttons in the header](images/file-toolbar.png)
 
 ### Interface language
 
@@ -111,24 +112,32 @@ altered, so the exported Turtle is identical in either language.
 
 We will build a [DCAT](https://www.w3.org/TR/vocab-dcat-3/)-style **Dataset**
 metadata schema. Each step introduces one feature of the tool, and by the end
-you will have touched every major capability. The editor opens with a small
-example *Dataset* schema already loaded — you can follow along by adjusting it,
-or clear it and start fresh.
+you will have touched every major capability.
 
-> Throughout, switch to the **Visual Editor** tab to do the work.
+Contour **starts blank** so you can build your own schema from scratch — the
+page title reads *New metadata schema* until you name it. If you'd rather explore
+a finished schema, the **Examples** menu in the header loads ready-made
+templates (Dataset, Agent, Concept); the *Dataset* example matches what we build
+below:
+
+![The Examples menu with Dataset, Agent, and Concept templates](images/examples-menu.png)
+
+> Throughout, switch to the **Visual Editor** tab to do the work. To begin a
+> fresh schema at any time, use the **New** button.
 
 ### Step 1 — Define the schema identity
 
-Click the **schema banner** at the top of the canvas (the blue "Dataset" card),
-or the **Schema settings** button. The Inspector switches to schema-level
-settings:
+Click the **schema banner** at the top of the canvas (it reads *Untitled schema*
+until you name it), or the **Schema settings** button. The Inspector switches to
+schema-level settings:
 
 ![Schema settings in the Inspector: name, description, shape IRI, target class, and prefixes](images/schema-settings.png)
 
 Fill in:
 
-- **Schema name** — a human label, e.g. `Dataset`. (This also appears in the
-  page title: *Edit Dataset*.)
+- **Schema name** — a human label, e.g. `Dataset`. (Once set, the page title
+  changes from *New metadata schema* to *Edit Dataset*; name it for any domain —
+  an ontology class, a catalog — and the title follows.)
 - **Description** — a sentence describing the schema's purpose.
 - **Shape IRI** — the identifier of the shape, e.g. `:DatasetShape`. The leading
   `:` uses your default namespace; you can leave the suggested value.
@@ -156,11 +165,12 @@ or class should be declared here so the exported Turtle is valid.
 
 ### Step 3 — Organise the form into groups
 
-Groups (`sh:PropertyGroup`) are the sections of your form. Click **Add group**
-(top-right of the canvas, or **Add another group** at the bottom). A new empty
-section appears with a drop zone:
+Groups (`sh:PropertyGroup`) are the sections of your form. On a blank canvas you
+can simply **drag your first widget onto the canvas** and Contour creates the
+first group for you — or click **Add group** (top-right of the canvas) to make an
+empty section to drop into:
 
-![A newly added group showing a "Drop a widget here" zone](images/add-group.png)
+![The blank canvas, ready for your first widget](images/blank-start.png)
 
 - **Rename** a group by clicking its title and typing — e.g. `General information`.
 - **Reorder** by setting the group's **Order** in the Inspector (select the group
@@ -292,27 +302,27 @@ The nested shape card on the canvas holds its own properties:
 
 ### Step 11 — Preview the data-entry form
 
-At any point, check what the person entering metadata will see. Use the
-**Form** toggle in the preview pane, or open the full **Form Preview** tab.
-Required fields show a red asterisk, descriptions become ⓘ tooltips, repeatable
-fields get **+ Add** buttons, and **Details** properties render their nested
-shape's fields inline:
+At any point, open the **Form Preview** tab to check what the person entering
+metadata will see. Required fields show a red asterisk, descriptions become ⓘ
+tooltips, repeatable fields get **+ Add** buttons, and **Details** properties
+render their nested shape's fields inline:
 
-![The rendered form preview, including an inline nested Contact form](images/nested-form-preview.png)
+![The rendered form preview, including an inline nested Contact form](images/form-preview-tab.png)
 
 This preview is read-only — it is there to validate the design, not to capture
 real data.
 
 ### Step 12 — Review the generated SHACL
 
-In the Visual Editor, the preview pane's **SHACL** toggle shows the Turtle being
-generated live as you work:
+The **SHACL Code** tab shows the Turtle generated from your design (and lets you
+edit it directly):
 
-![The live-generated SHACL Turtle preview](images/generated-shacl.png)
+![The SHACL Code tab showing the generated Turtle](images/shacl-code-tab.png)
 
 Everything you configured visually is here — `@prefix` declarations, the
 `PropertyGroup`s, the `NodeShape` with its `sh:property` blocks, and any nested
-shapes. Use **Copy** to put it on your clipboard.
+shapes. The **Copy SHACL** button in the Visual Editor's actions bar puts the
+Turtle on your clipboard.
 
 ### Step 13 — Save and export
 
@@ -333,12 +343,12 @@ rendered — according to your design.
 
 ---
 
-## 4. Working directly with Turtle (the Definition tab)
+## 4. Working directly with Turtle (the SHACL Code tab)
 
 Prefer to write or paste SHACL by hand, or need to start from an existing shape?
-Use the **Definition** tab.
+Use the **SHACL Code** tab.
 
-![The Definition tab with the raw SHACL Turtle editor](images/definition-tab.png)
+![The SHACL Code tab with the raw SHACL Turtle editor](images/shacl-code-tab.png)
 
 - **Two-way sync.** Edits to the Turtle are parsed and pushed back to the Visual
   Editor automatically (after you pause typing). Conversely, anything you build
@@ -443,6 +453,9 @@ property at it via `sh:node`. See [Step 10](#step-10--model-a-sub-object-with-a-
 **Enforce a format.** For literals, set a **Pattern** (regex) and/or **Min/Max
 length** — e.g. an ORCID pattern, or a max length on a code field.
 
+**Start from an example.** Use the **Examples** menu to load a Dataset (DCAT),
+Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.
+
 **Reuse an existing schema.** **Open…** the existing `.ttl`, adapt it in the
 Visual Editor, then **Save As…** a new file.
 
@@ -457,13 +470,13 @@ Visual Editor, then **Save As…** a new file.
   `vcard:`), add it under **Vocabularies** so the Turtle is valid.
 - **A field went to the wrong group.** Drag the property card into the correct
   group; the **Group** box in the Inspector is read-only and reflects the move.
-- **Definition-tab edits didn't sync.** Syncing happens shortly after you stop
+- **SHACL Code edits didn't sync.** Syncing happens shortly after you stop
   typing. If a parse error is shown (with a line number), fix the Turtle — the
   visual canvas keeps the last valid state until the text parses.
 - **Save button only downloads.** That's the expected fallback in Firefox/Safari.
   For in-place saves, use a Chromium-based browser (Chrome/Edge).
-- **Start over.** Re-open the editor in a fresh tab to reset to the example
-  schema, or **Open…** an empty/known-good `.ttl`.
+- **Start over.** Use the **New** button for a blank schema, load one from
+  **Examples**, or **Open…** an existing `.ttl`.
 
 ---
 

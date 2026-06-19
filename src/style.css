@@ -144,6 +144,17 @@ button {
   height: 2px;
   background: var(--color-accent);
 }
+.app-header__guide {
+  margin-left: 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-default);
+  white-space: nowrap;
+}
+.app-header__guide:hover {
+  color: var(--color-accent-darker);
+  text-decoration: none;
+}
 .app-header__spacer {
   flex: 1;
 }
