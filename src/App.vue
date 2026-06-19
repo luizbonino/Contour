@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSchemaStore } from './composables/useSchema';
 import { generateShacl, parseShacl } from './shacl';
-import { WIDGET_BY_ID, blankSchema } from './data';
+import { WIDGET_BY_ID, blankSchema, EXAMPLES } from './data';
+import type { SchemaExample } from './data';
 import type { SelectedKind } from './types';
 import Icon from './components/Icon.vue';
 import Palette from './components/Palette.vue';
@@ -342,17 +343,43 @@ function setSaved() {
   saveStatusTimer = setTimeout(() => (fileSaveStatus.value = 'idle'), 2500);
 }
 
-function newSchema() {
-  const hasContent =
-    totalFields.value > 0 || !!schema.schemaName || (schema.nestedShapes || []).length > 0;
-  if (hasContent && !window.confirm(t('header.newConfirm'))) return;
-  mutate((d) => Object.assign(d, blankSchema()));
+function hasContent(): boolean {
+  return totalFields.value > 0 || !!schema.schemaName || (schema.nestedShapes || []).length > 0;
+}
+
+function resetFileState() {
   fileHandle.value = null;
   loadedShaclSource.value = null;
   loadedFileParseError.value = null;
   clearSelection();
   tab.value = 'visual';
 }
+
+function newSchema() {
+  if (hasContent() && !window.confirm(t('header.newConfirm'))) return;
+  mutate((d) => Object.assign(d, blankSchema()));
+  resetFileState();
+}
+
+// ── Examples menu ────────────────────────────────────────────────────────────
+
+const exMenuOpen = ref(false);
+const exMenuRef = ref<HTMLElement | null>(null);
+
+function loadExample(ex: SchemaExample) {
+  exMenuOpen.value = false;
+  if (hasContent() && !window.confirm(t('examples.confirm'))) return;
+  mutate((d) => Object.assign(d, JSON.parse(JSON.stringify(ex.schema)) as typeof ex.schema));
+  resetFileState();
+}
+
+function onDocMousedown(e: MouseEvent) {
+  if (exMenuOpen.value && exMenuRef.value && !exMenuRef.value.contains(e.target as Node)) {
+    exMenuOpen.value = false;
+  }
+}
+onMounted(() => document.addEventListener('mousedown', onDocMousedown));
+onBeforeUnmount(() => document.removeEventListener('mousedown', onDocMousedown));
 
 async function openShacl() {
   if ('showOpenFilePicker' in window) {
@@ -500,6 +527,28 @@ async function saveAsShacl() {
         <button class="btn btn-ghost btn-sm" :title="t('header.newTitle')" @click="newSchema">
           <Icon name="plus" :size="13" /> {{ t('common.new') }}
         </button>
+        <div ref="exMenuRef" class="ex-menu">
+          <button
+            class="btn btn-ghost btn-sm"
+            :title="t('examples.title')"
+            aria-haspopup="true"
+            :aria-expanded="exMenuOpen"
+            @click="exMenuOpen = !exMenuOpen"
+          >
+            <Icon name="layers" :size="13" /> {{ t('examples.menu') }}
+          </button>
+          <div v-if="exMenuOpen" class="ex-menu__list">
+            <button
+              v-for="ex in EXAMPLES"
+              :key="ex.id"
+              class="ex-menu__item"
+              @click="loadExample(ex)"
+            >
+              <span class="ex-menu__name">{{ t(`examples.${ex.id}.name`) }}</span>
+              <span class="ex-menu__desc">{{ t(`examples.${ex.id}.desc`) }}</span>
+            </button>
+          </div>
+        </div>
         <button class="btn btn-ghost btn-sm" :title="t('header.openTitle')" @click="openShacl">
           <Icon name="folder" :size="13" /> {{ t('common.open') }}
         </button>

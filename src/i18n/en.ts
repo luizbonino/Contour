@@ -25,6 +25,23 @@ const en = {
     edit: 'Edit {name}',
     newSchema: 'New metadata schema',
   },
+  examples: {
+    menu: 'Examples',
+    title: 'Load an example schema',
+    confirm: 'Replace the current schema with this example?',
+    dataset: {
+      name: 'Dataset (DCAT)',
+      desc: 'Title, description, publisher, access rights + nested contact',
+    },
+    agent: {
+      name: 'Agent (FOAF)',
+      desc: 'A person or organisation',
+    },
+    concept: {
+      name: 'Concept (SKOS)',
+      desc: 'A vocabulary / ontology concept',
+    },
+  },
   tabs: {
     definition: 'SHACL Code',
     visualEditor: 'Visual Editor',

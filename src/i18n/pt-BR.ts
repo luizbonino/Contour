@@ -24,6 +24,23 @@ const ptBR = {
     edit: 'Editar {name}',
     newSchema: 'Novo esquema de metadados',
   },
+  examples: {
+    menu: 'Exemplos',
+    title: 'Carregar um esquema de exemplo',
+    confirm: 'Substituir o esquema atual por este exemplo?',
+    dataset: {
+      name: 'Dataset (DCAT)',
+      desc: 'Título, descrição, publicador, direitos de acesso + contato aninhado',
+    },
+    agent: {
+      name: 'Agente (FOAF)',
+      desc: 'Uma pessoa ou organização',
+    },
+    concept: {
+      name: 'Conceito (SKOS)',
+      desc: 'Um conceito de vocabulário / ontologia',
+    },
+  },
   tabs: {
     definition: 'Código SHACL',
     visualEditor: 'Editor visual',
