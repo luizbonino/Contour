@@ -39,6 +39,8 @@ const selectedNestedShapeId = ref<string | null>(null);
 
 // Active RDF syntax for the SHACL Code tab. New schemas start as Turtle.
 const rdfSyntax = ref<string>(DEFAULT_SYNTAX);
+// Some syntaxes (JSON-LD) are export-only — shown read-only, not parsed back.
+const syntaxEditable = computed(() => SYNTAX_BY_ID[rdfSyntax.value]?.editable !== false);
 const shacl = computed(() => serializeSchema(schema, rdfSyntax.value));
 
 // SHACL the editor can't model, preserved verbatim in the output.
@@ -58,6 +60,7 @@ watch(shacl, (newShacl) => {
 });
 
 function onShaclDraftInput(e: Event) {
+  if (!syntaxEditable.value) return; // export-only syntax: ignore edits
   const ta = e.target as HTMLTextAreaElement;
   const text = ta.value;
   shaclDraft.value = text;
@@ -919,10 +922,14 @@ async function saveAsShacl() {
             <p v-if="hasResidual" class="residual-notice">
               <Icon name="info" :size="13" /> {{ t('definition.residualNotice') }}
             </p>
+            <p v-if="!syntaxEditable" class="residual-notice">
+              <Icon name="info" :size="13" /> {{ t('definition.exportOnly') }}
+            </p>
             <textarea
               ref="textareaRef"
               class="turtle-area"
               :value="shaclDraft"
+              :readonly="!syntaxEditable"
               spellcheck="false"
               @input="onShaclDraftInput"
               @keydown="onShaclKeydown"

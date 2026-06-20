@@ -16,6 +16,7 @@ export interface RdfSyntax {
   format: string; // N3 format string
   ext: string;    // file extension (no dot)
   hasPrefixes: boolean;
+  editable?: boolean; // false → serialize/export only, no parse-back (default true)
 }
 
 export const SYNTAXES: RdfSyntax[] = [
@@ -23,6 +24,8 @@ export const SYNTAXES: RdfSyntax[] = [
   { id: 'ntriples', label: 'N-Triples', format: 'application/n-triples', ext: 'nt', hasPrefixes: false },
   { id: 'trig', label: 'TriG', format: 'application/trig', ext: 'trig', hasPrefixes: true },
   { id: 'n3', label: 'Notation3', format: 'text/n3', ext: 'n3', hasPrefixes: true },
+  // Export only — JSON-LD isn't round-trip editable in Contour (no JSON-LD parser).
+  { id: 'jsonld', label: 'JSON-LD (export)', format: 'application/ld+json', ext: 'jsonld', hasPrefixes: true, editable: false },
 ];
 
 export const SYNTAX_BY_ID: Record<string, RdfSyntax> = Object.fromEntries(

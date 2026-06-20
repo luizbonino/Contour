@@ -102,6 +102,7 @@ const en = {
     syncHint:
       'Edit the code directly — changes are parsed and synced back to the Visual Editor automatically.',
     syntax: 'Syntax',
+    exportOnly: 'JSON-LD is export-only — copy or save it, then switch to Turtle to keep editing.',
     residualNotice:
       'This schema uses SHACL/RDF the visual editor doesn\'t model yet. It is preserved verbatim (see the “Preserved” block) and round-trips on save.',
   },

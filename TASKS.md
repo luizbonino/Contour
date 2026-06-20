@@ -345,14 +345,21 @@ reshape concentrate.
 
 ---
 
-## Phase 6 — Optional / opt-in ⬜
+## Phase 6 — Optional / opt-in 🟡
 
-- [ ] **JSON-LD & RDF/XML syntaxes (U12):** extend the toggle via `jsonld` /
-      `rdfxml-streaming-parser` — gated on the bundle-size budget (these are far
-      heavier than N3.js); possibly lazy-loaded.
+- [x] **JSON-LD export (U12, partial):** ✅ a hand-rolled RDF→JSON-LD serializer
+      ([jsonld.ts](src/jsonld.ts)) — **no new dependency** — surfaced as an
+      export-only entry in the SHACL Code syntax toggle (read-only; copy / Save
+      As `.jsonld`). Builds a `@context` from the declared prefixes
+      (`@vocab`/`@base` for the empty prefix), embeds single-reference blank
+      nodes, collapses RDF lists (`sh:in`/`sh:or`) to `@list`, and renders
+      language-tagged labels as `@value`/`@language`. Verified by
+      [jsonld.test.ts](src/__tests__/jsonld.test.ts) (**152/152**; bundle
+      ~395 KB gzip).
+- [ ] **RDF/XML syntax** via `rdfxml-streaming-parser` — still gated on the
+      bundle-size budget (heavier than N3.js); possibly lazy-loaded.
 - [ ] **Validate sample data against the shape:** paste/load instance RDF and run
       a SHACL validation, showing the report — closes the FAIR authoring loop.
-- [ ] **Export to JSON-LD** for non-Turtle consumers.
 
 ---
 
