@@ -34,7 +34,7 @@ engine that can **ingest and emit multiple RDF syntaxes**.
 | 2 — RDF engine + multi-syntax + lossless round-trip | real parser, syntax toggle, preserve-unknown | ✅ Done |
 | 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ✅ Done |
 | 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ✅ Done (common cases; complex stays residual) |
-| 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | ⬜ Not started |
+| 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | 🟡 a11y/order/autocomplete/hygiene done; navigator + peer shapes pending |
 | 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | ⬜ Not started |
 
 ## Priority map (from the review)
@@ -264,24 +264,37 @@ Made the Form Preview honest and nested shapes easy to wire up. Shipped.
 
 ---
 
-## Phase 5 — Structure & scale ⬜
+## Phase 5 — Structure & scale 🟡
 
-- [ ] **Peer top-level shapes (F4):** support many independent NodeShapes (not
-      "first shape wins, rest are nested" — [shacl.ts:230](src/shacl.ts#L230));
-      model a graph of mutually-referencing shapes.
+> **Verified:** `npm test` **143/143**; type-check clean; build ~394 KB gzip.
+
+- [x] **a11y add (U6):** palette widgets are now keyboard-focusable and
+      add-on-click / Enter / Space, not drag-only — they append to the selected
+      nested shape, the selected/last group, or a new one
+      ([Palette.vue](src/components/Palette.vue), `addWidget` in
+      [App.vue](src/App.vue)).
+- [x] **Group reorder (U7, partial):** move-up / move-down controls on each group
+      header reorder groups and renumber `sh:order`
+      ([Canvas.vue](src/components/Canvas.vue)). *(Full drag-reorder of groups /
+      nested shapes and dropping the manual field-order input remain.)*
+- [x] **Visual-editor autocomplete (U9):** native `<datalist>` suggestions of
+      common predicates on `sh:path` and common classes on `sh:class` /
+      `sh:targetClass` (`VOCAB_TERMS` / `VOCAB_CLASSES` in
+      [data.ts](src/data.ts)).
+- [x] **Prefix hygiene (U10):** removing a prefix that's still referenced now
+      asks for confirmation ([PrefixEditor.vue](src/components/PrefixEditor.vue)).
+- [x] **Stable group IRIs (U11):** groups carry a minted, unique `iri` that
+      stays fixed across renames; the generator emits it (falling back to a
+      label-derived IRI for legacy data), killing the rename-breakage and
+      collision class of bugs.
 - [ ] **Shape navigator / outline (U8):** sidebar to jump between shapes and
-      large field lists.
-- [ ] **a11y add + reorder (U6, U7):** click/double-click-to-add from the palette
-      and keyboard reordering (today fields can only be added by drag —
-      [Palette.vue:60](src/components/Palette.vue#L60)); drag-reorder groups and
-      nested shapes; **derive `sh:order` from visual position** instead of manual
-      integers ([Inspector.vue:454](src/components/Inspector.vue#L454)).
-- [ ] **Visual-editor autocomplete (U9):** suggest known predicates/classes for
-      `sh:path` / `targetClass` / `sh:class` inputs (the Turtle tab already has
-      this; the visual editor doesn't).
-- [ ] **Prefix hygiene (U10, U11):** warn before deleting an in-use prefix; make
-      group IRIs stable/unique instead of label-derived
-      ([shacl.ts:367](src/shacl.ts#L367)).
+      large field lists. *(Pending.)*
+- [ ] **Peer top-level shapes (F4):** support many independent, mutually-
+      referencing NodeShapes rather than "first shape is primary, rest are
+      nested." **Deliberately deferred** — an XL model rework touching the whole
+      app; the current model already supports multiple shapes (hierarchically),
+      so the ROI doesn't justify destabilizing Phases 1–4 in one pass. Best as a
+      dedicated effort.
 
 ---
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { DATATYPES, NODE_KINDS, WIDGET_BY_ID, newId } from '../data';
+import { DATATYPES, NODE_KINDS, VOCAB_TERMS, VOCAB_CLASSES, WIDGET_BY_ID, newId } from '../data';
 import { useI18n } from '../composables/useI18n';
 import type { Field, Group, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
@@ -183,6 +183,28 @@ function onNumber(e: Event): number | null {
   return v === '' ? null : Number(v);
 }
 
+// Prefixes referenced anywhere in the schema (so the PrefixEditor can warn
+// before removing one that's still in use). sh/dash/rdfs are always emitted.
+const usedPrefixes = computed<string[]>(() => {
+  const used = new Set<string>(['sh', 'dash', 'rdfs']);
+  const add = (term?: string | null) => {
+    if (!term || term.startsWith('<')) return;
+    const c = term.indexOf(':');
+    if (c >= 0) used.add(term.slice(0, c));
+  };
+  const addField = (f: Field) => {
+    add(f.path); add(f.class); add(f.datatype); add(f.node);
+    for (const iv of f.inValues || []) if (iv.kind === 'iri') add(iv.value);
+    for (const ot of f.orTypes || []) { add(ot.datatype); add(ot.nodeKind); add(ot.class); }
+  };
+  const s = props.schema;
+  if (s.schemaDescription) used.add('dct');
+  add(s.shapeIri); add(s.targetClass);
+  for (const g of s.groups) { add(g.iri); g.fields.forEach(addField); }
+  for (const ns of s.nestedShapes || []) { add(ns.iri); add(ns.targetClass); ns.fields.forEach(addField); }
+  return [...used];
+});
+
 // Create a fresh nested shape and link the active DetailsEditor field to it via
 // sh:node — in one undo step. Works for a main field or a nested field.
 function createAndLinkNestedShape() {
@@ -229,6 +251,12 @@ function createAndLinkNestedShape() {
         <Icon name="x" :size="13" />
       </button>
     </div>
+    <datalist id="vocab-terms">
+      <option v-for="o in VOCAB_TERMS" :key="o" :value="o" />
+    </datalist>
+    <datalist id="vocab-classes">
+      <option v-for="o in VOCAB_CLASSES" :key="o" :value="o" />
+    </datalist>
     <div class="panel__body panel__body--snug">
 
       <!-- FIELD INSPECTOR (main or nested) -->
@@ -298,6 +326,7 @@ function createAndLinkNestedShape() {
             <input
               type="text"
               class="mono"
+              list="vocab-terms"
               :value="activeField.path"
               placeholder="dct:title"
               @input="setField('path', ($event.target as HTMLInputElement).value)"
@@ -362,6 +391,7 @@ function createAndLinkNestedShape() {
             <input
               type="text"
               class="mono"
+              list="vocab-classes"
               :value="activeField.class || ''"
               placeholder="foaf:Agent"
               @input="setField('class', ($event.target as HTMLInputElement).value || null)"
@@ -575,6 +605,7 @@ function createAndLinkNestedShape() {
             <input
               type="text"
               class="mono"
+              list="vocab-classes"
               :value="currentNestedShape.targetClass"
               placeholder="foaf:Agent"
               @input="setNestedShape('targetClass', ($event.target as HTMLInputElement).value)"
@@ -677,6 +708,7 @@ function createAndLinkNestedShape() {
             <input
               type="text"
               class="mono"
+              list="vocab-classes"
               :value="schema.targetClass"
               placeholder="dcat:Dataset"
               @input="setSchema('targetClass', ($event.target as HTMLInputElement).value)"
@@ -687,6 +719,7 @@ function createAndLinkNestedShape() {
           <div class="insp-section__title">{{ t('inspector.section.vocabularies') }}</div>
           <PrefixEditor
             :prefixes="schema.prefixes"
+            :used="usedPrefixes"
             @change="(v: Prefix[]) => setSchema('prefixes', v)"
           />
         </div>

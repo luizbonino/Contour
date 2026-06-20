@@ -135,6 +135,26 @@ export const DATATYPES: string[] = [
   'rdf:langString',
 ];
 
+// Curated common predicates/classes for visual-editor autocomplete (native
+// <datalist>). Not exhaustive — just the terms data stewards reach for most.
+export const VOCAB_TERMS: string[] = [
+  'dct:title', 'dct:description', 'dct:identifier', 'dct:issued', 'dct:modified',
+  'dct:publisher', 'dct:creator', 'dct:license', 'dct:rights', 'dct:accessRights',
+  'dct:conformsTo', 'dct:isPartOf', 'dct:hasPart', 'dct:relation', 'dct:subject',
+  'dct:type', 'dct:format', 'dct:language', 'dct:spatial', 'dct:temporal',
+  'dcat:keyword', 'dcat:theme', 'dcat:contactPoint', 'dcat:distribution',
+  'dcat:landingPage', 'dcat:accessURL', 'dcat:downloadURL', 'dcat:mediaType', 'dcat:byteSize',
+  'foaf:name', 'foaf:mbox', 'foaf:homepage', 'foaf:img',
+  'skos:prefLabel', 'skos:altLabel', 'skos:definition', 'skos:broader', 'skos:narrower', 'skos:related', 'skos:notation',
+  'rdfs:label', 'rdfs:comment', 'vcard:fn', 'vcard:hasEmail',
+];
+export const VOCAB_CLASSES: string[] = [
+  'dcat:Dataset', 'dcat:Catalog', 'dcat:Distribution', 'dcat:DataService',
+  'foaf:Agent', 'foaf:Person', 'foaf:Organization',
+  'skos:Concept', 'skos:ConceptScheme', 'vcard:Kind',
+  'dct:Standard', 'dct:LicenseDocument', 'dct:Location', 'dct:PeriodOfTime',
+];
+
 export const NODE_KINDS: string[] = [
   'sh:Literal',
   'sh:IRI',

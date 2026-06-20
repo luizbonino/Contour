@@ -111,12 +111,22 @@ describe('generateShacl – PropertyGroups', () => {
     expect(out).toContain('rdfs:label "Provenance"');
   });
 
-  it('uses the group label to derive the group IRI', () => {
+  it('uses the group label to derive the group IRI when none is stored', () => {
     const schema = baseSchema({
       groups: [{ id: 'g1', label: 'My Group', order: 0, fields: [] }],
     });
     const out = generateShacl(schema);
     expect(out).toContain(':MyGroupGroup');
+  });
+
+  it('uses a stored group IRI verbatim (stable across renames)', () => {
+    const schema = baseSchema({
+      groups: [{ id: 'g1', iri: ':OriginalGroup', label: 'Renamed Label', order: 0, fields: [field()] }],
+    });
+    const out = generateShacl(schema);
+    expect(out).toContain(':OriginalGroup');
+    expect(out).toContain('sh:group :OriginalGroup');
+    expect(out).not.toContain(':RenamedLabelGroup');
   });
 });
 

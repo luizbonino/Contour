@@ -95,6 +95,9 @@ export interface Field {
 
 export interface Group {
   id: string;
+  // Stable IRI, minted once and unchanged on rename (avoids collisions and
+  // broken sh:group references). Falls back to a label-derived IRI when unset.
+  iri?: string;
   label: string;
   order: number;
   fields: Field[];
