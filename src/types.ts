@@ -128,6 +128,24 @@ export interface Schema {
   residual?: string;
 }
 
+// ── F4 peer-shapes model (foundation; not yet the store's source of truth) ──
+// Every NodeShape is a first-class peer with its own groups. The current
+// Schema's primary shape + flat nestedShapes collapse into this in F4.2.
+export interface NodeShape {
+  id: string;
+  iri: string;
+  targetClass: string;
+  name: string;        // rdfs:label
+  description: string; // dct:description
+  groups: Group[];
+}
+
+export interface ShapesDoc {
+  prefixes: Prefix[];
+  shapes: NodeShape[];
+  residual?: string;
+}
+
 export type SelectedKind = 'schema' | 'field' | 'group' | 'nested-shape' | 'nested-field';
 
 export type Mutator = (draft: Schema) => void;

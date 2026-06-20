@@ -294,7 +294,54 @@ Made the Form Preview honest and nested shapes easy to wire up. Shipped.
       nested." **Deliberately deferred** — an XL model rework touching the whole
       app; the current model already supports multiple shapes (hierarchically),
       so the ROI doesn't justify destabilizing Phases 1–4 in one pass. Best as a
-      dedicated effort.
+      dedicated effort — see the **F4 design** below.
+
+---
+
+## F4 — Peer top-level shapes (design + phasing)
+
+**Problem.** Today the model has an *implicit primary shape* (the `Schema`
+top-level `shapeIri`/`targetClass`/`schemaName`/`groups`) plus second-class
+`nestedShapes` (flat, no groups, chosen by document order). Real FAIR/DCAT-AP
+schemas are **graphs of equal, mutually-referencing shapes** (Catalog → Dataset
+→ Distribution → DataService + Agent/Kind). The current model misrepresents
+them and denies non-primary shapes groups.
+
+**Target model** — unify into a `shapes[]` array, every shape first-class:
+
+```ts
+interface NodeShape { id; iri; targetClass; name; description; groups: Group[] }
+interface ShapesDoc { prefixes: Prefix[]; shapes: NodeShape[]; residual?: string }
+// Schema's schemaName/shapeIri/targetClass/groups/nestedShapes collapse into shapes[].
+```
+
+**Key decisions.** "Nested" dissolves — there are just shapes, cross-referenced
+by `sh:node` (the FormPreview recursion already resolves by IRI, so it
+generalizes for free). No "primary" in the data — which shape is shown is **UI
+focus state**. Selection collapses 5 kinds → 3 (`shape`/`group`/`field`).
+Residual stays document-level + per-shape-by-IRI. **U8 (navigator) falls out**
+as the shape list.
+
+**Phasing.**
+
+- [x] **F4.1 — model + adapters + parse/generate wrappers + tests** ✅:
+      purely additive `NodeShape`/`ShapesDoc` types, lossless
+      `shapesFromLegacy`/`legacyFromShapes` adapters, and thin
+      `parseToShapes`/`generateFromShapes` over the existing proven path. The
+      live `Schema`, store, UI, and existing tests are untouched (the new code
+      is tree-shaken out of the shipped bundle — `dist` byte-identical). Verified
+      by [shapes.adapter.test.ts](src/__tests__/shapes.adapter.test.ts) (adapter
+      identity + a 3-peer-shape round-trip). `npm test` **147/147**.
+- [ ] **F4.2 — UI + store flip:** generalize the N3 parser to group fields on
+      *every* shape; make `ShapesDoc` the store's source of truth (with a
+      `migrate(old)` for drafts/examples); shape navigator; per-shape canvas;
+      unified Inspector; `focusedShapeId`. The bulk of the cost. **L–XL.**
+- [ ] **F4.3 — preview per-shape, polish, guide.** **M.**
+
+**Recommendation.** Worth it for the FDP ecosystem (multi-shape packages are the
+norm), phased. F4.1 is safe to land now; **gate F4.2** on confirming multi-shape
+editing is a real user workflow, since that's where the cost and the core-UX
+reshape concentrate.
 
 ---
 
