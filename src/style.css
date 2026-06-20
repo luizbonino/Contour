@@ -1590,6 +1590,58 @@ button {
   color: #8a6d00;
 }
 
+/* ---------- Language-tagged label field ---------- */
+.lang-field {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.lang-field > input:first-child,
+.lang-field > textarea {
+  flex: 1;
+  min-width: 0;
+}
+.lang-field__tag {
+  flex: 0 0 56px;
+  width: 56px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+.trans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.trans-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.trans-row__lang {
+  flex: 0 0 48px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent-darker);
+}
+.trans-row__val {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trans-row--draft .trans-row__lang-input {
+  flex: 0 0 48px;
+  width: 48px;
+  font-family: var(--font-mono);
+}
+.trans-row--draft input:not(.trans-row__lang-input) {
+  flex: 1;
+  min-width: 0;
+}
+
 /* ---------- RDF syntax selector ---------- */
 .syntax-select {
   display: inline-flex;

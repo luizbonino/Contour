@@ -33,7 +33,7 @@ engine that can **ingest and emit multiple RDF syntaxes**.
 | 1 — Safety & correctness quick-wins | undo, autosave, bug fixes, linting, ranges | ✅ Done |
 | 2 — RDF engine + multi-syntax + lossless round-trip | real parser, syntax toggle, preserve-unknown | ✅ Done |
 | 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ✅ Done |
-| 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ⬜ Not started |
+| 4 — Expressiveness | language tags, sh:or / qualified, rich paths | 🟡 F8 done; F6/F9 pending |
 | 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | ⬜ Not started |
 | 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | ⬜ Not started |
 
@@ -231,16 +231,26 @@ Made the Form Preview honest and nested shapes easy to wire up. Shipped.
 
 ---
 
-## Phase 4 — Expressiveness ⬜
+## Phase 4 — Expressiveness 🟡
 
-- [ ] **Language-tagged labels (F8):** repeatable `sh:name`/`sh:description` with
-      `@lang`; model `rdf:langString` + `sh:languageIn`; per-label language UI.
+- [x] **Language-tagged labels (F8):** ✅ repeatable `sh:name`/`sh:description`
+      with `@lang`. `Field` carries `nameLang`/`descriptionLang` for the primary
+      label plus `nameI18n`/`descriptionI18n` translation lists
+      ([types.ts](src/types.ts)); the parser collects every literal with its
+      language tag and the generator emits one `sh:name`/`sh:description` per
+      language ([shacl.ts](src/shacl.ts)). Authored in the Inspector via an
+      inline language-tag input + a [`TranslationsEditor`](src/components/TranslationsEditor.vue).
+      Backward-compatible: untagged labels stay untagged (existing output
+      unchanged). Verified by round-trip tests.
+      > Remaining within F8 (minor follow-up): schema-level `rdfs:label` /
+      > `dct:description` language tags, and modeling `sh:languageIn`.
 - [ ] **Logical constraints (F6):** `sh:or` / `sh:xone` / `sh:and` / `sh:not`,
       starting with the common "literal **or** IRI" and "one-of shapes" patterns;
       qualified value shapes (`sh:qualifiedValueShape` + min/max counts).
+      *(Still safely preserved via the Phase 2 residual graph until modeled.)*
 - [ ] **Rich paths (F9):** `sh:inversePath`, sequence, and alternative paths in a
-      path editor (today `sh:path` is a single token,
-      [types.ts:31](src/types.ts#L31)).
+      path editor (today `sh:path` is a single token).
+      *(Complex-path properties are currently preserved verbatim via residual.)*
 
 ---
 

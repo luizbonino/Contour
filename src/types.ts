@@ -13,6 +13,14 @@ export interface InValue {
   kind: 'literal' | 'iri';
 }
 
+// A language-tagged string (rdf:langString). `lang` is a BCP-47 tag (e.g. 'en',
+// 'pt-BR'); '' is never stored here — untagged primary values use the field's
+// plain value + its *Lang property.
+export interface LangValue {
+  value: string;
+  lang: string;
+}
+
 export interface WidgetDefaults {
   nodeKind?: NodeKind;
   datatype?: string;
@@ -35,6 +43,12 @@ export interface Field {
   widgetId: string;
   name: string;
   description: string;
+  // Optional language tags for the primary name/description (sh:name/sh:description
+  // as rdf:langString), plus any additional translations. Empty/unset → untagged.
+  nameLang?: string;
+  descriptionLang?: string;
+  nameI18n?: LangValue[];
+  descriptionI18n?: LangValue[];
   path: string;
   order: number;
   nodeKind: NodeKind | null;
