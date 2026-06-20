@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contour — Data steward guide</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJDb250b3VyIj4KICAKICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMUIyQTRBIj48L3JlY3Q+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjUuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0gNjYuMjEgNjcuNzAgQSAyNCAyNCAwIDEgMSA2Ni4yMSAzMi4zMCI+PC9wYXRoPgogICAgPHBhdGggZD0iTSA1OS40NiA2MC4zMiBBIDE0IDE0IDAgMSAxIDU5LjQ2IDM5LjY4Ij48L3BhdGg+CiAgPC9nPgogIDxwYXRoIGQ9Ik0gNzIuOTcgNzUuMDcgTCA0My44MSA4My40MyBMIDE5LjU3IDY1LjE3IEwgMTkuNTcgMzQuODMgTCA0My44MSAxNi41NyBMIDcyLjk3IDI0LjkzIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQkIzQUIiIHN0cm9rZS13aWR0aD0iMy40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjwvcGF0aD4KICA8ZyBmaWxsPSIjMkJCM0FCIj4KICAgIDxjaXJjbGUgY3g9IjcyLjk3IiBjeT0iNzUuMDciIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjgzLjQzIiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iMTkuNTciIGN5PSI2NS4xNyIgcj0iNC42Ij48L2NpcmNsZT4KICAgIDxjaXJjbGUgY3g9IjE5LjU3IiBjeT0iMzQuODMiIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjE2LjU3IiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iNzIuOTciIGN5PSIyNC45MyIgcj0iNC42Ij48L2NpcmNsZT4KICA8L2c+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1b2a4a; --accent: #0e7c7b; --accent-dark: #0a5f5e;
+    --sand: #eae7e0; --card: #fcfbf8; --border: #e4e0d6;
+    --text: #3a3d45; --muted: #8a8c94; --code-bg: #faf8f3;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--sand); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: var(--card);
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px; }
+  .topbar svg { height: 30px; width: 30px; display: block; }
+  .topbar .wm { font-family: var(--sans); font-weight: 600; font-size: 18px;
+    letter-spacing: -0.015em; color: var(--ink); }
+  .topbar .tag { font-family: var(--mono); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+  .topbar .spacer { flex: 1; }
+  .topbar a.app { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
+  .topbar a.app:hover { border-color: var(--accent); color: var(--accent-dark); }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
+  main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
+  main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
+    padding-top: 14px; border-top: 1px solid var(--border); }
+  main h3 { font-size: 18px; color: var(--ink); margin: 28px 0 8px; }
+  main h4 { font-size: 15px; color: var(--ink); margin: 22px 0 6px; }
+  a { color: var(--accent-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p, li { font-size: 16px; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--ink); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,32,60,.06); margin: 12px 0; }
+  blockquote { margin: 16px 0; padding: 10px 16px; background: var(--card);
+    border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; }
+  blockquote p { margin: 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-size: 14px; }
+  th { background: var(--code-bg); color: var(--ink); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+  :target { scroll-margin-top: 70px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" role="img" aria-label="Contour">
+  
+  <g stroke="#1B2A4A" stroke-width="5.5" stroke-linecap="round">
+    <path d="M 66.21 67.70 A 24 24 0 1 1 66.21 32.30"></path>
+    <path d="M 59.46 60.32 A 14 14 0 1 1 59.46 39.68"></path>
+  </g>
+  
+  <path d="M 72.97 75.07 L 43.81 83.43 L 19.57 65.17 L 19.57 34.83 L 43.81 16.57 L 72.97 24.93" stroke="#0E7C7B" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"></path>
+  <g fill="#0E7C7B">
+    <circle cx="72.97" cy="75.07" r="4.6"></circle>
+    <circle cx="43.81" cy="83.43" r="4.6"></circle>
+    <circle cx="19.57" cy="65.17" r="4.6"></circle>
+    <circle cx="19.57" cy="34.83" r="4.6"></circle>
+    <circle cx="43.81" cy="16.57" r="4.6"></circle>
+    <circle cx="72.97" cy="24.93" r="4.6"></circle>
+  </g>
+</svg>
+    <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
+    <div class="spacer"></div>
+    <a class="app" href="../" target="_blank" rel="noopener">Open the editor ↗</a>
+  </div>
+  <main>
+<h1 id="creating-metadata-schemas--a-guide-for-data-stewards">Creating Metadata Schemas — A Guide for Data Stewards</h1>
+<p><strong>Contour</strong> lets you design custom metadata schemas visually —
+by dragging form widgets onto a canvas — and exports them as standards-compliant
+<a href="https://www.w3.org/TR/shacl/">SHACL</a> shapes with <a href="https://datashapes.org/forms.html">DASH</a>
+form annotations. The output drops straight into a
+<a href="https://fairdatapoint.org/">FAIR Data Point</a> or any SHACL-aware platform.</p>
+<blockquote>
+<p><em>Contour&#39;s tagline: <strong>Visual schemas. Clean SHACL.</strong></em></p>
+</blockquote>
+<p>This guide is written for <strong>data stewards</strong> who want to define what metadata
+their community must (or may) provide for a given type of resource — a dataset,
+a study, a sample, a software package — without hand-writing Turtle.</p>
+<blockquote>
+<p><strong>No installation, no server.</strong> The editor is a single self-contained web page.
+Open it in Chrome or Edge (recommended, for direct file save) — Firefox and
+Safari work too, with a download-style save.</p>
+</blockquote>
+<hr>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-what-you-are-building-key-concepts">What you are building (key concepts)</a></li>
+<li><a href="#2-the-interface-at-a-glance">The interface at a glance</a></li>
+<li><a href="#3-tutorial-build-a-dataset-schema-from-scratch">Tutorial: build a <em>Dataset</em> schema from scratch</a><ul>
+<li><a href="#step-1--define-the-schema-identity">Step 1 — Define the schema identity</a></li>
+<li><a href="#step-2--manage-vocabularies-prefixes">Step 2 — Manage vocabularies (prefixes)</a></li>
+<li><a href="#step-3--organise-the-form-into-groups">Step 3 — Organise the form into groups</a></li>
+<li><a href="#step-4--add-your-first-property-a-text-field">Step 4 — Add your first property (a text field)</a></li>
+<li><a href="#step-5--set-cardinality-and-validation-constraints">Step 5 — Set cardinality and validation constraints</a></li>
+<li><a href="#step-6--add-a-multi-line-description">Step 6 — Add a multi-line description</a></li>
+<li><a href="#step-7--add-a-date-property">Step 7 — Add a date property</a></li>
+<li><a href="#step-8--add-a-controlled-vocabulary-enumeration">Step 8 — Add a controlled vocabulary (enumeration)</a></li>
+<li><a href="#step-9--reference-another-entity-iri--class">Step 9 — Reference another entity (IRI + class)</a></li>
+<li><a href="#step-10--model-a-sub-object-with-a-nested-shape">Step 10 — Model a sub-object with a nested shape</a></li>
+<li><a href="#step-11--preview-the-data-entry-form">Step 11 — Preview the data-entry form</a></li>
+<li><a href="#step-12--review-the-generated-shacl">Step 12 — Review the generated SHACL</a></li>
+<li><a href="#step-13--save-and-export">Step 13 — Save and export</a></li>
+</ul>
+</li>
+<li><a href="#4-working-directly-with-turtle-the-shacl-code-tab">Working directly with Turtle (the SHACL Code tab)</a></li>
+<li><a href="#5-reference">Reference</a><ul>
+<li><a href="#widget-catalogue">Widget catalogue</a></li>
+<li><a href="#property-settings-reference">Property settings reference</a></li>
+</ul>
+</li>
+<li><a href="#6-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
+<li><a href="#7-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
+</ol>
+<hr>
+<h2 id="1-what-you-are-building-key-concepts">1. What you are building (key concepts)</h2>
+<p>A metadata schema in this tool is a <strong>SHACL NodeShape</strong>: a description of what a
+valid record of a given kind looks like. A few terms you will meet throughout:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>What it means for you</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NodeShape</strong></td>
+<td>The schema itself — e.g. &quot;what a Dataset record must contain&quot;.</td>
+</tr>
+<tr>
+<td><strong>Target class</strong> (<code>sh:targetClass</code>)</td>
+<td>The RDF type the schema applies to, e.g. <code>dcat:Dataset</code>. Records of this type are validated against your schema.</td>
+</tr>
+<tr>
+<td><strong>Property</strong> (<code>sh:property</code>)</td>
+<td>A single field — title, publisher, issue date, … Each property has a <em>path</em>, a <em>widget</em>, and <em>constraints</em>.</td>
+</tr>
+<tr>
+<td><strong>Property path</strong> (<code>sh:path</code>)</td>
+<td>The RDF predicate the field writes to, e.g. <code>dct:title</code>. This is the actual term stored in the metadata.</td>
+</tr>
+<tr>
+<td><strong>Widget</strong> (<code>dash:editor</code>)</td>
+<td>The form control shown to the person filling in metadata — a text box, a date picker, a drop-down, etc.</td>
+</tr>
+<tr>
+<td><strong>Group</strong> (<code>sh:PropertyGroup</code>)</td>
+<td>A visual section that bundles related fields, e.g. &quot;General information&quot;.</td>
+</tr>
+<tr>
+<td><strong>Prefix</strong> (<code>@prefix</code>)</td>
+<td>A short alias for a vocabulary namespace, e.g. <code>dct:</code> → <code>http://purl.org/dc/terms/</code>.</td>
+</tr>
+</tbody></table>
+<p>You design all of this visually; the tool writes the SHACL for you.</p>
+<hr>
+<h2 id="2-the-interface-at-a-glance">2. The interface at a glance</h2>
+<p><img src="images/interface-overview.png" alt="Contour with the example Dataset schema loaded"></p>
+<p>The window has three tabs:</p>
+<p><img src="images/tabs.png" alt="The three tabs: SHACL Code, Visual Editor, Form Preview"></p>
+<ul>
+<li><strong>SHACL Code</strong> — the raw SHACL Turtle, with autocomplete. Edits here sync back
+to the visual canvas. This is also where files you open are shown.</li>
+<li><strong>Visual Editor</strong> — the drag-and-drop workbench (shown above). This is where
+most of your work happens.</li>
+<li><strong>Form Preview</strong> — a realistic rendering of the data-entry form your schema
+produces, so you can test the experience before publishing.</li>
+</ul>
+<p>The <strong>Visual Editor</strong> is split into three columns:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Widgets</strong> (left)</td>
+<td>The palette of form controls you drag onto the canvas.</td>
+</tr>
+<tr>
+<td><strong>Form canvas</strong> (centre)</td>
+<td>Your schema: the target banner, groups, properties, and nested shapes.</td>
+</tr>
+<tr>
+<td><strong>Inspector</strong> (right)</td>
+<td>Settings for whatever is currently selected — the schema, a group, or a property.</td>
+</tr>
+</tbody></table>
+<p>Below the workbench is an actions bar with a property/group counter and Save
+buttons. To see the generated Turtle, switch to the <strong>SHACL Code</strong> tab; to see
+the rendered form, switch to <strong>Form Preview</strong>.</p>
+<p>The header holds the file actions — <strong>New</strong>, <strong>Examples</strong>, <strong>Open</strong>, <strong>Save</strong>,
+<strong>Save As</strong> — plus the language toggle and a <strong>Guide</strong> link:</p>
+<p><img src="images/file-toolbar.png" alt="New, Examples, Open, Save, and Save As buttons in the header"></p>
+<h3 id="interface-language">Interface language</h3>
+<p>Contour&#39;s interface is available in <strong>English</strong> (default) and <strong>Brazilian
+Portuguese</strong>. Switch with the <strong>EN / PT</strong> toggle in the header — your choice is
+remembered between sessions. Only the interface is translated; your schema
+content (names, descriptions, property paths) and the generated SHACL are never
+altered, so the exported Turtle is identical in either language.</p>
+<p><img src="images/interface-overview-ptbr.png" alt="Contour interface in Brazilian Portuguese"></p>
+<hr>
+<h2 id="3-tutorial-build-a-dataset-schema-from-scratch">3. Tutorial: build a <em>Dataset</em> schema from scratch</h2>
+<p>We will build a <a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT</a>-style <strong>Dataset</strong>
+metadata schema. Each step introduces one feature of the tool, and by the end
+you will have touched every major capability.</p>
+<p>Contour <strong>starts blank</strong> so you can build your own schema from scratch — the
+page title reads <em>New metadata schema</em> until you name it. If you&#39;d rather explore
+a finished schema, the <strong>Examples</strong> menu in the header loads ready-made
+templates (Dataset, Agent, Concept); the <em>Dataset</em> example matches what we build
+below:</p>
+<p><img src="images/examples-menu.png" alt="The Examples menu with Dataset, Agent, and Concept templates"></p>
+<blockquote>
+<p>Throughout, switch to the <strong>Visual Editor</strong> tab to do the work. To begin a
+fresh schema at any time, use the <strong>New</strong> button.</p>
+</blockquote>
+<h3 id="step-1--define-the-schema-identity">Step 1 — Define the schema identity</h3>
+<p>Click the <strong>schema banner</strong> at the top of the canvas (it reads <em>Untitled schema</em>
+until you name it), or the <strong>Schema settings</strong> button. The Inspector switches to
+schema-level settings:</p>
+<p><img src="images/schema-settings.png" alt="Schema settings in the Inspector: name, description, shape IRI, target class, and prefixes"></p>
+<p>Fill in:</p>
+<ul>
+<li><strong>Schema name</strong> — a human label, e.g. <code>Dataset</code>. (Once set, the page title
+changes from <em>New metadata schema</em> to <em>Edit Dataset</em>; name it for any domain —
+an ontology class, a catalog — and the title follows.)</li>
+<li><strong>Description</strong> — a sentence describing the schema&#39;s purpose.</li>
+<li><strong>Shape IRI</strong> — the identifier of the shape, e.g. <code>:DatasetShape</code>. The leading
+<code>:</code> uses your default namespace; you can leave the suggested value.</li>
+<li><strong>Target class</strong> (<code>sh:targetClass</code>) — the RDF class this schema validates, e.g.
+<code>dcat:Dataset</code>. <strong>This is required</strong> for the schema to be useful — it is what
+tells a platform &quot;apply these rules to Dataset records&quot;.</li>
+</ul>
+<h3 id="step-2--manage-vocabularies-prefixes">Step 2 — Manage vocabularies (prefixes)</h3>
+<p>Still in schema settings, scroll to <strong>Vocabularies</strong>. Prefixes let you write
+short terms like <code>dct:title</code> instead of full URLs.</p>
+<p>The editor ships with the common ones already declared — <code>sh</code>, <code>dash</code>, <code>rdf</code>,
+<code>rdfs</code>, <code>xsd</code>, <code>dcat</code>, <code>dct</code>, <code>foaf</code>, and the default empty prefix <code>:</code>. To add
+your own (for example a domain vocabulary):</p>
+<ol>
+<li>In the empty row at the bottom of the prefix table, type the <strong>alias</strong> (e.g.
+<code>vcard</code>) in the first box.</li>
+<li>Type the <strong>namespace URL</strong> (e.g. <code>http://www.w3.org/2006/vcard/ns#</code>) in the
+second box.</li>
+<li>Press <strong>Enter</strong> or click the <strong>+</strong> button.</li>
+</ol>
+<p>Remove a prefix with the <strong>×</strong> next to it. Any prefix you use in a property path
+or class should be declared here so the exported Turtle is valid.</p>
+<h3 id="step-3--organise-the-form-into-groups">Step 3 — Organise the form into groups</h3>
+<p>Groups (<code>sh:PropertyGroup</code>) are the sections of your form. On a blank canvas you
+can simply <strong>drag your first widget onto the canvas</strong> and Contour creates the
+first group for you — or click <strong>Add group</strong> (top-right of the canvas) to make an
+empty section to drop into:</p>
+<p><img src="images/blank-start.png" alt="The blank canvas, ready for your first widget"></p>
+<ul>
+<li><strong>Rename</strong> a group by clicking its title and typing — e.g. <code>General information</code>.</li>
+<li><strong>Reorder</strong> by setting the group&#39;s <strong>Order</strong> in the Inspector (select the group
+header first).</li>
+<li><strong>Delete</strong> with the trash icon on the group header.</li>
+</ul>
+<p>For this tutorial, create two groups: <strong>General information</strong> and <strong>Provenance</strong>.</p>
+<h3 id="step-4--add-your-first-property-a-text-field">Step 4 — Add your first property (a text field)</h3>
+<p>From the <strong>Widgets</strong> palette on the left, <strong>drag</strong> a <strong>Text field</strong> onto the
+<em>General information</em> group. Widgets are organised by category (Text, References,
+Choice, Date &amp; number) and searchable via the box at the top.</p>
+<p><img src="images/widget-palette.png" alt="The widget palette grouped by category"></p>
+<p>When you drop a widget, it becomes a property card on the canvas and is selected
+automatically. A property card shows its label, path, type, and status badges
+(a red dot for required, a &quot;multi&quot; badge for repeatable):</p>
+<p><img src="images/field-card.png" alt="A property card on the canvas"></p>
+<p>Each card has handles to <strong>drag-reorder</strong> (the grip on the left), <strong>duplicate</strong>,
+and <strong>delete</strong> (the icons on the right, on hover).</p>
+<p>With the new field selected, the Inspector shows its <strong>Property settings</strong>. Set:</p>
+<ul>
+<li><strong>Label (<code>sh:name</code>)</strong> → <code>Title</code> — the field label shown to users.</li>
+<li><strong>Description</strong> → optional help text (appears as an ⓘ tooltip on the form).</li>
+<li><strong>Property path (<code>sh:path</code>)</strong> → <code>dct:title</code> — <strong>the RDF term this field writes</strong>.
+Always set this; the default placeholder path is not meaningful.</li>
+</ul>
+<p><img src="images/field-inspector.png" alt="The property Inspector with Basic, Constraints, and Defaults sections"></p>
+<h3 id="step-5--set-cardinality-and-validation-constraints">Step 5 — Set cardinality and validation constraints</h3>
+<p>The <strong>Constraints</strong> section of the Inspector controls validation. For <em>Title</em>:</p>
+<ul>
+<li><strong>Min count</strong> = <code>1</code>, <strong>Max count</strong> = <code>1</code> → exactly one title is required.
+(Min count ≥ 1 makes the field required — note the red dot on the card and the
+red asterisk in the form preview.)</li>
+<li><strong>Node kind</strong> = <code>sh:Literal</code> (a plain value rather than a link).</li>
+<li><strong>Datatype</strong> = <code>xsd:string</code>.</li>
+<li>Optionally <strong>Min/Max length</strong> and a <strong>Pattern</strong> (a regular expression, e.g.
+<code>^[A-Z].*</code> to require an initial capital).</li>
+</ul>
+<blockquote>
+<p><strong>Cardinality cheat-sheet:</strong> <em>Min 1 / Max 1</em> = required, single value.
+<em>Min 0 / Max 1</em> = optional, single value. <em>Min 1 / Max ∞</em> (leave Max empty) =
+required, repeatable. <em>Min 0 / Max ∞</em> = optional, repeatable.</p>
+</blockquote>
+<h3 id="step-6--add-a-multi-line-description">Step 6 — Add a multi-line description</h3>
+<p>Drag a <strong>Text area</strong> into <em>General information</em>. Set:</p>
+<ul>
+<li><strong>Label</strong> → <code>Description</code>, <strong>Path</strong> → <code>dct:description</code>.</li>
+<li><strong>Min count</strong> = <code>1</code>, leave <strong>Max count</strong> empty (∞) so multiple
+language variants can be provided. The card now shows a <strong>multi</strong> badge, and
+the form preview gains a <strong>+ Add</strong> button.</li>
+</ul>
+<h3 id="step-7--add-a-date-property">Step 7 — Add a date property</h3>
+<p>Drag a <strong>Date picker</strong> into <em>General information</em>. Set:</p>
+<ul>
+<li><strong>Label</strong> → <code>Issued</code>, <strong>Path</strong> → <code>dct:issued</code>.</li>
+<li><strong>Min count</strong> = <code>0</code>, <strong>Max count</strong> = <code>1</code> (optional, single).</li>
+<li>The datatype defaults to <code>xsd:date</code>, which is correct for a calendar date.
+(Use <strong>Date &amp; time</strong> instead if you need a timestamp — <code>xsd:dateTime</code>.)</li>
+</ul>
+<h3 id="step-8--add-a-controlled-vocabulary-enumeration">Step 8 — Add a controlled vocabulary (enumeration)</h3>
+<p>Switch to the <em>Provenance</em> group and drag an <strong>Enumeration</strong> widget in. This
+creates a drop-down restricted to a fixed list of values (<code>sh:in</code>).</p>
+<p>In the Inspector, an <strong>Allowed values</strong> editor appears:</p>
+<p><img src="images/enum-inspector.png" alt="The Enumeration property Inspector with the Allowed values (sh:in) editor"></p>
+<ul>
+<li><strong>Label</strong> → <code>Access rights</code>, <strong>Path</strong> → <code>dct:accessRights</code>.</li>
+<li>In <strong>Allowed values</strong>, type each option and press <strong>Enter</strong>: <code>public</code>,
+<code>restricted</code>, <code>private</code>. Remove one with its <strong>×</strong>.</li>
+<li>Min/Max count <code>1</code>/<code>1</code> to require exactly one choice.</li>
+</ul>
+<p>The values are exported as <code>sh:in ( &quot;public&quot; &quot;restricted&quot; &quot;private&quot; )</code>.</p>
+<h3 id="step-9--reference-another-entity-iri--class">Step 9 — Reference another entity (IRI + class)</h3>
+<p>Some properties point to <em>another resource</em> rather than holding a plain value —
+for example the dataset&#39;s <strong>publisher</strong> is an organisation, not a string. Drag an
+<strong>Auto-complete</strong> widget into <em>Provenance</em>. This renders a search box that looks
+up existing instances.</p>
+<p><img src="images/iri-class-inspector.png" alt="The Inspector for an IRI-valued property with a Class (sh:class) constraint"></p>
+<ul>
+<li><strong>Label</strong> → <code>Publisher</code>, <strong>Path</strong> → <code>dct:publisher</code>.</li>
+<li><strong>Node kind</strong> = <code>sh:IRI</code> (the value is a link/identifier).</li>
+<li><strong>Class (<code>sh:class</code>)</strong> → <code>foaf:Agent</code> — restricts the picker to instances of
+that class. (The <strong>Class</strong> box only appears when the node kind is IRI-based.)</li>
+<li>Min/Max count <code>1</code>/<code>1</code>.</li>
+</ul>
+<blockquote>
+<p>Other reference widgets: <strong>URI</strong> (free-form link), <strong>Instances select</strong> (a
+drop-down of instances). Use whichever fits how the value is chosen.</p>
+</blockquote>
+<h3 id="step-10--model-a-sub-object-with-a-nested-shape">Step 10 — Model a sub-object with a nested shape</h3>
+<p>Sometimes a field is itself a small structured object. A <strong>contact point</strong>, for
+instance, has its own <em>name</em> and <em>email</em>. Model this with a <strong>nested shape</strong> and
+the <strong>Details (nested)</strong> widget.</p>
+<ol>
+<li>At the bottom of the canvas, click <strong>Add nested shape</strong>. A new shape appears
+under the <em>Nested shapes</em> divider and is selected. In the Inspector set its
+<strong>Shape IRI</strong> (e.g. <code>:ContactShape</code>) and optionally a <strong>Target class</strong> (e.g.
+<code>vcard:Kind</code>). <em>Renaming the IRI automatically updates every property that
+references it.</em></li>
+<li><strong>Drag widgets onto the nested shape</strong> just like a group — e.g. a <strong>Text
+field</strong> <code>Full name</code> (<code>vcard:fn</code>) and a <strong>URI</strong> <code>Email</code> (<code>vcard:hasEmail</code>).</li>
+<li>Back in a group, drag in a <strong>Details (nested)</strong> widget. In its Inspector, set
+<strong>Nested shape (<code>sh:node</code>)</strong> to <code>:ContactShape</code> (the box offers your nested
+shapes as suggestions).</li>
+</ol>
+<p><img src="images/nested-canvas.png" alt="A schema with a Details property and a populated nested ContactShape"></p>
+<p>The Details property&#39;s Inspector links it to the nested shape via <code>sh:node</code>:</p>
+<p><img src="images/details-inspector.png" alt="The Details property Inspector showing the Nested shape (sh:node) setting"></p>
+<p>The nested shape card on the canvas holds its own properties:</p>
+<p><img src="images/nested-shape-card.png" alt="The nested shape card with its Full name and Email properties"></p>
+<h3 id="step-11--preview-the-data-entry-form">Step 11 — Preview the data-entry form</h3>
+<p>At any point, open the <strong>Form Preview</strong> tab to check what the person entering
+metadata will see. Required fields show a red asterisk, descriptions become ⓘ
+tooltips, repeatable fields get <strong>+ Add</strong> buttons, and <strong>Details</strong> properties
+render their nested shape&#39;s fields inline:</p>
+<p><img src="images/form-preview-tab.png" alt="The rendered form preview, including an inline nested Contact form"></p>
+<p>This preview is read-only — it is there to validate the design, not to capture
+real data.</p>
+<h3 id="step-12--review-the-generated-shacl">Step 12 — Review the generated SHACL</h3>
+<p>The <strong>SHACL Code</strong> tab shows the Turtle generated from your design (and lets you
+edit it directly):</p>
+<p><img src="images/shacl-code-tab.png" alt="The SHACL Code tab showing the generated Turtle"></p>
+<p>Everything you configured visually is here — <code>@prefix</code> declarations, the
+<code>PropertyGroup</code>s, the <code>NodeShape</code> with its <code>sh:property</code> blocks, and any nested
+shapes. The <strong>Copy SHACL</strong> button in the Visual Editor&#39;s actions bar puts the
+Turtle on your clipboard.</p>
+<h3 id="step-13--save-and-export">Step 13 — Save and export</h3>
+<p>Save your schema as a <code>.ttl</code> file:</p>
+<ul>
+<li><strong>Save As…</strong> — choose a new file name and location.</li>
+<li><strong>Save</strong> — write back to the file you last opened/saved (Ctrl/Cmd+S). The
+button briefly shows <strong>Saved!</strong> to confirm.</li>
+<li><strong>Copy SHACL</strong> — copy the Turtle without saving a file.</li>
+</ul>
+<blockquote>
+<p>In Chrome/Edge the file is written directly to disk. In Firefox/Safari the
+editor falls back to a normal download. The suggested file name is derived from
+the schema name (e.g. <code>dataset.ttl</code>).</p>
+</blockquote>
+<p>Upload the resulting <code>.ttl</code> to your FAIR Data Point (or other SHACL platform) as
+a metadata schema, and records of the target class will be validated — and forms
+rendered — according to your design.</p>
+<hr>
+<h2 id="4-working-directly-with-turtle-the-shacl-code-tab">4. Working directly with Turtle (the SHACL Code tab)</h2>
+<p>Prefer to write or paste SHACL by hand, or need to start from an existing shape?
+Use the <strong>SHACL Code</strong> tab.</p>
+<p><img src="images/shacl-code-tab.png" alt="The SHACL Code tab with the raw SHACL Turtle editor"></p>
+<ul>
+<li><strong>Two-way sync.</strong> Edits to the Turtle are parsed and pushed back to the Visual
+Editor automatically (after you pause typing). Conversely, anything you build
+visually appears here.</li>
+<li><strong>Context-aware autocomplete.</strong> As you type, the editor suggests SHACL
+predicates, node kinds, XSD datatypes, DASH editors, declared property groups,
+and <code>@prefix</code> lines. Use <strong>↑/↓</strong> to move, <strong>Tab</strong>/<strong>Enter</strong> to accept,
+<strong>Esc</strong> to dismiss.</li>
+</ul>
+<p><img src="images/turtle-autocomplete.png" alt="Turtle autocomplete suggesting sh:datatype"></p>
+<ul>
+<li><strong>Open an existing file.</strong> <strong>Open…</strong> in the header loads a <code>.ttl</code>/<code>.shacl</code>
+file into this tab and parses it into the Visual Editor — a fast way to adapt
+an existing schema. If a file can&#39;t be parsed, an inline message points to the
+problem line; you can still edit the raw text.</li>
+<li><strong>Name &amp; Description</strong> for the schema also have plain inputs at the top of this
+tab.</li>
+</ul>
+<p>Click <strong>Open in Visual Editor</strong> to jump back to the drag-and-drop view.</p>
+<hr>
+<h2 id="5-reference">5. Reference</h2>
+<h3 id="widget-catalogue">Widget catalogue</h3>
+<p>Every widget maps to a DASH editor and sensible default node kind / datatype.</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>DASH editor</th>
+<th>Typical use</th>
+<th>Defaults</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Text field</strong></td>
+<td><code>dash:TextFieldEditor</code></td>
+<td>Single-line text</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Text area</strong></td>
+<td><code>dash:TextAreaEditor</code></td>
+<td>Multi-line text</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Rich text</strong></td>
+<td><code>dash:RichTextEditor</code></td>
+<td>Formatted text with language tag</td>
+<td><code>sh:Literal</code>, <code>rdf:HTML</code></td>
+</tr>
+<tr>
+<td><strong>URI</strong></td>
+<td><code>dash:URIEditor</code></td>
+<td>Free-form link / IRI</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Auto-complete</strong></td>
+<td><code>dash:AutoCompleteEditor</code></td>
+<td>Look up an instance by label</td>
+<td><code>sh:IRI</code>, <code>sh:class foaf:Agent</code></td>
+</tr>
+<tr>
+<td><strong>Instances select</strong></td>
+<td><code>dash:InstancesSelectEditor</code></td>
+<td>Drop-down of instances</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Details (nested)</strong></td>
+<td><code>dash:DetailsEditor</code></td>
+<td>Embedded sub-form via a nested shape</td>
+<td><code>sh:BlankNodeOrIRI</code></td>
+</tr>
+<tr>
+<td><strong>Enumeration</strong></td>
+<td><code>dash:EnumSelectEditor</code></td>
+<td>Choice from a fixed <code>sh:in</code> list</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Boolean</strong></td>
+<td><code>dash:BooleanSelectEditor</code></td>
+<td>true / false</td>
+<td><code>sh:Literal</code>, <code>xsd:boolean</code></td>
+</tr>
+<tr>
+<td><strong>Date picker</strong></td>
+<td><code>dash:DatePickerEditor</code></td>
+<td>Calendar date</td>
+<td><code>sh:Literal</code>, <code>xsd:date</code></td>
+</tr>
+<tr>
+<td><strong>Date &amp; time</strong></td>
+<td><code>dash:DateTimePickerEditor</code></td>
+<td>Timestamp</td>
+<td><code>sh:Literal</code>, <code>xsd:dateTime</code></td>
+</tr>
+<tr>
+<td><strong>Number</strong></td>
+<td><code>dash:NumberFieldEditor</code></td>
+<td>Numeric value</td>
+<td><code>sh:Literal</code>, <code>xsd:integer</code></td>
+</tr>
+</tbody></table>
+<p>Defaults are starting points — override the node kind, datatype, or class in the
+Inspector whenever your model needs something different.</p>
+<h3 id="property-settings-reference">Property settings reference</h3>
+<p>What each Inspector control writes into SHACL:</p>
+<table>
+<thead>
+<tr>
+<th>Inspector field</th>
+<th>SHACL output</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Label</td>
+<td><code>sh:name</code></td>
+<td>The form label.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td><code>sh:description</code></td>
+<td>Help text / ⓘ tooltip.</td>
+</tr>
+<tr>
+<td>Property path</td>
+<td><code>sh:path</code></td>
+<td><strong>Required.</strong> The RDF predicate.</td>
+</tr>
+<tr>
+<td>Min count</td>
+<td><code>sh:minCount</code></td>
+<td>≥ 1 makes the field required.</td>
+</tr>
+<tr>
+<td>Max count</td>
+<td><code>sh:maxCount</code></td>
+<td>Empty = unbounded (repeatable).</td>
+</tr>
+<tr>
+<td>Node kind</td>
+<td><code>sh:nodeKind</code></td>
+<td><code>sh:Literal</code>, <code>sh:IRI</code>, <code>sh:BlankNode</code>, or combinations.</td>
+</tr>
+<tr>
+<td>Datatype</td>
+<td><code>sh:datatype</code></td>
+<td>Shown for literal node kinds.</td>
+</tr>
+<tr>
+<td>Class</td>
+<td><code>sh:class</code></td>
+<td>Shown for IRI node kinds; restricts the target type.</td>
+</tr>
+<tr>
+<td>Nested shape</td>
+<td><code>sh:node</code></td>
+<td>Shown for <strong>Details</strong>; links to a nested shape.</td>
+</tr>
+<tr>
+<td>Min / Max length</td>
+<td><code>sh:minLength</code> / <code>sh:maxLength</code></td>
+<td>Literals only.</td>
+</tr>
+<tr>
+<td>Pattern (regex)</td>
+<td><code>sh:pattern</code></td>
+<td>Literals only.</td>
+</tr>
+<tr>
+<td>Allowed values</td>
+<td><code>sh:in ( … )</code></td>
+<td>Enumeration choices.</td>
+</tr>
+<tr>
+<td>Default value</td>
+<td><code>sh:defaultValue</code></td>
+<td>Pre-filled value.</td>
+</tr>
+<tr>
+<td>Order</td>
+<td><code>sh:order</code></td>
+<td>Field order within its group.</td>
+</tr>
+</tbody></table>
+<p>Schema- and group-level controls:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>SHACL output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Schema name</td>
+<td><code>rdfs:label</code> on the NodeShape</td>
+</tr>
+<tr>
+<td>Shape IRI</td>
+<td>the NodeShape subject</td>
+</tr>
+<tr>
+<td>Target class</td>
+<td><code>sh:targetClass</code></td>
+</tr>
+<tr>
+<td>Prefixes</td>
+<td><code>@prefix</code> declarations</td>
+</tr>
+<tr>
+<td>Group label</td>
+<td><code>rdfs:label</code> on the <code>sh:PropertyGroup</code></td>
+</tr>
+<tr>
+<td>Group order</td>
+<td><code>sh:order</code> on the group; field&#39;s <code>sh:group</code> links it</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-recipes--common-modelling-patterns">6. Recipes — common modelling patterns</h2>
+<p>Short, self-contained patterns you can apply on top of the tutorial.</p>
+<p><strong>Make a field required.</strong> Set <strong>Min count</strong> to <code>1</code>. The card shows a red dot and
+the form marks it with <code>*</code>.</p>
+<p><strong>Allow multiple values.</strong> Leave <strong>Max count</strong> empty (∞). The card shows a
+<strong>multi</strong> badge and the form gains <strong>+ Add</strong>.</p>
+<p><strong>Restrict to a fixed list.</strong> Use the <strong>Enumeration</strong> widget and fill in
+<strong>Allowed values</strong>. Exports as <code>sh:in</code>.</p>
+<p><strong>Link to an organisation or person.</strong> Use <strong>Auto-complete</strong> (or <strong>Instances
+select</strong>), node kind <code>sh:IRI</code>, and <strong>Class</strong> = <code>foaf:Agent</code> (or your chosen
+class).</p>
+<p><strong>Capture a structured sub-object</strong> (address, contact point, distribution).
+Create a <strong>nested shape</strong>, add its fields, then point a <strong>Details (nested)</strong>
+property at it via <code>sh:node</code>. See <a href="#step-10--model-a-sub-object-with-a-nested-shape">Step 10</a>.</p>
+<p><strong>Enforce a format.</strong> For literals, set a <strong>Pattern</strong> (regex) and/or <strong>Min/Max
+length</strong> — e.g. an ORCID pattern, or a max length on a code field.</p>
+<p><strong>Start from an example.</strong> Use the <strong>Examples</strong> menu to load a Dataset (DCAT),
+Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.</p>
+<p><strong>Reuse an existing schema.</strong> <strong>Open…</strong> the existing <code>.ttl</code>, adapt it in the
+Visual Editor, then <strong>Save As…</strong> a new file.</p>
+<hr>
+<h2 id="7-tips--troubleshooting">7. Tips &amp; troubleshooting</h2>
+<ul>
+<li><strong>Always set the property path.</strong> New widgets get a placeholder path like
+<code>:textfield</code>; replace it with the real RDF term (<code>dct:title</code>, <code>dcat:theme</code>, …)
+or the exported metadata won&#39;t use the term you intend.</li>
+<li><strong>Declare the prefixes you use.</strong> If a path or class uses an alias (e.g.
+<code>vcard:</code>), add it under <strong>Vocabularies</strong> so the Turtle is valid.</li>
+<li><strong>A field went to the wrong group.</strong> Drag the property card into the correct
+group; the <strong>Group</strong> box in the Inspector is read-only and reflects the move.</li>
+<li><strong>SHACL Code edits didn&#39;t sync.</strong> Syncing happens shortly after you stop
+typing. If a parse error is shown (with a line number), fix the Turtle — the
+visual canvas keeps the last valid state until the text parses.</li>
+<li><strong>Save button only downloads.</strong> That&#39;s the expected fallback in Firefox/Safari.
+For in-place saves, use a Chromium-based browser (Chrome/Edge).</li>
+<li><strong>Start over.</strong> Use the <strong>New</strong> button for a blank schema, load one from
+<strong>Examples</strong>, or <strong>Open…</strong> an existing <code>.ttl</code>.</li>
+</ul>
+<hr>
+<p><em>Built with Contour for the FAIR Data Point ecosystem. Output is
+standard SHACL + DASH and works with any SHACL-aware tooling.</em></p>
+
+  </main>
+</body>
+</html>
