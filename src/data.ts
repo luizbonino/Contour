@@ -1,4 +1,7 @@
-import type { Field, Prefix, Schema, Widget } from './types';
+import type { Field, InValue, Prefix, Schema, Widget } from './types';
+
+// Concise constructor for literal sh:in members in the static catalogue/examples.
+const lit = (value: string): InValue => ({ value, kind: 'literal' });
 
 // All DASH form widgets from https://datashapes.org/forms.html
 export const WIDGETS: Widget[] = [
@@ -72,7 +75,7 @@ export const WIDGETS: Widget[] = [
     category: 'Choice',
     editor: 'dash:EnumSelectEditor',
     icon: '◉',
-    defaults: { nodeKind: 'sh:Literal', datatype: 'xsd:string', inValues: ['Option A', 'Option B'] },
+    defaults: { nodeKind: 'sh:Literal', datatype: 'xsd:string', inValues: [lit('Option A'), lit('Option B')] },
   },
   {
     id: 'BooleanSelectEditor',
@@ -226,7 +229,7 @@ export const EXAMPLES: SchemaExample[] = [
           order: 1,
           fields: [
             f({ id: 'ds-f5', widgetId: 'AutoCompleteEditor', name: 'Publisher', path: 'dct:publisher', description: 'The entity responsible for making the dataset available', nodeKind: 'sh:IRI', class: 'foaf:Agent', minCount: 1, maxCount: 1, order: 0 }),
-            f({ id: 'ds-f6', widgetId: 'EnumSelectEditor', name: 'Access rights', path: 'dct:accessRights', description: 'Information about who can access the resource', nodeKind: 'sh:Literal', datatype: 'xsd:string', inValues: ['public', 'restricted', 'private'], minCount: 1, maxCount: 1, order: 1 }),
+            f({ id: 'ds-f6', widgetId: 'EnumSelectEditor', name: 'Access rights', path: 'dct:accessRights', description: 'Information about who can access the resource', nodeKind: 'sh:Literal', datatype: 'xsd:string', inValues: [lit('public'), lit('restricted'), lit('private')], minCount: 1, maxCount: 1, order: 1 }),
           ],
         },
         {

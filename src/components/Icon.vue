@@ -89,5 +89,18 @@ const props = withDefaults(defineProps<Props>(), { size: 16 });
       <path d="M12 16v-4" />
       <path d="M12 8h.01" stroke-width="2.5" />
     </template>
+    <template v-else-if="name === 'undo'">
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h11a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3" />
+    </template>
+    <template v-else-if="name === 'redo'">
+      <path d="m15 14 5-5-5-5" />
+      <path d="M20 9H9a5 5 0 0 0-5 5 5 5 0 0 0 5 5h3" />
+    </template>
+    <template v-else-if="name === 'warning'">
+      <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+      <path d="M12 9v4" />
+      <path d="M12 17h.01" stroke-width="2.5" />
+    </template>
   </svg>
 </template>

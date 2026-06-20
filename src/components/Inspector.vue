@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { DATATYPES, NODE_KINDS, WIDGET_BY_ID } from '../data';
+import { DATATYPES, NODE_KINDS, WIDGET_BY_ID, newId } from '../data';
 import { useI18n } from '../composables/useI18n';
 import type { Field, Group, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
@@ -13,7 +13,7 @@ interface Props {
   selectedKind: SelectedKind;
   selectedId: string | null;
   selectedNestedShapeId: string | null;
-  mutate: (m: Mutator) => void;
+  mutate: (m: Mutator, coalesceKey?: string) => void;
 }
 const props = defineProps<Props>();
 const emit = defineEmits<{ clear: [] }>();
@@ -73,8 +73,16 @@ const fieldWidget = computed(() =>
   activeField.value ? WIDGET_BY_ID[activeField.value.widgetId] : null,
 );
 
+const SEVERITIES = ['sh:Violation', 'sh:Warning', 'sh:Info'];
+
 const isLiteral = computed(() => (activeField.value?.nodeKind || '').includes('Literal'));
 const isIRI = computed(() => (activeField.value?.nodeKind || '').includes('IRI'));
+
+// Value-range bounds (sh:minInclusive etc.) only make sense for numeric / date widgets.
+const showRange = computed(() => {
+  const id = fieldWidget.value?.id;
+  return id === 'NumberFieldEditor' || id === 'DatePickerEditor' || id === 'DateTimePickerEditor';
+});
 
 const showCloseBtn = computed(() =>
   props.selectedKind === 'field' ||
@@ -94,7 +102,7 @@ function setField<K extends keyof Field>(key: K, value: Field[K]) {
       if (!g) return;
       const i = g.fields.findIndex((f) => f.id === loc.field.id);
       if (i >= 0) (g.fields[i] as Field)[key] = value;
-    });
+    }, `f:${loc.field.id}:${String(key)}`);
   } else if (props.selectedKind === 'nested-field') {
     const nsId = props.selectedNestedShapeId;
     const fId = props.selectedId;
@@ -104,7 +112,7 @@ function setField<K extends keyof Field>(key: K, value: Field[K]) {
       if (!ns) return;
       const i = ns.fields.findIndex((f) => f.id === fId);
       if (i >= 0) (ns.fields[i] as Field)[key] = value;
-    });
+    }, `nf:${nsId}:${fId}:${String(key)}`);
   }
 }
 
@@ -114,7 +122,7 @@ function setGroup<K extends keyof Group>(key: K, value: Group[K]) {
   props.mutate((draft) => {
     const g = draft.groups.find((x) => x.id === grp.id);
     if (g) (g as Group)[key] = value;
-  });
+  }, `g:${grp.id}:${String(key)}`);
 }
 
 function deleteCurrentGroup() {
@@ -130,7 +138,7 @@ function deleteCurrentGroup() {
 function setSchema<K extends keyof Schema>(key: K, value: Schema[K]) {
   props.mutate((draft) => {
     (draft as Schema)[key] = value;
-  });
+  }, `s:${String(key)}`);
 }
 
 function setNestedShape<K extends keyof NestedShape>(key: K, value: NestedShape[K]) {
@@ -139,7 +147,7 @@ function setNestedShape<K extends keyof NestedShape>(key: K, value: NestedShape[
   props.mutate((draft) => {
     const x = (draft.nestedShapes || []).find((n) => n.id === ns.id);
     if (x) (x as NestedShape)[key] = value;
-  });
+  }, `ns:${ns.id}:${String(key)}`);
 }
 
 function setNestedShapeIri(newIri: string) {
@@ -171,6 +179,35 @@ function deleteCurrentNestedShape() {
 function onNumber(e: Event): number | null {
   const v = (e.target as HTMLInputElement).value;
   return v === '' ? null : Number(v);
+}
+
+// Create a fresh nested shape and link the active DetailsEditor field to it via
+// sh:node — in one undo step. Works for a main field or a nested field.
+function createAndLinkNestedShape() {
+  const f = activeField.value;
+  if (!f) return;
+  const kind = props.selectedKind;
+  const fId = props.selectedId;
+  const parentNsId = props.selectedNestedShapeId;
+  props.mutate((draft) => {
+    if (!draft.nestedShapes) draft.nestedShapes = [];
+    const base = (f.name || 'Nested').replace(/[^A-Za-z0-9]+/g, '') || 'Nested';
+    const exists = (x: string) => draft.nestedShapes.some((ns) => ns.iri === x);
+    let iri = `:${base}Shape`;
+    let i = 2;
+    while (exists(iri)) iri = `:${base}Shape${i++}`;
+    draft.nestedShapes.push({ id: newId('ns'), iri, targetClass: f.class || '', fields: [] });
+    if (kind === 'field') {
+      for (const g of draft.groups) {
+        const ff = g.fields.find((x) => x.id === fId);
+        if (ff) { ff.node = iri; break; }
+      }
+    } else if (kind === 'nested-field' && parentNsId) {
+      const ns = draft.nestedShapes.find((x) => x.id === parentNsId);
+      const ff = ns?.fields.find((x) => x.id === fId);
+      if (ff) ff.node = iri;
+    }
+  });
 }
 </script>
 
@@ -303,6 +340,9 @@ function onNumber(e: Event): number | null {
                 {{ ns.targetClass ? ns.targetClass : '' }}
               </option>
             </datalist>
+            <button class="btn btn-secondary btn-xs" style="margin-top: 6px" @click="createAndLinkNestedShape">
+              <Icon name="plus" :size="11" /> {{ t('inspector.createLinkNested') }}
+            </button>
             <div class="hint">{{ t('inspector.hint.nestedShape') }}</div>
           </div>
           <template v-if="isLiteral">
@@ -339,6 +379,54 @@ function onNumber(e: Event): number | null {
               />
             </div>
           </template>
+          <template v-if="showRange">
+            <div class="insp-section__title" style="margin-top: 10px">{{ t('inspector.section.valueRange') }}</div>
+            <div class="form-row-2">
+              <div class="form-row">
+                <label>{{ t('inspector.label.minInclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.minInclusive ?? ''"
+                  placeholder="≥"
+                  @input="setField('minInclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+              <div class="form-row">
+                <label>{{ t('inspector.label.maxInclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.maxInclusive ?? ''"
+                  placeholder="≤"
+                  @input="setField('maxInclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-row">
+                <label>{{ t('inspector.label.minExclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.minExclusive ?? ''"
+                  placeholder="&gt;"
+                  @input="setField('minExclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+              <div class="form-row">
+                <label>{{ t('inspector.label.maxExclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.maxExclusive ?? ''"
+                  placeholder="&lt;"
+                  @input="setField('maxExclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+            <div class="hint">{{ t('inspector.hint.valueRange') }}</div>
+          </template>
           <InValuesEditor
             v-if="
               activeField.widgetId === 'EnumSelectEditor' ||
@@ -347,6 +435,29 @@ function onNumber(e: Event): number | null {
             :values="activeField.inValues"
             @change="(v) => setField('inValues', v)"
           />
+        </div>
+
+        <div class="insp-section">
+          <div class="insp-section__title">{{ t('inspector.section.validation') }}</div>
+          <div class="form-row">
+            <label>{{ t('inspector.label.message') }}</label>
+            <input
+              type="text"
+              :value="activeField.message ?? ''"
+              :placeholder="t('inspector.placeholder.message')"
+              @input="setField('message', ($event.target as HTMLInputElement).value || undefined)"
+            />
+          </div>
+          <div class="form-row">
+            <label>{{ t('inspector.label.severity') }}</label>
+            <select
+              :value="activeField.severity || ''"
+              @change="setField('severity', (($event.target as HTMLSelectElement).value || undefined))"
+            >
+              <option value="">{{ t('inspector.severityDefault') }}</option>
+              <option v-for="s in SEVERITIES" :key="s" :value="s">{{ s }}</option>
+            </select>
+          </div>
         </div>
 
         <div class="insp-section">

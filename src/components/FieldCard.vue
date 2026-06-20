@@ -31,6 +31,7 @@ const multi = computed(() => {
 });
 const typeLabel = computed(() => {
   const f = props.field;
+  if (f.widgetId === 'DetailsEditor' && f.node) return `→ ${f.node}`;
   return (
     f.datatype ||
     f.class ||

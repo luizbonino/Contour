@@ -134,7 +134,8 @@ describe('parseShacl – sh:property blocks', () => {
       dash:editor dash:TextFieldEditor`);
     const { schema, error } = parseShacl(ttl);
     expect(schema).toBeNull();
-    expect(error).toMatch(/unclosed/i);
+    // N3 reports its own syntax-error message; we just surface it.
+    expect(error).toBeTruthy();
   });
 
   it('parses all field constraint properties', () => {
@@ -168,7 +169,7 @@ describe('parseShacl – sh:property blocks', () => {
     expect(f.order).toBe(5);
   });
 
-  it('parses sh:in list values', () => {
+  it('parses sh:in list of literal values', () => {
     const ttl = minimal(`sh:property [
       sh:path dct:rights ;
       sh:in ( "public" "restricted" "private" ) ;
@@ -176,7 +177,38 @@ describe('parseShacl – sh:property blocks', () => {
     ]`);
     const { schema } = parseShacl(ttl);
     const f = schema!.groups.flatMap((g) => g.fields)[0];
-    expect(f.inValues).toEqual(['public', 'restricted', 'private']);
+    expect(f.inValues).toEqual([
+      { value: 'public', kind: 'literal' },
+      { value: 'restricted', kind: 'literal' },
+      { value: 'private', kind: 'literal' },
+    ]);
+  });
+
+  it('parses sh:in list of IRI values as IRIs', () => {
+    const ttl = minimal(`sh:property [
+      sh:path dct:rights ;
+      sh:in ( :Public :Restricted ) ;
+      dash:editor dash:EnumSelectEditor
+    ]`);
+    const { schema } = parseShacl(ttl);
+    const f = schema!.groups.flatMap((g) => g.fields)[0];
+    expect(f.inValues).toEqual([
+      { value: ':Public', kind: 'iri' },
+      { value: ':Restricted', kind: 'iri' },
+    ]);
+  });
+
+  it('parses value-range bounds', () => {
+    const ttl = minimal(`sh:property [
+      sh:path :year ;
+      sh:minInclusive 1900 ;
+      sh:maxInclusive "2020-12-31"^^xsd:date ;
+      dash:editor dash:NumberFieldEditor
+    ]`);
+    const { schema } = parseShacl(ttl);
+    const f = schema!.groups.flatMap((g) => g.fields)[0];
+    expect(f.minInclusive).toBe('1900');
+    expect(f.maxInclusive).toBe('2020-12-31');
   });
 
   it('falls back to TextFieldEditor when dash:editor is absent', () => {
@@ -264,7 +296,7 @@ describe('parseShacl – comment handling', () => {
     expect(f.name).toBe('Title # not a comment');
   });
 
-  it('preserves # inside IRI angle brackets (e.g. XMLSchema#string)', () => {
+  it('handles # inside IRI angle brackets (e.g. XMLSchema#string)', () => {
     const ttl = minimal(`sh:property [
       sh:path dct:title ;
       sh:datatype <http://www.w3.org/2001/XMLSchema#string> ;
@@ -273,7 +305,8 @@ describe('parseShacl – comment handling', () => {
     const { schema, error } = parseShacl(ttl);
     expect(error).toBeNull();
     const f = schema!.groups.flatMap((g) => g.fields)[0];
-    expect(f.datatype).toBe('<http://www.w3.org/2001/XMLSchema#string>');
+    // The full IRI is compacted to its canonical CURIE (xsd is declared).
+    expect(f.datatype).toBe('xsd:string');
   });
 });
 

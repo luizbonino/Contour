@@ -44,8 +44,8 @@ describe('fieldFromWidget', () => {
     const widget = WIDGET_BY_ID['EnumSelectEditor'];
     const f1 = fieldFromWidget(widget);
     const f2 = fieldFromWidget(widget);
-    f1.inValues?.push('extra');
-    expect(f2.inValues).not.toContain('extra');
+    f1.inValues?.push({ value: 'extra', kind: 'literal' });
+    expect(f2.inValues?.some((v) => v.value === 'extra')).toBe(false);
   });
 
   it('sets node to null', () => {

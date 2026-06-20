@@ -104,16 +104,79 @@ describe('shacl round-trip', () => {
     expect(f.maxCount).toBe(3);
   });
 
-  it('preserves sh:in values', () => {
+  it('preserves sh:in literal values', () => {
     const schema = baseSchema({
       groups: [{
         id: 'g1', label: 'G', order: 0,
-        fields: [field({ widgetId: 'EnumSelectEditor', inValues: ['a', 'b', 'c'] })],
+        fields: [field({ widgetId: 'EnumSelectEditor', inValues: [
+          { value: 'a', kind: 'literal' }, { value: 'b', kind: 'literal' }, { value: 'c', kind: 'literal' },
+        ] })],
       }],
     });
     const rt = roundtrip(schema);
     const f = rt.groups.flatMap((g) => g.fields)[0];
-    expect(f.inValues).toEqual(['a', 'b', 'c']);
+    expect(f.inValues).toEqual([
+      { value: 'a', kind: 'literal' }, { value: 'b', kind: 'literal' }, { value: 'c', kind: 'literal' },
+    ]);
+  });
+
+  it('preserves sh:in IRI values as IRIs', () => {
+    const schema = baseSchema({
+      groups: [{
+        id: 'g1', label: 'G', order: 0,
+        fields: [field({ widgetId: 'EnumSelectEditor', nodeKind: 'sh:IRI', datatype: null, inValues: [
+          { value: 'ex:A', kind: 'iri' }, { value: 'ex:B', kind: 'iri' },
+        ] })],
+      }],
+      prefixes: [
+        ...baseSchema().prefixes,
+        { prefix: 'ex', uri: 'http://example.com/' },
+      ],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.inValues).toEqual([
+      { value: 'ex:A', kind: 'iri' }, { value: 'ex:B', kind: 'iri' },
+    ]);
+  });
+
+  it('preserves schema description via dct:description', () => {
+    const schema = baseSchema({ schemaDescription: 'A round-tripped description.' });
+    expect(roundtrip(schema).schemaDescription).toBe('A round-tripped description.');
+  });
+
+  it('preserves sh:message and sh:severity', () => {
+    const schema = baseSchema({
+      groups: [{
+        id: 'g1', label: 'G', order: 0,
+        fields: [field({ message: 'Title is required', severity: 'sh:Warning' })],
+      }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.message).toBe('Title is required');
+    expect(f.severity).toBe('sh:Warning');
+  });
+
+  it('does not push modeled message/severity into residual', () => {
+    const schema = baseSchema({
+      groups: [{ id: 'g1', label: 'G', order: 0, fields: [field({ message: 'x', severity: 'sh:Info' })] }],
+    });
+    const rt = roundtrip(schema);
+    expect(rt.residual).toBeUndefined();
+  });
+
+  it('preserves value-range bounds', () => {
+    const schema = baseSchema({
+      groups: [{
+        id: 'g1', label: 'G', order: 0,
+        fields: [field({ widgetId: 'NumberFieldEditor', datatype: 'xsd:integer', minInclusive: '0', maxInclusive: '100' })],
+      }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.minInclusive).toBe('0');
+    expect(f.maxInclusive).toBe('100');
   });
 
   it('preserves widget type via dash:editor', () => {
@@ -148,6 +211,7 @@ describe('shacl round-trip', () => {
 
   it('preserves nested shape IRI and targetClass', () => {
     const schema = baseSchema({
+      prefixes: [...baseSchema().prefixes, { prefix: 'foaf', uri: 'http://xmlns.com/foaf/0.1/' }],
       nestedShapes: [{ id: 'ns1', iri: ':AgentShape', targetClass: 'foaf:Person', fields: [] }],
     });
     const rt = roundtrip(schema);

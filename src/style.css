@@ -1180,6 +1180,32 @@ button {
   flex: 1;
   min-width: 0;
 }
+.form-preview__lang {
+  flex-shrink: 0;
+  width: 64px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+/* Cardinality hint chip beside a preview label */
+.form-preview__card {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-lighter);
+  background: var(--color-bg-highlight);
+  border-radius: var(--radius-pill);
+  padding: 1px 7px;
+}
+/* sh:message feedback under a field, coloured by severity */
+.form-preview__msg {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-text-lighter);
+}
+.form-preview__msg.sev-violation { color: var(--color-danger); }
+.form-preview__msg.sev-warning { color: #8a6d00; }
+.form-preview__msg.sev-info { color: var(--color-accent-darker); }
 .form-preview__remove-btn {
   flex-shrink: 0;
   padding: 6px 10px;
@@ -1447,4 +1473,153 @@ button {
   background: var(--color-accent-tint);
   color: var(--color-accent-darker);
   font-weight: 600;
+}
+
+/* ---------- Recent menu empty state ---------- */
+.ex-menu__empty {
+  font-size: 12px;
+  color: var(--color-text-lighter);
+  padding: 8px 10px;
+}
+
+/* ---------- Restored-draft banner ---------- */
+.draft-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 4px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--color-accent-darker);
+  background: var(--color-accent-tint);
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-md);
+}
+.draft-banner span {
+  flex: 1;
+}
+
+/* ---------- sh:in value kind tags ---------- */
+.tag__kind {
+  border: 0;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-darker);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.tag--iri {
+  background: var(--color-primary-tint);
+  color: var(--color-primary-darker);
+}
+.tag--iri .tag__kind {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-darker);
+}
+
+/* ---------- Issues toggle + panel ---------- */
+.issues-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-input);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-lighter);
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.issues-toggle.has-errors {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+.issues-toggle.has-warnings {
+  color: #8a6d00;
+  border-color: #d8c27a;
+}
+.issues-panel {
+  margin-top: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-card);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.issues-panel__ok {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-success);
+  padding: 8px 10px;
+}
+.issues-panel__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--color-text-default);
+  cursor: pointer;
+}
+.issues-panel__item:hover {
+  background: var(--color-bg-highlight);
+}
+.issues-panel__item.is-error {
+  color: var(--color-danger);
+}
+.issues-panel__item.is-warning {
+  color: #8a6d00;
+}
+
+/* ---------- RDF syntax selector ---------- */
+.syntax-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-lighter);
+  text-transform: none;
+}
+.syntax-select select {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-input);
+}
+
+/* ---------- Residual (preserved-constructs) notice ---------- */
+.residual-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-accent-darker);
+  background: var(--color-accent-tint);
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-md);
 }
