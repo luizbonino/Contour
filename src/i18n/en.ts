@@ -152,8 +152,12 @@ const en = {
       vocabularies: 'Vocabularies',
       properties: 'Properties',
     },
+    langPlaceholder: 'lang',
+    langTitle: 'Language tag (BCP-47, e.g. en, pt-BR) — leave blank for an untagged literal',
     label: {
       name: 'Label (sh:name)',
+      nameTranslations: 'Label — other languages',
+      descriptionTranslations: 'Description — other languages',
       path: 'Property path (sh:path)',
       minCount: 'Min count',
       maxCount: 'Max count',
@@ -211,6 +215,10 @@ const en = {
   prefixes: {
     label: 'Prefixes',
     remove: 'Remove',
+  },
+  translations: {
+    lang: 'lang',
+    value: 'translation',
   },
   inValues: {
     label: 'Allowed values (sh:in)',

@@ -145,6 +145,44 @@ describe('shacl round-trip', () => {
     expect(roundtrip(schema).schemaDescription).toBe('A round-tripped description.');
   });
 
+  it('preserves a language tag on the primary label', () => {
+    const schema = baseSchema({
+      groups: [{ id: 'g1', label: 'G', order: 0, fields: [field({ name: 'Title', nameLang: 'en' })] }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.name).toBe('Title');
+    expect(f.nameLang).toBe('en');
+  });
+
+  it('preserves multilingual labels (sh:name in several languages)', () => {
+    const schema = baseSchema({
+      groups: [{
+        id: 'g1', label: 'G', order: 0,
+        fields: [field({
+          name: 'Title', nameLang: 'en',
+          nameI18n: [{ lang: 'pt', value: 'Título' }, { lang: 'nl', value: 'Titel' }],
+        })],
+      }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.name).toBe('Title');
+    expect(f.nameLang).toBe('en');
+    expect(f.nameI18n).toEqual([{ lang: 'pt', value: 'Título' }, { lang: 'nl', value: 'Titel' }]);
+  });
+
+  it('leaves an untagged label untagged', () => {
+    const schema = baseSchema({
+      groups: [{ id: 'g1', label: 'G', order: 0, fields: [field({ name: 'Title' })] }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.name).toBe('Title');
+    expect(f.nameLang).toBeUndefined();
+    expect(f.nameI18n).toBeUndefined();
+  });
+
   it('preserves sh:message and sh:severity', () => {
     const schema = baseSchema({
       groups: [{

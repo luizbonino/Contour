@@ -151,8 +151,12 @@ const ptBR = {
       vocabularies: 'Vocabulários',
       properties: 'Propriedades',
     },
+    langPlaceholder: 'idioma',
+    langTitle: 'Tag de idioma (BCP-47, ex.: en, pt-BR) — deixe em branco para um literal sem tag',
     label: {
       name: 'Rótulo (sh:name)',
+      nameTranslations: 'Rótulo — outros idiomas',
+      descriptionTranslations: 'Descrição — outros idiomas',
       path: 'Caminho da propriedade (sh:path)',
       minCount: 'Contagem mín.',
       maxCount: 'Contagem máx.',
@@ -210,6 +214,10 @@ const ptBR = {
   prefixes: {
     label: 'Prefixos',
     remove: 'Remover',
+  },
+  translations: {
+    lang: 'idioma',
+    value: 'tradução',
   },
   inValues: {
     label: 'Valores permitidos (sh:in)',

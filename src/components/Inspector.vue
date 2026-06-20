@@ -7,6 +7,7 @@ import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
 import InValuesEditor from './InValuesEditor.vue';
 import PrefixEditor from './PrefixEditor.vue';
+import TranslationsEditor from './TranslationsEditor.vue';
 
 interface Props {
   schema: Schema;
@@ -245,20 +246,52 @@ function createAndLinkNestedShape() {
           <div class="insp-section__title">{{ t('inspector.section.basic') }}</div>
           <div class="form-row">
             <label class="required">{{ t('inspector.label.name') }}</label>
-            <input
-              type="text"
-              :value="activeField.name"
-              @input="setField('name', ($event.target as HTMLInputElement).value)"
-            />
+            <div class="lang-field">
+              <input
+                type="text"
+                :value="activeField.name"
+                @input="setField('name', ($event.target as HTMLInputElement).value)"
+              />
+              <input
+                type="text"
+                class="lang-field__tag"
+                :value="activeField.nameLang ?? ''"
+                :placeholder="t('inspector.langPlaceholder')"
+                :title="t('inspector.langTitle')"
+                @input="setField('nameLang', ($event.target as HTMLInputElement).value || undefined)"
+              />
+            </div>
           </div>
+          <TranslationsEditor
+            v-if="(activeField.nameI18n && activeField.nameI18n.length) || activeField.nameLang"
+            :values="activeField.nameI18n"
+            :label="t('inspector.label.nameTranslations')"
+            @change="(v) => setField('nameI18n', v)"
+          />
           <div class="form-row">
             <label>{{ t('inspector.label.description') }}</label>
-            <textarea
-              :value="activeField.description"
-              :placeholder="t('inspector.placeholder.descriptionHelp')"
-              @input="setField('description', ($event.target as HTMLTextAreaElement).value)"
-            />
+            <div class="lang-field">
+              <textarea
+                :value="activeField.description"
+                :placeholder="t('inspector.placeholder.descriptionHelp')"
+                @input="setField('description', ($event.target as HTMLTextAreaElement).value)"
+              />
+              <input
+                type="text"
+                class="lang-field__tag"
+                :value="activeField.descriptionLang ?? ''"
+                :placeholder="t('inspector.langPlaceholder')"
+                :title="t('inspector.langTitle')"
+                @input="setField('descriptionLang', ($event.target as HTMLInputElement).value || undefined)"
+              />
+            </div>
           </div>
+          <TranslationsEditor
+            v-if="(activeField.descriptionI18n && activeField.descriptionI18n.length) || activeField.descriptionLang"
+            :values="activeField.descriptionI18n"
+            :label="t('inspector.label.descriptionTranslations')"
+            @change="(v) => setField('descriptionI18n', v)"
+          />
           <div class="form-row">
             <label class="required">{{ t('inspector.label.path') }}</label>
             <input
