@@ -154,10 +154,14 @@ const en = {
     },
     langPlaceholder: 'lang',
     langTitle: 'Language tag (BCP-47, e.g. en, pt-BR) — leave blank for an untagged literal',
+    inversePath: 'Inverse (^)',
+    addOrTypes: 'Allow alternative value types (sh:or)',
+    addOrType: 'Add type',
     label: {
       name: 'Label (sh:name)',
       nameTranslations: 'Label — other languages',
       descriptionTranslations: 'Description — other languages',
+      orTypes: 'Alternative value types (sh:or)',
       path: 'Property path (sh:path)',
       minCount: 'Min count',
       maxCount: 'Max count',
@@ -193,6 +197,7 @@ const en = {
     severityDefault: '— default (Violation) —',
     hint: {
       valueRange: 'Bounds on the value (sh:minInclusive / maxInclusive / minExclusive / maxExclusive). Numbers are written bare; dates as typed literals.',
+      orTypes: 'The value may match any one of these types (e.g. a literal or an IRI).',
       nestedShape: "sh:NodeShape that defines the nested object's fields.",
       moveFieldGroup: 'Move the field by dragging it into another group.',
       moveFieldNested: 'Move the field by dragging it within the shape.',

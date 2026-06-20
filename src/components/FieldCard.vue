@@ -66,9 +66,10 @@ function handleClick(e: MouseEvent) {
         <span v-if="multi" class="field__badge">{{ t('fieldCard.multi') }}</span>
       </div>
       <div class="field__meta">
-        <span>{{ field.path }}</span>
+        <span>{{ field.inversePath ? '^' + field.path : field.path }}</span>
         <span>·</span>
-        <span>{{ typeLabel }}</span>
+        <span v-if="field.orTypes && field.orTypes.length">sh:or</span>
+        <span v-else>{{ typeLabel }}</span>
       </div>
     </div>
     <div class="field__actions">

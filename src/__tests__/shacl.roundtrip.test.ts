@@ -204,6 +204,32 @@ describe('shacl round-trip', () => {
     expect(rt.residual).toBeUndefined();
   });
 
+  it('preserves an inverse path', () => {
+    const schema = baseSchema({
+      groups: [{ id: 'g1', label: 'G', order: 0, fields: [field({ path: 'dct:isPartOf', inversePath: true })] }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.path).toBe('dct:isPartOf');
+    expect(f.inversePath).toBe(true);
+    expect(generateShacl(schema)).toContain('sh:path [ sh:inversePath dct:isPartOf ]');
+  });
+
+  it('preserves sh:or alternative value types', () => {
+    const schema = baseSchema({
+      groups: [{
+        id: 'g1', label: 'G', order: 0,
+        fields: [field({ orTypes: [{ nodeKind: 'sh:Literal' }, { nodeKind: 'sh:IRI' }] })],
+      }],
+    });
+    const out = generateShacl(schema);
+    expect(out).toContain('sh:or (');
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.orTypes).toEqual([{ nodeKind: 'sh:Literal' }, { nodeKind: 'sh:IRI' }]);
+    expect(rt.residual).toBeUndefined(); // modeled, not residual
+  });
+
   it('preserves value-range bounds', () => {
     const schema = baseSchema({
       groups: [{

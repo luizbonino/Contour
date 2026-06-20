@@ -153,10 +153,14 @@ const ptBR = {
     },
     langPlaceholder: 'idioma',
     langTitle: 'Tag de idioma (BCP-47, ex.: en, pt-BR) — deixe em branco para um literal sem tag',
+    inversePath: 'Inverso (^)',
+    addOrTypes: 'Permitir tipos de valor alternativos (sh:or)',
+    addOrType: 'Adicionar tipo',
     label: {
       name: 'Rótulo (sh:name)',
       nameTranslations: 'Rótulo — outros idiomas',
       descriptionTranslations: 'Descrição — outros idiomas',
+      orTypes: 'Tipos de valor alternativos (sh:or)',
       path: 'Caminho da propriedade (sh:path)',
       minCount: 'Contagem mín.',
       maxCount: 'Contagem máx.',
@@ -192,6 +196,7 @@ const ptBR = {
     severityDefault: '— padrão (Violation) —',
     hint: {
       valueRange: 'Limites do valor (sh:minInclusive / maxInclusive / minExclusive / maxExclusive). Números são escritos diretamente; datas como literais tipados.',
+      orTypes: 'O valor pode corresponder a qualquer um destes tipos (ex.: um literal ou um IRI).',
       nestedShape: 'sh:NodeShape que define os campos do objeto aninhado.',
       moveFieldGroup: 'Mova o campo arrastando-o para outro grupo.',
       moveFieldNested: 'Mova o campo arrastando-o dentro da forma.',

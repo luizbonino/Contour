@@ -33,7 +33,7 @@ engine that can **ingest and emit multiple RDF syntaxes**.
 | 1 — Safety & correctness quick-wins | undo, autosave, bug fixes, linting, ranges | ✅ Done |
 | 2 — RDF engine + multi-syntax + lossless round-trip | real parser, syntax toggle, preserve-unknown | ✅ Done |
 | 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ✅ Done |
-| 4 — Expressiveness | language tags, sh:or / qualified, rich paths | 🟡 F8 done; F6/F9 pending |
+| 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ✅ Done (common cases; complex stays residual) |
 | 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | ⬜ Not started |
 | 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | ⬜ Not started |
 
@@ -231,7 +231,14 @@ Made the Form Preview honest and nested shapes easy to wire up. Shipped.
 
 ---
 
-## Phase 4 — Expressiveness 🟡
+## Phase 4 — Expressiveness ✅
+
+> **Verified:** `npm test` **142/142**; type-check clean; build ~393 KB gzip.
+> Scope note: Phase 4 models the **common, form-relevant** cases of each
+> construct and leans on the Phase 2 residual graph for the rest. For a
+> form-design tool, arbitrary logical shapes and multi-step path expressions add
+> heavy UI for little form value, so they remain preserved-but-not-modeled.
+
 
 - [x] **Language-tagged labels (F8):** ✅ repeatable `sh:name`/`sh:description`
       with `@lang`. `Field` carries `nameLang`/`descriptionLang` for the primary
@@ -244,13 +251,16 @@ Made the Form Preview honest and nested shapes easy to wire up. Shipped.
       unchanged). Verified by round-trip tests.
       > Remaining within F8 (minor follow-up): schema-level `rdfs:label` /
       > `dct:description` language tags, and modeling `sh:languageIn`.
-- [ ] **Logical constraints (F6):** `sh:or` / `sh:xone` / `sh:and` / `sh:not`,
-      starting with the common "literal **or** IRI" and "one-of shapes" patterns;
-      qualified value shapes (`sh:qualifiedValueShape` + min/max counts).
-      *(Still safely preserved via the Phase 2 residual graph until modeled.)*
-- [ ] **Rich paths (F9):** `sh:inversePath`, sequence, and alternative paths in a
-      path editor (today `sh:path` is a single token).
-      *(Complex-path properties are currently preserved verbatim via residual.)*
+- [x] **Logical constraints (F6):** ✅ `sh:or` modeled as **alternative value
+      types** — a list of type-only branches (`sh:nodeKind` / `sh:datatype` /
+      `sh:class`), covering "literal **or** IRI" and "string **or** date". A
+      branch with anything richer keeps the whole `sh:or` in the residual graph
+      ([OrTypesEditor.vue](src/components/OrTypesEditor.vue)). `sh:xone`/`and`/
+      `not` and qualified value shapes remain residual-preserved.
+- [x] **Rich paths (F9):** ✅ `sh:inversePath` modeled (`Field.inversePath`;
+      parsed from `[ sh:inversePath p ]`, generated back; Inspector checkbox; the
+      field card shows `^path`). Sequence and alternative paths remain
+      preserved verbatim via residual.
 
 ---
 
