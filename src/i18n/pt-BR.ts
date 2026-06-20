@@ -101,6 +101,7 @@ const ptBR = {
     syncHint:
       'Edite o código diretamente — as alterações são interpretadas e sincronizadas de volta ao editor visual automaticamente.',
     syntax: 'Sintaxe',
+    exportOnly: 'JSON-LD é somente para exportação — copie ou salve e volte ao Turtle para continuar editando.',
     residualNotice:
       'Este esquema usa SHACL/RDF que o editor visual ainda não modela. É preservado integralmente (veja o bloco “Preserved”) e mantido ao salvar.',
   },
