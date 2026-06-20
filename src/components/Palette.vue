@@ -10,6 +10,7 @@ import WidgetIcon from './WidgetIcon.vue';
 const q = ref('');
 const { startPaletteDrag, endDrag } = useDrag();
 const { t } = useI18n();
+const emit = defineEmits<{ add: [widget: Widget] }>();
 
 const filtered = computed<Widget[]>(() => {
   const needle = q.value.trim().toLowerCase();
@@ -62,9 +63,14 @@ function onDragStart(e: DragEvent, widget: Widget) {
           :key="w.id"
           class="palette-item"
           draggable="true"
-          :title="w.editor"
+          role="button"
+          tabindex="0"
+          :title="t('palette.addTitle', { editor: w.editor })"
           @dragstart="onDragStart($event, w)"
           @dragend="endDrag"
+          @click="emit('add', w)"
+          @keydown.enter.prevent="emit('add', w)"
+          @keydown.space.prevent="emit('add', w)"
         >
           <div class="palette-item__icon"><WidgetIcon :char="w.icon" /></div>
           <div class="palette-item__text">

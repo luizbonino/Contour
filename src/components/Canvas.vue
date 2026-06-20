@@ -4,9 +4,18 @@ import { newId } from '../data';
 import { fieldFromWidget } from '../composables/useSchema';
 import { useDrag } from '../composables/useDrag';
 import { useI18n } from '../composables/useI18n';
-import type { Field, Mutator, Schema, SelectedKind } from '../types';
+import type { Field, Group, Mutator, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
 import FieldCard from './FieldCard.vue';
+
+// Mint a stable, unique IRI for a new group (kept fixed across later renames).
+function mintGroupIri(groups: Group[], label: string): string {
+  const base = `:${(label || 'group').replace(/[^A-Za-z0-9]+/g, '') || 'Group'}Group`;
+  let iri = base;
+  let n = 2;
+  while (groups.some((g) => g.iri === iri)) iri = `${base}_${n++}`;
+  return iri;
+}
 
 const { t, plural } = useI18n();
 
@@ -31,6 +40,10 @@ const { state: dragState, startFieldDrag, startNestedFieldDrag, endDrag, setHove
 
 const totalFields = computed(() =>
   props.schema.groups.reduce((s, g) => s + g.fields.length, 0),
+);
+
+const orderedGroups = computed(() =>
+  props.schema.groups.slice().sort((a, b) => a.order - b.order),
 );
 
 // ── Main shape drag/drop ───────────────────────────────────────────────────
@@ -79,7 +92,8 @@ function onDrop(e: DragEvent, targetGroupId: string) {
     let destGroup = draft.groups.find((g) => g.id === destGroupId) || draft.groups[draft.groups.length - 1];
     // No group yet (blank canvas): create the first one automatically.
     if (!destGroup) {
-      destGroup = { id: newId('g'), label: `Section ${draft.groups.length + 1}`, order: draft.groups.length, fields: [] };
+      const label = `Section ${draft.groups.length + 1}`;
+      destGroup = { id: newId('g'), iri: mintGroupIri(draft.groups, label), label, order: draft.groups.length, fields: [] };
       draft.groups.push(destGroup);
     }
 
@@ -169,7 +183,20 @@ function onDropToNested(e: DragEvent, nsId: string) {
 function addGroup() {
   props.mutate((draft) => {
     const order = draft.groups.length;
-    draft.groups.push({ id: newId('g'), label: `Section ${order + 1}`, order, fields: [] });
+    const label = `Section ${order + 1}`;
+    draft.groups.push({ id: newId('g'), iri: mintGroupIri(draft.groups, label), label, order, fields: [] });
+  });
+}
+
+// ── U7-lite: reorder a group up/down ────────────────────────────────────────
+function moveGroup(gid: string, dir: -1 | 1) {
+  props.mutate((draft) => {
+    const sorted = draft.groups.slice().sort((a, b) => a.order - b.order);
+    const idx = sorted.findIndex((g) => g.id === gid);
+    const swap = idx + dir;
+    if (idx < 0 || swap < 0 || swap >= sorted.length) return;
+    [sorted[idx], sorted[swap]] = [sorted[swap], sorted[idx]];
+    sorted.forEach((g, i) => { g.order = i; });
   });
 }
 
@@ -346,7 +373,7 @@ function onCanvasClick() {
         </div>
 
         <!-- Main shape groups -->
-        <div v-for="g in schema.groups" :key="g.id" class="group-card">
+        <div v-for="(g, gi) in orderedGroups" :key="g.id" class="group-card">
           <div class="group-card__header" @click.stop="emit('selectGroup', g.id)">
             <Icon name="layers" :size="14" />
             <input
@@ -356,6 +383,8 @@ function onCanvasClick() {
               @click.stop
             />
             <div class="group-card__actions">
+              <button class="btn btn-ghost btn-xs" :title="t('canvas.moveUp')" :disabled="gi === 0" @click.stop="moveGroup(g.id, -1)">↑</button>
+              <button class="btn btn-ghost btn-xs" :title="t('canvas.moveDown')" :disabled="gi === orderedGroups.length - 1" @click.stop="moveGroup(g.id, 1)">↓</button>
               <button class="btn btn-danger-ghost btn-xs" :title="t('canvas.deleteGroupTitle')" @click.stop="deleteGroup(g.id)">
                 <Icon name="trash" :size="13" />
               </button>

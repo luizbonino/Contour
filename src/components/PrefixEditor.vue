@@ -8,6 +8,7 @@ const { t } = useI18n();
 
 interface Props {
   prefixes: Prefix[];
+  used?: string[];
 }
 const props = defineProps<Props>();
 const emit = defineEmits<{ change: [v: Prefix[]] }>();
@@ -25,6 +26,11 @@ function add() {
 }
 
 function remove(i: number) {
+  const p = props.prefixes[i];
+  if (p && (props.used || []).includes(p.prefix) &&
+      !window.confirm(t('prefixes.removeUsedConfirm', { prefix: p.prefix }))) {
+    return;
+  }
   const next = props.prefixes.slice();
   next.splice(i, 1);
   emit('change', next);

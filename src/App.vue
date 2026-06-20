@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { useSchemaStore } from './composables/useSchema';
+import { useSchemaStore, fieldFromWidget } from './composables/useSchema';
 import { serializeSchema, parseShacl } from './shacl';
 import { SYNTAXES, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax } from './rdf';
 import { validateSchema } from './validation';
 import { loadDraft, saveDraft, clearDraft, listRecent, addRecent, type RecentEntry } from './composables/usePersistence';
-import { WIDGET_BY_ID, blankSchema, EXAMPLES } from './data';
+import { WIDGET_BY_ID, blankSchema, newId, EXAMPLES } from './data';
 import type { SchemaExample } from './data';
-import type { SelectedKind } from './types';
+import type { SelectedKind, Widget } from './types';
 import Icon from './components/Icon.vue';
 import Palette from './components/Palette.vue';
 import Canvas from './components/Canvas.vue';
@@ -333,6 +333,44 @@ function selectNestedField(nsId: string, fieldId: string) {
 
 function clearSelection() {
   selectSchemaTarget();
+}
+
+// Click/keyboard alternative to dragging: add a widget to the most sensible
+// target (the selected nested shape, the selected/last group, or a new one).
+function addWidget(widget: Widget) {
+  const kind = selectedKind.value;
+  const selId = selectedId.value;
+  const nsId = selectedNestedShapeId.value;
+  let newFieldId: string | null = null;
+  let nestedTarget: string | null = null;
+  mutate((d) => {
+    const f = fieldFromWidget(widget, 0);
+    if ((kind === 'nested-shape' || kind === 'nested-field') && nsId) {
+      const ns = (d.nestedShapes || []).find((x) => x.id === nsId);
+      if (!ns) return;
+      f.order = ns.fields.length;
+      ns.fields.push(f);
+      newFieldId = f.id;
+      nestedTarget = nsId;
+      return;
+    }
+    let g =
+      (kind === 'group' || kind === 'field') && selId
+        ? d.groups.find((x) => x.id === selId) ||
+          d.groups.find((x) => x.fields.some((ff) => ff.id === selId))
+        : undefined;
+    if (!g) g = d.groups[d.groups.length - 1];
+    if (!g) {
+      const label = 'Section 1';
+      g = { id: newId('g'), iri: `:${label.replace(/\s+/g, '')}Group`, label, order: 0, fields: [] };
+      d.groups.push(g);
+    }
+    f.order = g.fields.length;
+    g.fields.push(f);
+    newFieldId = f.id;
+  });
+  if (nestedTarget && newFieldId) selectNestedField(nestedTarget, newFieldId);
+  else if (newFieldId) selectField(newFieldId);
 }
 
 async function copyShacl() {
@@ -764,7 +802,7 @@ async function saveAsShacl() {
         <div class="tabs-callout" v-html="t('visual.calloutHtml')" />
 
         <div class="workbench">
-          <Palette />
+          <Palette @add="addWidget" />
           <Canvas
             :schema="schema"
             :mutate="mutate"

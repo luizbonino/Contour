@@ -123,6 +123,8 @@ const en = {
     nestedShapes: 'Nested shapes',
     deleteGroupTitle: 'Delete group',
     deleteNestedShapeTitle: 'Delete nested shape',
+    moveUp: 'Move group up',
+    moveDown: 'Move group down',
   },
   fieldCard: {
     duplicate: 'Duplicate',
@@ -214,12 +216,14 @@ const en = {
   },
   palette: {
     title: 'Widgets',
-    subtitle: 'Drag to canvas · DASH',
+    subtitle: 'Drag or click to add · DASH',
     search: 'Search widgets…',
+    addTitle: 'Click to add, or drag onto the canvas ({editor})',
   },
   prefixes: {
     label: 'Prefixes',
     remove: 'Remove',
+    removeUsedConfirm: 'The prefix "{prefix}:" is used in this schema. Removing it will make the generated SHACL reference an undeclared prefix. Remove anyway?',
   },
   translations: {
     lang: 'lang',

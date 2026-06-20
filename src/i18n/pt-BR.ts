@@ -122,6 +122,8 @@ const ptBR = {
     nestedShapes: 'Formas aninhadas',
     deleteGroupTitle: 'Excluir grupo',
     deleteNestedShapeTitle: 'Excluir forma aninhada',
+    moveUp: 'Mover grupo para cima',
+    moveDown: 'Mover grupo para baixo',
   },
   fieldCard: {
     duplicate: 'Duplicar',
@@ -213,12 +215,14 @@ const ptBR = {
   },
   palette: {
     title: 'Widgets',
-    subtitle: 'Arraste para a tela · DASH',
+    subtitle: 'Arraste ou clique para adicionar · DASH',
     search: 'Buscar widgets…',
+    addTitle: 'Clique para adicionar, ou arraste para a tela ({editor})',
   },
   prefixes: {
     label: 'Prefixos',
     remove: 'Remover',
+    removeUsedConfirm: 'O prefixo "{prefix}:" é usado neste esquema. Removê-lo fará o SHACL gerado referenciar um prefixo não declarado. Remover mesmo assim?',
   },
   translations: {
     lang: 'idioma',

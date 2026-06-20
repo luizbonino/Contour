@@ -23,7 +23,8 @@ function curiePrefix(term: string | null | undefined): string | null {
   return term.slice(0, c);
 }
 
-const labelToGroupIri = (label: string) => `:${(label || 'group').replace(/\s+/g, '')}Group`;
+const groupIri = (g: Schema['groups'][number]) =>
+  g.iri || `:${(g.label || 'group').replace(/\s+/g, '')}Group`;
 
 export function validateSchema(schema: Schema): Issue[] {
   const issues: Issue[] = [];
@@ -57,11 +58,11 @@ export function validateSchema(schema: Schema): Issue[] {
   // Group-IRI collisions (IRI is derived from the label).
   const groupIris = new Map<string, number>();
   for (const g of schema.groups) {
-    const iri = labelToGroupIri(g.label);
+    const iri = groupIri(g);
     groupIris.set(iri, (groupIris.get(iri) ?? 0) + 1);
   }
   for (const g of schema.groups) {
-    if ((groupIris.get(labelToGroupIri(g.label)) ?? 0) > 1) {
+    if ((groupIris.get(groupIri(g)) ?? 0) > 1) {
       issues.push({
         severity: 'warning',
         message: `Group label "${g.label}" collides with another group (same generated IRI).`,
