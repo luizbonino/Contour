@@ -13,7 +13,7 @@ interface Props {
   selectedKind: SelectedKind;
   selectedId: string | null;
   selectedNestedShapeId: string | null;
-  mutate: (m: Mutator) => void;
+  mutate: (m: Mutator, coalesceKey?: string) => void;
 }
 const props = defineProps<Props>();
 const emit = defineEmits<{ clear: [] }>();
@@ -76,6 +76,12 @@ const fieldWidget = computed(() =>
 const isLiteral = computed(() => (activeField.value?.nodeKind || '').includes('Literal'));
 const isIRI = computed(() => (activeField.value?.nodeKind || '').includes('IRI'));
 
+// Value-range bounds (sh:minInclusive etc.) only make sense for numeric / date widgets.
+const showRange = computed(() => {
+  const id = fieldWidget.value?.id;
+  return id === 'NumberFieldEditor' || id === 'DatePickerEditor' || id === 'DateTimePickerEditor';
+});
+
 const showCloseBtn = computed(() =>
   props.selectedKind === 'field' ||
   props.selectedKind === 'group' ||
@@ -94,7 +100,7 @@ function setField<K extends keyof Field>(key: K, value: Field[K]) {
       if (!g) return;
       const i = g.fields.findIndex((f) => f.id === loc.field.id);
       if (i >= 0) (g.fields[i] as Field)[key] = value;
-    });
+    }, `f:${loc.field.id}:${String(key)}`);
   } else if (props.selectedKind === 'nested-field') {
     const nsId = props.selectedNestedShapeId;
     const fId = props.selectedId;
@@ -104,7 +110,7 @@ function setField<K extends keyof Field>(key: K, value: Field[K]) {
       if (!ns) return;
       const i = ns.fields.findIndex((f) => f.id === fId);
       if (i >= 0) (ns.fields[i] as Field)[key] = value;
-    });
+    }, `nf:${nsId}:${fId}:${String(key)}`);
   }
 }
 
@@ -114,7 +120,7 @@ function setGroup<K extends keyof Group>(key: K, value: Group[K]) {
   props.mutate((draft) => {
     const g = draft.groups.find((x) => x.id === grp.id);
     if (g) (g as Group)[key] = value;
-  });
+  }, `g:${grp.id}:${String(key)}`);
 }
 
 function deleteCurrentGroup() {
@@ -130,7 +136,7 @@ function deleteCurrentGroup() {
 function setSchema<K extends keyof Schema>(key: K, value: Schema[K]) {
   props.mutate((draft) => {
     (draft as Schema)[key] = value;
-  });
+  }, `s:${String(key)}`);
 }
 
 function setNestedShape<K extends keyof NestedShape>(key: K, value: NestedShape[K]) {
@@ -139,7 +145,7 @@ function setNestedShape<K extends keyof NestedShape>(key: K, value: NestedShape[
   props.mutate((draft) => {
     const x = (draft.nestedShapes || []).find((n) => n.id === ns.id);
     if (x) (x as NestedShape)[key] = value;
-  });
+  }, `ns:${ns.id}:${String(key)}`);
 }
 
 function setNestedShapeIri(newIri: string) {
@@ -338,6 +344,54 @@ function onNumber(e: Event): number | null {
                 @input="setField('pattern', ($event.target as HTMLInputElement).value)"
               />
             </div>
+          </template>
+          <template v-if="showRange">
+            <div class="insp-section__title" style="margin-top: 10px">{{ t('inspector.section.valueRange') }}</div>
+            <div class="form-row-2">
+              <div class="form-row">
+                <label>{{ t('inspector.label.minInclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.minInclusive ?? ''"
+                  placeholder="≥"
+                  @input="setField('minInclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+              <div class="form-row">
+                <label>{{ t('inspector.label.maxInclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.maxInclusive ?? ''"
+                  placeholder="≤"
+                  @input="setField('maxInclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-row">
+                <label>{{ t('inspector.label.minExclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.minExclusive ?? ''"
+                  placeholder="&gt;"
+                  @input="setField('minExclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+              <div class="form-row">
+                <label>{{ t('inspector.label.maxExclusive') }}</label>
+                <input
+                  type="text"
+                  class="mono"
+                  :value="activeField.maxExclusive ?? ''"
+                  placeholder="&lt;"
+                  @input="setField('maxExclusive', ($event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+            <div class="hint">{{ t('inspector.hint.valueRange') }}</div>
           </template>
           <InValuesEditor
             v-if="

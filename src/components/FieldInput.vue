@@ -20,20 +20,20 @@ const { t } = useI18n();
   <template v-else-if="field.widgetId === 'EnumSelectEditor'">
     <select>
       <option value="">{{ t('fieldInput.select') }}</option>
-      <option v-for="(v, i) in field.inValues || []" :key="i">{{ v }}</option>
+      <option v-for="(v, i) in field.inValues || []" :key="i">{{ v.value }}</option>
     </select>
   </template>
   <template v-else-if="field.widgetId === 'DatePickerEditor'">
-    <input type="date" />
+    <input type="date" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
   </template>
   <template v-else-if="field.widgetId === 'DateTimePickerEditor'">
     <div class="form-preview__datetime">
-      <input type="date" />
+      <input type="date" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
       <input type="time" />
     </div>
   </template>
   <template v-else-if="field.widgetId === 'NumberFieldEditor'">
-    <input type="number" />
+    <input type="number" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
   </template>
   <template
     v-else-if="

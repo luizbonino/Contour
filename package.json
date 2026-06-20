@@ -16,9 +16,11 @@
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/ibm-plex-sans": "^5.2.8",
+    "n3": "^2.0.4",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@types/n3": "^1.26.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/test-utils": "^2.4.10",
     "happy-dom": "^20.9.0",

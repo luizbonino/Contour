@@ -1,4 +1,292 @@
-# Contour Rebrand — Implementation Plan
+# Contour — Implementation Plans
+
+This file tracks Contour's implementation plans. The **active** plan is the
+**SHACL Editor Enhancements** below (derived from the SHACL / form-generation
+review). The completed **Rebrand** plan is archived at the end for reference.
+
+- [SHACL Editor Enhancements](#shacl-editor-enhancements--implementation-plan) — **active**
+- [Contour Rebrand](#contour-rebrand--implementation-plan-archived--done) — ✅ done (archived)
+
+---
+
+# SHACL Editor Enhancements — Implementation Plan
+
+Improve Contour's **correctness, safety, expressiveness, and UX** as a SHACL
+form-design tool, and replace the hand-rolled regex parser with a real RDF
+engine that can **ingest and emit multiple RDF syntaxes**.
+
+## Guiding principles
+
+- **Don't corrupt the steward's work.** Open → edit → save must never silently
+  drop SHACL the tool doesn't model. Correctness/safety beats new features.
+- **Preserve the brand promise.** "Visual schemas. Clean SHACL." — Turtle output
+  stays clean and hand-formatted; new schemas are **Turtle by default**.
+- **Respect the ethos.** Zero backend, single self-contained build, minimal
+  runtime deps. New deps must earn their bundle weight; heavy ones are opt-in.
+- **Ship safety first.** Phases 1–2 are non-negotiable; Phases 3–6 are
+  deliberate, opt-in scope.
+
+## Status
+
+| Phase | Theme | Status |
+|---|---|---|
+| 1 — Safety & correctness quick-wins | undo, autosave, bug fixes, linting, ranges | ✅ Done |
+| 2 — RDF engine + multi-syntax + lossless round-trip | real parser, syntax toggle, preserve-unknown | ✅ Done |
+| 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ⬜ Not started |
+| 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ⬜ Not started |
+| 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | ⬜ Not started |
+| 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | ⬜ Not started |
+
+## Priority map (from the review)
+
+| Rec | Finding | Phase | Impact | Effort |
+|---|---|---|---|---|
+| Preserve-or-warn on unknown SHACL | F1 | 2 | ★★★ | M |
+| Undo / redo | U1 | 1 | ★★★ | S |
+| localStorage autosave + recent schemas | U2 | 1 | ★★★ | S |
+| Fix `sh:in` IRI enums + serialize description | F2, F3 | 1 | ★★★ | S |
+| Live validation / issues panel | U3 | 1 | ★★★ | M |
+| Value-range constraints | F5 | 1 | ★★ | S |
+| Real RDF parser + multi-syntax I/O | F10 | 2 | ★★★ | L |
+| `sh:message` / `sh:severity` + preview | F7, U4 | 3 | ★★ | M |
+| Create-&-link nested shape from field | U5 | 3 | ★★ | S |
+| Click/keyboard add + drag-reorder (a11y) | U6, U7 | 5 | ★★ | M |
+| Peer top-level shapes + shape navigator | F4, U8 | 5 | ★★ | L |
+| Language-tagged labels (`@en`/`@pt`, `languageIn`) | F8 | 4 | ★★ | M |
+| `sh:or` / qualified shapes; rich paths | F6, F9 | 4 | ★ | L |
+
+## Key technical decisions
+
+1. **RDF library = [N3.js](https://github.com/rdfjs/N3.js).** Parses & serializes
+   Turtle, N-Triples, TriG, and N3 with essentially no transitive deps — the
+   "few RDF syntaxes" the toggle needs, without breaking the single-file ethos.
+   JSON-LD (`jsonld`) and RDF/XML (`rdfxml-streaming-parser`) are **heavier and
+   deferred to Phase 6** as opt-in.
+2. **Graph-backed round-trip with a residual store.** Parse any syntax → N3
+   `Store`. Project the editable `Schema` from known SHACL/DASH quads, recording
+   each element's **source term** (blank node / IRI). Everything not consumed by
+   the projection is the **residual store** and is preserved verbatim. On
+   output: model → quads ∪ residual → serialize. This is what actually fixes F1.
+3. **Keep the custom Turtle pretty-printer for the model.** "Clean SHACL" is a
+   brand promise N3.Writer's formatting won't match. Turtle output =
+   hand-printed model + residual appended in a clearly-commented block. **Other
+   syntaxes** (N-Triples/TriG/N3, later JSON-LD/RDF-XML) serialize the whole
+   graph via the library — clean formatting is a Turtle-specific concern.
+4. **Turtle is the default** for new schemas and the initial toggle state.
+5. **Autosave is local-only** (`localStorage`), consistent with zero-backend.
+
+> **Open trade-offs (acceptable defaults chosen; revisit if needed):**
+> N3.js adds ~50–150 KB to the inlined bundle (acceptable). Residual-graph
+> preservation means re-saving a hand-authored file may reorder/normalise the
+> *unknown* portion — documented as expected. If full byte-fidelity becomes a
+> requirement, escalate to a quad-diff write-back model (bigger rewrite).
+
+---
+
+## Phase 1 — Safety & correctness quick-wins ✅
+
+High impact, low effort, mostly independent of the parser rewrite. Shipped.
+
+> **Verified:** `npm test` **125/125** green (was 109; added IRI-enum,
+> description, range round-trip, and validation tests); `npm run type-check`
+> clean; `npm run build` produces the single-file `dist/index.html`
+> (559 KB / 335 KB gzip).
+
+### 1a. Undo / redo (U1) — ✅
+- [x] Bounded history stack in [`useSchema.ts`](src/composables/useSchema.ts):
+      pre-mutation snapshot on each `mutate()`, `undo()` / `redo()`, redo cleared
+      on new mutations, 100-entry cap.
+- [x] `Ctrl/Cmd+Z` / `Ctrl/Cmd+Shift+Z` (ignored while focused in a text
+      control so native edit-undo still works) + header buttons in
+      [`App.vue`](src/App.vue), disabled when stacks are empty.
+- [x] Coalesce rapid same-key edits (typing in one field) into one history step
+      via an optional `coalesceKey` on `mutate()`, threaded through the Inspector.
+- [x] Snapshot-based design (no per-rule tests needed; covered by manual + the
+      immutable store contract).
+
+### 1b. localStorage autosave + recent schemas (U2) — ✅
+- [x] Debounced (600 ms) draft persistence to `localStorage` (`contour.draft`)
+      via [`usePersistence.ts`](src/composables/usePersistence.ts); restored on
+      load behind a dismissible "Restored your unsaved draft" banner.
+- [x] **Recent schemas** list (name + timestamp + schema), recorded on save,
+      surfaced in a header **Recent** menu next to **Examples**.
+- [x] "New" clears the draft; load-example / file-open reset the banner.
+
+### 1c. Fix `sh:in` IRI enumerations (F3) — ✅
+- [x] Modelled enum items as `InValue = { value, kind: 'literal' | 'iri' }`
+      ([types.ts](src/types.ts)).
+- [x] Parser tokenizes `sh:in ( … )` capturing IRIs/CURIEs and literals
+      ([shacl.ts](src/shacl.ts) `parseInList`).
+- [x] Generator emits IRIs unquoted, literals quoted.
+- [x] [`InValuesEditor.vue`](src/components/InValuesEditor.vue) lets each value be
+      tagged literal vs. IRI (toggle on the tag).
+- [x] Round-trip tests for both literal and IRI enums.
+
+### 1d. Serialize the schema description (F2) — ✅
+- [x] `generateShacl` emits `dct:description`; parser reads `dct:description` /
+      `rdfs:comment` back.
+- [x] Removed the ephemeral re-injection workaround in `App.vue`.
+- [x] Round-trip test for description.
+
+### 1e. Value-range constraints (F5) — ✅
+- [x] Added `minInclusive` / `maxInclusive` / `minExclusive` / `maxExclusive` to
+      `Field`; parse/generate (numbers bare, dates as typed literals; decimals &
+      negatives supported).
+- [x] Inspector "Value range" section for Number / Date / DateTime widgets.
+- [x] Reflected as `min` / `max` on the preview inputs
+      ([FieldInput.vue](src/components/FieldInput.vue)).
+
+### 1f. Live validation / issues panel (U3) — ✅
+- [x] Pure-model linter [`validation.ts`](src/validation.ts): empty/duplicate
+      `sh:path`, dangling/empty `sh:node`, undeclared-prefix on
+      path/class/datatype/targetClass, empty `targetClass`, missing name,
+      nested-shape empty/duplicate IRI, group-IRI collisions.
+- [x] Non-blocking "Issues" toggle in the actions bar + click-to-focus panel
+      with error/warning styling.
+- [x] Unit tests per rule ([validation.test.ts](src/__tests__/validation.test.ts)).
+
+---
+
+## Phase 2 — RDF engine + multi-syntax + lossless round-trip ✅
+
+Replaced the regex parser (F10) and delivered the multi-syntax toggle and
+preserve-unknown round-trip (F1). The architectural heart of this plan. Shipped.
+
+> **Verified:** `npm test` **133/133** (8 new preservation + multi-syntax tests);
+> `npm run type-check` clean; `npm run build` single-file `dist/index.html`
+> **740 KB / 390 KB gzip** (N3.js adds ~55 KB gzip — within the documented
+> tolerance). Confirmed by eyeballing regenerated Turtle: simple properties stay
+> clean inline `[ … ]`; advanced ones (sh:or + sh:message) become a labeled
+> `_:n…` node with their unmodeled triples in a fenced "Preserved" tail, and the
+> whole graph round-trips (Turtle ↔ TriG ↔ N-Triples).
+
+> **Design note (what actually shipped vs. the plan):** residual is carried *on
+> the model* (`Field.bnode` + `Schema.residual` N-Triples) rather than as a
+> separate live store, and re-emitted as a commented N-Triples tail. This keeps
+> the model JSON/localStorage-friendly (Phase 1 autosave) and the round-trip
+> guarantee intact. The N-Triples tail uses full IRIs (verbose but valid and
+> clearly fenced); the editable model stays clean Turtle.
+
+### 2a. Adopt N3.js as the RDF engine — ✅
+- [x] Added `n3` runtime dep; inlines into the single-file build (size delta
+      recorded above).
+- [x] [`src/rdf.ts`](src/rdf.ts) wraps N3 parse/serialize: `SYNTAXES`,
+      `parseRdf(text, syntax)`, `serializeQuads(quads, prefixes, syntax)`,
+      `shorten()`, `detectSyntax()`.
+
+### 2b. Graph projection + residual — ✅
+- [x] `storeToSchema` ([shacl.ts](src/shacl.ts)) builds the `Schema` from known
+      SHACL/DASH quads, consuming them from a residual `Store`; per-property
+      unknowns split off via a stable blank-node label (`Field.bnode`).
+- [x] Residual = quads not consumed → serialized to N-Triples on `Schema.residual`.
+- [x] Robust literals come for free (decimals, negatives, typed/boolean literals,
+      language tags, triple-quoted strings — the old integer-only parsing is gone).
+
+### 2c. Clean Turtle output preserved — ✅
+- [x] Kept the hand-written Turtle pretty-printer; appends the residual graph in
+      a clearly-commented `# ── Preserved … ──` block.
+- [x] Non-Turtle syntaxes: `serializeSchema` re-parses the clean Turtle and
+      serializes via N3.
+
+### 2d. Multi-syntax toggle in the SHACL Code tab — ✅
+- [x] Syntax `<select>` (Turtle · N-Triples · TriG · Notation3) in the SHACL Code
+      header; switching re-serializes the current model.
+- [x] Textarea sync is syntax-aware; parse errors carry N3's line number.
+- [x] File **open** detects syntax by extension; **Save As** suggests the
+      matching extension.
+- [x] New schema → Turtle; autocomplete restricted to Turtle.
+
+### 2e. Lossy-edit guardrail (F1) — ✅
+- [x] Dismissible notice in the SHACL Code tab when `schema.residual` is present
+      ("preserved verbatim … round-trips on save").
+- [x] Tests: `parse → generate → parse` stable; `sh:or`, `sh:message`,
+      shape-level predicates, and unmanaged subjects survive; Turtle ↔ TriG ↔
+      N-Triples round-trips ([shacl.preservation.test.ts](src/__tests__/shacl.preservation.test.ts)).
+- [x] Reworked the existing parse/roundtrip tests for the N3 pipeline.
+
+---
+
+## Phase 3 — Form fidelity & linking UX ⬜
+
+Make the Form Preview honest and nested shapes easy to wire up.
+
+- [ ] **`sh:message` / `sh:severity` (F7):** add to `Field`; author in the
+      Inspector (message text + Violation/Warning/Info); parse/generate.
+- [ ] **Preview fidelity (U4):** show cardinality hints ("1–3 values"), enforce
+      required, apply `pattern`/range/min-max to inputs, render language pickers
+      for `rdf:langString`, surface `sh:message`, and **recurse** into
+      nested-within-nested shapes ([FormPreview.vue](src/components/FormPreview.vue)).
+- [ ] **Create-&-link nested shape (U5):** a "Create & link nested shape" action
+      on a `DetailsEditor` field that mints the shape and sets `sh:node`
+      automatically ([Inspector.vue:291](src/components/Inspector.vue#L291)); draw a
+      visual link between the field and its target shape on the canvas; warn on
+      dangling references (ties into the Phase 1 linter).
+
+---
+
+## Phase 4 — Expressiveness ⬜
+
+- [ ] **Language-tagged labels (F8):** repeatable `sh:name`/`sh:description` with
+      `@lang`; model `rdf:langString` + `sh:languageIn`; per-label language UI.
+- [ ] **Logical constraints (F6):** `sh:or` / `sh:xone` / `sh:and` / `sh:not`,
+      starting with the common "literal **or** IRI" and "one-of shapes" patterns;
+      qualified value shapes (`sh:qualifiedValueShape` + min/max counts).
+- [ ] **Rich paths (F9):** `sh:inversePath`, sequence, and alternative paths in a
+      path editor (today `sh:path` is a single token,
+      [types.ts:31](src/types.ts#L31)).
+
+---
+
+## Phase 5 — Structure & scale ⬜
+
+- [ ] **Peer top-level shapes (F4):** support many independent NodeShapes (not
+      "first shape wins, rest are nested" — [shacl.ts:230](src/shacl.ts#L230));
+      model a graph of mutually-referencing shapes.
+- [ ] **Shape navigator / outline (U8):** sidebar to jump between shapes and
+      large field lists.
+- [ ] **a11y add + reorder (U6, U7):** click/double-click-to-add from the palette
+      and keyboard reordering (today fields can only be added by drag —
+      [Palette.vue:60](src/components/Palette.vue#L60)); drag-reorder groups and
+      nested shapes; **derive `sh:order` from visual position** instead of manual
+      integers ([Inspector.vue:454](src/components/Inspector.vue#L454)).
+- [ ] **Visual-editor autocomplete (U9):** suggest known predicates/classes for
+      `sh:path` / `targetClass` / `sh:class` inputs (the Turtle tab already has
+      this; the visual editor doesn't).
+- [ ] **Prefix hygiene (U10, U11):** warn before deleting an in-use prefix; make
+      group IRIs stable/unique instead of label-derived
+      ([shacl.ts:367](src/shacl.ts#L367)).
+
+---
+
+## Phase 6 — Optional / opt-in ⬜
+
+- [ ] **JSON-LD & RDF/XML syntaxes (U12):** extend the toggle via `jsonld` /
+      `rdfxml-streaming-parser` — gated on the bundle-size budget (these are far
+      heavier than N3.js); possibly lazy-loaded.
+- [ ] **Validate sample data against the shape:** paste/load instance RDF and run
+      a SHACL validation, showing the report — closes the FAIR authoring loop.
+- [ ] **Export to JSON-LD** for non-Turtle consumers.
+
+---
+
+## Cross-cutting verification
+
+- [ ] `npm test` green; new tests for each phase (notably Phase 2 round-trip &
+      preservation).
+- [ ] `npm run build` still produces a single self-contained `dist/index.html`;
+      record bundle-size deltas (N3.js in Phase 2; deferred libs in Phase 6).
+- [ ] Generated Turtle stays clean and human-readable; new schemas default to
+      Turtle.
+- [ ] Keyboard reachability for added affordances (undo, add-field, toggle).
+
+> **Environment caveat (carried over):** in the sandbox `npm run dev` / `npm run
+> build` may fail (esbuild can't spawn its service). Source edits are fine here;
+> **building, bundle-size measurement, and screenshots require a real
+> environment.**
+
+---
+
+# Contour Rebrand — Implementation Plan (archived — done)
 
 Rebrand the application from **Project Oak** (currently presented as a FAIR Data
 Point–styled tool) to **Contour**, adopting the approved "Linked contours" brand

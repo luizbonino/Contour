@@ -11,6 +11,8 @@ const ptBR = {
     saveAs: 'Salvar como…',
     copy: 'Copiar',
     copyShacl: 'Copiar SHACL',
+    undo: 'Desfazer',
+    redo: 'Refazer',
   },
   header: {
     guide: 'Guia',
@@ -21,6 +23,27 @@ const ptBR = {
     saveTitle: 'Salvar no arquivo atual (Ctrl+S)',
     saveAsTitle: 'Salvar como um novo arquivo',
     language: 'Idioma',
+    undoTitle: 'Desfazer (Ctrl+Z)',
+    redoTitle: 'Refazer (Ctrl+Shift+Z)',
+  },
+  draft: {
+    restored: 'Seu rascunho não salvo foi restaurado.',
+    startFresh: 'Começar do zero',
+    dismiss: 'Dispensar',
+  },
+  recent: {
+    menu: 'Recentes',
+    title: 'Abrir um esquema salvo recentemente',
+    empty: 'Nenhum esquema salvo recentemente ainda.',
+    confirm: 'Substituir o esquema atual por este recente?',
+  },
+  issues: {
+    title: 'Problemas',
+    none: 'Sem problemas — o esquema parece válido.',
+    show: 'Mostrar problemas',
+    hide: 'Ocultar problemas',
+    summary: '{errors} erros · {warnings} avisos',
+    ok: 'Sem problemas',
   },
   page: {
     edit: 'Editar {name}',
@@ -76,7 +99,10 @@ const ptBR = {
     openInVisualEditor: 'Abrir no editor visual',
     importError: 'Não foi possível importar para o editor visual — {error}',
     syncHint:
-      'Edite o Turtle diretamente — as alterações são interpretadas e sincronizadas de volta ao editor visual automaticamente.',
+      'Edite o código diretamente — as alterações são interpretadas e sincronizadas de volta ao editor visual automaticamente.',
+    syntax: 'Sintaxe',
+    residualNotice:
+      'Este esquema usa SHACL/RDF que o editor visual ainda não modela. É preservado integralmente (veja o bloco “Preserved”) e mantido ao salvar.',
   },
   formPreviewTab: {
     rendered: 'Pré-visualização do formulário renderizado',
@@ -117,6 +143,7 @@ const ptBR = {
     section: {
       basic: 'Básico',
       constraints: 'Restrições',
+      valueRange: 'Faixa de valores',
       defaultsOrder: 'Padrões e ordem',
       identity: 'Identidade',
       shapeDefinition: 'Definição da forma',
@@ -134,6 +161,10 @@ const ptBR = {
       nestedShape: 'Forma aninhada (sh:node)',
       minLength: 'Comprimento mín.',
       maxLength: 'Comprimento máx.',
+      minInclusive: 'Mín (≥)',
+      maxInclusive: 'Máx (≤)',
+      minExclusive: 'Mín (>)',
+      maxExclusive: 'Máx (<)',
       pattern: 'Padrão (regex)',
       defaultValue: 'Valor padrão',
       order: 'Ordem (sh:order)',
@@ -151,6 +182,7 @@ const ptBR = {
       descriptionHelp: 'Texto de ajuda exibido ao usuário',
     },
     hint: {
+      valueRange: 'Limites do valor (sh:minInclusive / maxInclusive / minExclusive / maxExclusive). Números são escritos diretamente; datas como literais tipados.',
       nestedShape: 'sh:NodeShape que define os campos do objeto aninhado.',
       moveFieldGroup: 'Mova o campo arrastando-o para outro grupo.',
       moveFieldNested: 'Mova o campo arrastando-o dentro da forma.',
@@ -176,7 +208,11 @@ const ptBR = {
   inValues: {
     label: 'Valores permitidos (sh:in)',
     placeholder: 'Adicionar valor + Enter',
-    hint: 'Pressione Enter para adicionar. Armazenado como sh:in ( "a" "b" "c" ).',
+    hint: 'Pressione Enter para adicionar. Cada valor é um literal ou um IRI — alterne com a etiqueta à esquerda.',
+    kind: 'Tipo de valor',
+    toggleKind: 'Alternar literal / IRI',
+    literal: 'literal',
+    iri: 'IRI',
   },
   formPreview: {
     empty: 'Adicione campos para ver uma pré-visualização do formulário renderizado.',

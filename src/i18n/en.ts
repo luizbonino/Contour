@@ -12,6 +12,8 @@ const en = {
     saveAs: 'Save As…',
     copy: 'Copy',
     copyShacl: 'Copy SHACL',
+    undo: 'Undo',
+    redo: 'Redo',
   },
   header: {
     guide: 'Guide',
@@ -22,6 +24,27 @@ const en = {
     saveTitle: 'Save to current file (Ctrl+S)',
     saveAsTitle: 'Save as a new file',
     language: 'Language',
+    undoTitle: 'Undo (Ctrl+Z)',
+    redoTitle: 'Redo (Ctrl+Shift+Z)',
+  },
+  draft: {
+    restored: 'Restored your unsaved draft.',
+    startFresh: 'Start fresh',
+    dismiss: 'Dismiss',
+  },
+  recent: {
+    menu: 'Recent',
+    title: 'Open a recently saved schema',
+    empty: 'No recently saved schemas yet.',
+    confirm: 'Replace the current schema with this recent one?',
+  },
+  issues: {
+    title: 'Issues',
+    none: 'No issues — the schema looks valid.',
+    show: 'Show issues',
+    hide: 'Hide issues',
+    summary: '{errors} errors · {warnings} warnings',
+    ok: 'No issues',
   },
   page: {
     edit: 'Edit {name}',
@@ -77,7 +100,10 @@ const en = {
     openInVisualEditor: 'Open in Visual Editor',
     importError: 'Could not import into Visual Editor — {error}',
     syncHint:
-      'Edit the Turtle directly — changes are parsed and synced back to the Visual Editor automatically.',
+      'Edit the code directly — changes are parsed and synced back to the Visual Editor automatically.',
+    syntax: 'Syntax',
+    residualNotice:
+      'This schema uses SHACL/RDF the visual editor doesn\'t model yet. It is preserved verbatim (see the “Preserved” block) and round-trips on save.',
   },
   formPreviewTab: {
     rendered: 'Rendered form preview',
@@ -118,6 +144,7 @@ const en = {
     section: {
       basic: 'Basic',
       constraints: 'Constraints',
+      valueRange: 'Value range',
       defaultsOrder: 'Defaults & order',
       identity: 'Identity',
       shapeDefinition: 'Shape definition',
@@ -135,6 +162,10 @@ const en = {
       nestedShape: 'Nested shape (sh:node)',
       minLength: 'Min length',
       maxLength: 'Max length',
+      minInclusive: 'Min (≥)',
+      maxInclusive: 'Max (≤)',
+      minExclusive: 'Min (>)',
+      maxExclusive: 'Max (<)',
       pattern: 'Pattern (regex)',
       defaultValue: 'Default value',
       order: 'Order (sh:order)',
@@ -152,6 +183,7 @@ const en = {
       descriptionHelp: 'Help text shown to the user',
     },
     hint: {
+      valueRange: 'Bounds on the value (sh:minInclusive / maxInclusive / minExclusive / maxExclusive). Numbers are written bare; dates as typed literals.',
       nestedShape: "sh:NodeShape that defines the nested object's fields.",
       moveFieldGroup: 'Move the field by dragging it into another group.',
       moveFieldNested: 'Move the field by dragging it within the shape.',
@@ -177,7 +209,11 @@ const en = {
   inValues: {
     label: 'Allowed values (sh:in)',
     placeholder: 'Add value + Enter',
-    hint: 'Press Enter to add. Stored as sh:in ( "a" "b" "c" ).',
+    hint: 'Press Enter to add. Each value is a literal or an IRI — toggle with the tag on its left.',
+    kind: 'Value kind',
+    toggleKind: 'Toggle literal / IRI',
+    literal: 'literal',
+    iri: 'IRI',
   },
   formPreview: {
     empty: 'Add fields to see a live preview of the rendered form.',

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSchemaStore } from './composables/useSchema';
-import { generateShacl, parseShacl } from './shacl';
+import { serializeSchema, parseShacl } from './shacl';
+import { SYNTAXES, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax } from './rdf';
+import { validateSchema } from './validation';
+import { loadDraft, saveDraft, clearDraft, listRecent, addRecent, type RecentEntry } from './composables/usePersistence';
 import { WIDGET_BY_ID, blankSchema, EXAMPLES } from './data';
 import type { SchemaExample } from './data';
 import type { SelectedKind } from './types';
@@ -14,7 +17,7 @@ import contourIcon from './assets/contour-icon.svg';
 import { useI18n } from './composables/useI18n';
 import { LOCALES } from './i18n';
 
-const { schema, mutate } = useSchemaStore();
+const { schema, mutate, undo, redo, canUndo, canRedo } = useSchemaStore();
 const { t, plural, locale, setLocale } = useI18n();
 
 // "Edit <name>" once the schema is named, otherwise "New metadata schema".
@@ -34,7 +37,12 @@ const selectedKind = ref<SelectedKind>('schema');
 const selectedId = ref<string | null>(null);
 const selectedNestedShapeId = ref<string | null>(null);
 
-const shacl = computed(() => generateShacl(schema));
+// Active RDF syntax for the SHACL Code tab. New schemas start as Turtle.
+const rdfSyntax = ref<string>(DEFAULT_SYNTAX);
+const shacl = computed(() => serializeSchema(schema, rdfSyntax.value));
+
+// SHACL the editor can't model, preserved verbatim in the output.
+const hasResidual = computed(() => !!(schema.residual && schema.residual.trim()));
 
 const shaclDraft = ref(shacl.value);
 const shaclParseError = ref<string | null>(null);
@@ -58,20 +66,28 @@ function onShaclDraftInput(e: Event) {
   shaclEditTimeout = setTimeout(() => { userEditingShacl = false; }, 3000);
   if (shaclParseTimeout) clearTimeout(shaclParseTimeout);
   shaclParseTimeout = setTimeout(() => {
-    const result = parseShacl(text);
+    const result = parseShacl(text, rdfSyntax.value);
     if (result.schema) {
       shaclParseError.value = null;
       mutate((d) => {
-        const desc = d.schemaDescription;
         Object.assign(d, result.schema!);
-        d.schemaDescription = desc;
-      });
+      }, 'shacl-edit');
     } else {
       const line = result.errorLine ? ` (line ${result.errorLine})` : '';
       shaclParseError.value = `${result.error}${line}`;
     }
   }, 800);
-  updateAc(ta);
+  // Autocomplete is Turtle-specific.
+  if (rdfSyntax.value === 'turtle') updateAc(ta);
+  else acItems.value = [];
+}
+
+// Switching syntax re-serializes the current model in the chosen syntax.
+function onSyntaxChange() {
+  userEditingShacl = false;
+  shaclDraft.value = shacl.value;
+  shaclParseError.value = null;
+  acItems.value = [];
 }
 
 // ── Autocomplete ─────────────────────────────────────────────────────────────
@@ -341,6 +357,8 @@ function setSaved() {
   fileSaveStatus.value = 'saved';
   if (saveStatusTimer) clearTimeout(saveStatusTimer);
   saveStatusTimer = setTimeout(() => (fileSaveStatus.value = 'idle'), 2500);
+  addRecent(schema);
+  refreshRecent();
 }
 
 function hasContent(): boolean {
@@ -351,6 +369,8 @@ function resetFileState() {
   fileHandle.value = null;
   loadedShaclSource.value = null;
   loadedFileParseError.value = null;
+  restoredDraft.value = false;
+  rdfSyntax.value = DEFAULT_SYNTAX;
   clearSelection();
   tab.value = 'visual';
 }
@@ -358,6 +378,7 @@ function resetFileState() {
 function newSchema() {
   if (hasContent() && !window.confirm(t('header.newConfirm'))) return;
   mutate((d) => Object.assign(d, blankSchema()));
+  clearDraft();
   resetFileState();
 }
 
@@ -373,13 +394,91 @@ function loadExample(ex: SchemaExample) {
   resetFileState();
 }
 
+// ── Recent schemas menu ────────────────────────────────────────────────────────
+
+const recentMenuOpen = ref(false);
+const recentMenuRef = ref<HTMLElement | null>(null);
+const recent = ref<RecentEntry[]>([]);
+
+function refreshRecent() {
+  recent.value = listRecent();
+}
+
+function loadRecent(entry: RecentEntry) {
+  recentMenuOpen.value = false;
+  if (hasContent() && !window.confirm(t('recent.confirm'))) return;
+  mutate((d) => Object.assign(d, JSON.parse(JSON.stringify(entry.schema)) as typeof entry.schema));
+  resetFileState();
+}
+
 function onDocMousedown(e: MouseEvent) {
   if (exMenuOpen.value && exMenuRef.value && !exMenuRef.value.contains(e.target as Node)) {
     exMenuOpen.value = false;
   }
+  if (recentMenuOpen.value && recentMenuRef.value && !recentMenuRef.value.contains(e.target as Node)) {
+    recentMenuOpen.value = false;
+  }
 }
-onMounted(() => document.addEventListener('mousedown', onDocMousedown));
-onBeforeUnmount(() => document.removeEventListener('mousedown', onDocMousedown));
+
+// ── Undo / redo keyboard shortcuts ──────────────────────────────────────────────
+// Ignore when focus is in a text control so native text-editing undo still works.
+function onGlobalKeydown(e: KeyboardEvent) {
+  if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'z') return;
+  const el = e.target as HTMLElement | null;
+  const tag = el?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return;
+  e.preventDefault();
+  if (e.shiftKey) redo();
+  else undo();
+}
+
+// ── Autosave (debounced) + restore on load ──────────────────────────────────────
+const restoredDraft = ref(false);
+let autosaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+watch(
+  schema,
+  () => {
+    if (autosaveTimer) clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => saveDraft(schema), 600);
+  },
+  { deep: true },
+);
+
+function dismissRestored() {
+  restoredDraft.value = false;
+}
+
+onMounted(() => {
+  document.addEventListener('mousedown', onDocMousedown);
+  document.addEventListener('keydown', onGlobalKeydown);
+  refreshRecent();
+  // Restore an autosaved draft so a refresh / accidental close never loses work.
+  const draft = loadDraft();
+  if (draft) {
+    mutate((d) => Object.assign(d, draft));
+    restoredDraft.value = true;
+  }
+});
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', onDocMousedown);
+  document.removeEventListener('keydown', onGlobalKeydown);
+});
+
+// ── Live validation ──────────────────────────────────────────────────────────────
+const issues = computed(() => validateSchema(schema));
+const errorCount = computed(() => issues.value.filter((i) => i.severity === 'error').length);
+const warningCount = computed(() => issues.value.filter((i) => i.severity === 'warning').length);
+const showIssues = ref(false);
+
+function focusIssue(i: ReturnType<typeof validateSchema>[number]) {
+  tab.value = 'visual';
+  if (i.kind === 'field') selectField(i.id);
+  else if (i.kind === 'group' && i.id) selectGroup(i.id);
+  else if (i.kind === 'nested-shape' && i.id) selectNestedShape(i.id);
+  else if (i.kind === 'nested-field' && i.nestedShapeId && i.id) selectNestedField(i.nestedShapeId, i.id);
+  else selectSchemaTarget();
+}
 
 async function openShacl() {
   if ('showOpenFilePicker' in window) {
@@ -387,11 +486,12 @@ async function openShacl() {
       const [handle] = await (window as unknown as Window & {
         showOpenFilePicker(opts?: object): Promise<FileSystemFileHandle[]>;
       }).showOpenFilePicker({
-        types: [{ description: 'Turtle / SHACL files', accept: { 'text/turtle': ['.ttl', '.n3', '.shacl'] } }],
+        types: [{ description: 'RDF / SHACL files', accept: { 'text/turtle': ['.ttl', '.n3', '.shacl', '.nt', '.trig'] } }],
         multiple: false,
       });
       fileHandle.value = handle;
       const file = await handle.getFile();
+      rdfSyntax.value = detectSyntax(file.name);
       loadedShaclSource.value = await file.text();
       applyLoadedShacl(loadedShaclSource.value);
       tab.value = 'definition';
@@ -406,6 +506,7 @@ async function openShacl() {
 function onFileInputChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
+  rdfSyntax.value = detectSyntax(file.name);
   const reader = new FileReader();
   reader.onload = () => {
     loadedShaclSource.value = reader.result as string;
@@ -422,7 +523,7 @@ function applyLoadedShacl(source: string): void {
   if (shaclEditTimeout) clearTimeout(shaclEditTimeout);
   shaclEditTimeout = setTimeout(() => { userEditingShacl = false; }, 3000);
 
-  const result = parseShacl(source);
+  const result = parseShacl(source, rdfSyntax.value);
 
   // Always wipe the current schema — a file load is a complete replacement.
   mutate((d) => {
@@ -472,13 +573,15 @@ async function saveShacl() {
 }
 
 async function saveAsShacl() {
+  const ext = SYNTAX_BY_ID[rdfSyntax.value]?.ext || 'ttl';
+  const base = (schema.schemaName || 'schema').replace(/\s+/g, '-').toLowerCase();
   if ('showSaveFilePicker' in window) {
     try {
       const handle = await (window as unknown as Window & {
         showSaveFilePicker(opts?: object): Promise<FileSystemFileHandle>;
       }).showSaveFilePicker({
-        suggestedName: (schema.schemaName || 'schema').replace(/\s+/g, '-').toLowerCase() + '.ttl',
-        types: [{ description: 'Turtle file', accept: { 'text/turtle': ['.ttl'] } }],
+        suggestedName: `${base}.${ext}`,
+        types: [{ description: 'RDF file', accept: { 'text/turtle': [`.${ext}`] } }],
       });
       fileHandle.value = handle;
       await writeToHandle(handle, shacl.value);
@@ -487,14 +590,13 @@ async function saveAsShacl() {
       /* user cancelled */
     }
   } else {
-    const suggested = (schema.schemaName || 'schema').replace(/\s+/g, '-').toLowerCase() + '.ttl';
-    const filename = window.prompt('Save file as:', suggested);
+    const filename = window.prompt('Save file as:', `${base}.${ext}`);
     if (!filename) return;
     const blob = new Blob([shacl.value], { type: 'text/turtle' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename.endsWith('.ttl') ? filename : filename + '.ttl';
+    a.download = filename.includes('.') ? filename : `${filename}.${ext}`;
     a.click();
     URL.revokeObjectURL(url);
     setSaved();
@@ -531,9 +633,48 @@ async function saveAsShacl() {
             @click="setLocale(l.code)"
           >{{ l.label }}</button>
         </div>
+        <button
+          class="btn btn-ghost btn-sm"
+          :title="t('header.undoTitle')"
+          :disabled="!canUndo"
+          @click="undo"
+        >
+          <Icon name="undo" :size="13" /> {{ t('common.undo') }}
+        </button>
+        <button
+          class="btn btn-ghost btn-sm"
+          :title="t('header.redoTitle')"
+          :disabled="!canRedo"
+          @click="redo"
+        >
+          <Icon name="redo" :size="13" /> {{ t('common.redo') }}
+        </button>
         <button class="btn btn-ghost btn-sm" :title="t('header.newTitle')" @click="newSchema">
           <Icon name="plus" :size="13" /> {{ t('common.new') }}
         </button>
+        <div ref="recentMenuRef" class="ex-menu">
+          <button
+            class="btn btn-ghost btn-sm"
+            :title="t('recent.title')"
+            aria-haspopup="true"
+            :aria-expanded="recentMenuOpen"
+            @click="recentMenuOpen = !recentMenuOpen; refreshRecent()"
+          >
+            <Icon name="folder" :size="13" /> {{ t('recent.menu') }}
+          </button>
+          <div v-if="recentMenuOpen" class="ex-menu__list">
+            <div v-if="recent.length === 0" class="ex-menu__empty">{{ t('recent.empty') }}</div>
+            <button
+              v-for="(entry, i) in recent"
+              :key="i"
+              class="ex-menu__item"
+              @click="loadRecent(entry)"
+            >
+              <span class="ex-menu__name">{{ entry.name }}</span>
+              <span class="ex-menu__desc">{{ plural('count.properties', entry.schema.groups.reduce((s, g) => s + g.fields.length, 0)) }}</span>
+            </button>
+          </div>
+        </div>
         <div ref="exMenuRef" class="ex-menu">
           <button
             class="btn btn-ghost btn-sm"
@@ -580,6 +721,13 @@ async function saveAsShacl() {
       <h1 class="app-page__title">
         {{ pageTitle }}
       </h1>
+
+      <div v-if="restoredDraft" class="draft-banner">
+        <Icon name="info" :size="14" />
+        <span>{{ t('draft.restored') }}</span>
+        <button class="btn btn-ghost btn-xs" @click="newSchema">{{ t('draft.startFresh') }}</button>
+        <button class="btn btn-ghost btn-xs" @click="dismissRestored">{{ t('draft.dismiss') }}</button>
+      </div>
 
       <ul class="nav-tabs">
         <li>
@@ -643,6 +791,15 @@ async function saveAsShacl() {
           <div class="actions-bar__hint">
             <Icon name="check" :size="12" />
             <span class="ok">{{ plural('count.properties', totalFields) }} · {{ plural('count.groups', schema.groups.length) }}</span>
+            <button
+              class="issues-toggle"
+              :class="{ 'has-errors': errorCount > 0, 'has-warnings': errorCount === 0 && warningCount > 0 }"
+              @click="showIssues = !showIssues"
+            >
+              <Icon :name="issues.length ? 'warning' : 'check'" :size="12" />
+              <template v-if="issues.length">{{ t('issues.summary', { errors: errorCount, warnings: warningCount }) }}</template>
+              <template v-else>{{ t('issues.ok') }}</template>
+            </button>
           </div>
           <div style="display: flex; gap: 10px">
             <button class="btn btn-ghost btn-sm" @click="copyShacl">
@@ -655,6 +812,22 @@ async function saveAsShacl() {
               {{ t('common.saveAs') }}
             </button>
           </div>
+        </div>
+
+        <div v-if="showIssues" class="issues-panel">
+          <div v-if="issues.length === 0" class="issues-panel__ok">
+            <Icon name="check" :size="13" /> {{ t('issues.none') }}
+          </div>
+          <button
+            v-for="(issue, i) in issues"
+            :key="i"
+            class="issues-panel__item"
+            :class="`is-${issue.severity}`"
+            @click="focusIssue(issue)"
+          >
+            <Icon :name="issue.severity === 'error' ? 'warning' : 'info'" :size="13" />
+            <span>{{ issue.message }}</span>
+          </button>
         </div>
       </template>
 
@@ -686,6 +859,12 @@ async function saveAsShacl() {
                 <span v-if="loadedShaclSource" class="loaded-badge">{{ t('definition.loadedFromFile') }}</span>
               </span>
               <div style="display: flex; gap: 8px; align-items: center">
+                <label class="syntax-select">
+                  {{ t('definition.syntax') }}
+                  <select v-model="rdfSyntax" @change="onSyntaxChange">
+                    <option v-for="s in SYNTAXES" :key="s.id" :value="s.id">{{ s.label }}</option>
+                  </select>
+                </label>
                 <button
                   v-if="loadedShaclSource"
                   class="btn btn-ghost btn-sm"
@@ -699,6 +878,9 @@ async function saveAsShacl() {
                 </button>
               </div>
             </label>
+            <p v-if="hasResidual" class="residual-notice">
+              <Icon name="info" :size="13" /> {{ t('definition.residualNotice') }}
+            </p>
             <textarea
               ref="textareaRef"
               class="turtle-area"

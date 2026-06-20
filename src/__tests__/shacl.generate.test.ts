@@ -203,16 +203,62 @@ describe('generateShacl – sh:property blocks', () => {
     expect(out).not.toContain('sh:minCount');
   });
 
-  it('emits sh:in list', () => {
+  it('emits sh:in list of literals', () => {
     const out = generateShacl(
       baseSchema({
         groups: [{
           id: 'g1', label: 'G', order: 0,
-          fields: [field({ widgetId: 'EnumSelectEditor', inValues: ['a', 'b', 'c'] })],
+          fields: [field({ widgetId: 'EnumSelectEditor', inValues: [
+            { value: 'a', kind: 'literal' }, { value: 'b', kind: 'literal' }, { value: 'c', kind: 'literal' },
+          ] })],
         }],
       }),
     );
     expect(out).toContain('sh:in ( "a" "b" "c" )');
+  });
+
+  it('emits IRI members of sh:in unquoted', () => {
+    const out = generateShacl(
+      baseSchema({
+        groups: [{
+          id: 'g1', label: 'G', order: 0,
+          fields: [field({ widgetId: 'EnumSelectEditor', nodeKind: 'sh:IRI', datatype: null, inValues: [
+            { value: 'ex:Public', kind: 'iri' }, { value: 'ex:Private', kind: 'iri' },
+          ] })],
+        }],
+      }),
+    );
+    expect(out).toContain('sh:in ( ex:Public ex:Private )');
+  });
+
+  it('emits dct:description for the schema', () => {
+    const out = generateShacl(baseSchema({ schemaDescription: 'A test schema.' }));
+    expect(out).toContain('dct:description "A test schema."');
+  });
+
+  it('emits value-range bounds', () => {
+    const out = generateShacl(
+      baseSchema({
+        groups: [{
+          id: 'g1', label: 'G', order: 0,
+          fields: [field({ widgetId: 'NumberFieldEditor', datatype: 'xsd:integer', minInclusive: '1900', maxExclusive: '2100' })],
+        }],
+      }),
+    );
+    expect(out).toContain('sh:minInclusive 1900');
+    expect(out).toContain('sh:maxExclusive 2100');
+  });
+
+  it('emits date range bounds as typed literals', () => {
+    const out = generateShacl(
+      baseSchema({
+        groups: [{
+          id: 'g1', label: 'G', order: 0,
+          fields: [field({ widgetId: 'DatePickerEditor', datatype: 'xsd:date', minInclusive: '2020-01-01' })],
+        }],
+      }),
+    );
+    expect(out).toContain('sh:minInclusive "2020-01-01"^^xsd:date');
   });
 
   it('emits sh:order', () => {
