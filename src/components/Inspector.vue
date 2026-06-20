@@ -6,6 +6,7 @@ import type { Field, Group, Mutator, NestedShape, Prefix, Schema, SelectedKind }
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
 import InValuesEditor from './InValuesEditor.vue';
+import OrTypesEditor from './OrTypesEditor.vue';
 import PrefixEditor from './PrefixEditor.vue';
 import TranslationsEditor from './TranslationsEditor.vue';
 
@@ -301,6 +302,14 @@ function createAndLinkNestedShape() {
               placeholder="dct:title"
               @input="setField('path', ($event.target as HTMLInputElement).value)"
             />
+            <label class="insp-check">
+              <input
+                type="checkbox"
+                :checked="!!activeField.inversePath"
+                @change="setField('inversePath', ($event.target as HTMLInputElement).checked || undefined)"
+              />
+              {{ t('inspector.inversePath') }}
+            </label>
           </div>
         </div>
 
@@ -468,6 +477,19 @@ function createAndLinkNestedShape() {
             :values="activeField.inValues"
             @change="(v) => setField('inValues', v)"
           />
+          <OrTypesEditor
+            v-if="activeField.orTypes && activeField.orTypes.length"
+            :values="activeField.orTypes"
+            @change="(v) => setField('orTypes', v)"
+          />
+          <button
+            v-else
+            class="btn btn-ghost btn-xs"
+            style="margin-top: 4px"
+            @click="setField('orTypes', [{ nodeKind: 'sh:Literal' }, { nodeKind: 'sh:IRI' }])"
+          >
+            <Icon name="plus" :size="11" /> {{ t('inspector.addOrTypes') }}
+          </button>
         </div>
 
         <div class="insp-section">

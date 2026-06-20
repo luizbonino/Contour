@@ -21,6 +21,15 @@ export interface LangValue {
   lang: string;
 }
 
+// One branch of an sh:or value-type alternative. Each is a type-only shape
+// ([ sh:datatype … ] / [ sh:nodeKind … ] / [ sh:class … ]). Anything richer
+// stays in the residual graph rather than being modeled here.
+export interface OrType {
+  nodeKind?: string;
+  datatype?: string;
+  class?: string;
+}
+
 export interface WidgetDefaults {
   nodeKind?: NodeKind;
   datatype?: string;
@@ -55,6 +64,9 @@ export interface Field {
   datatype: string | null;
   class: string | null;  // sh:class — constrains the IRI to instances of this RDF class
   node: string | null;   // sh:node — references another NodeShape for nested validation
+  inversePath?: boolean; // sh:path is an inverse path: [ sh:inversePath <path> ]
+  // Alternative value types (sh:or of type-only shapes), e.g. "literal or IRI".
+  orTypes?: OrType[];
   minCount: number | null;
   maxCount: number | null;
   minLength: number | null;

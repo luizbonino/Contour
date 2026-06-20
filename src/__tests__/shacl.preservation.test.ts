@@ -25,7 +25,7 @@ const ADVANCED = `${PREFIXES}
   ] ;
   sh:property [
     sh:path dct:subject ;
-    sh:or ( [ sh:datatype xsd:string ] [ sh:nodeKind sh:IRI ] ) ;
+    sh:or ( [ sh:datatype xsd:string ; sh:minLength 2 ] [ sh:nodeKind sh:IRI ] ) ;
     dash:editor dash:TextFieldEditor
   ] .
 
@@ -79,6 +79,21 @@ describe('residual preservation (F1)', () => {
     // Editable structure is preserved too.
     expect(second.schema!.groups.flatMap((g) => g.fields).map((f) => f.path).sort())
       .toEqual(['dct:subject', 'dct:title']);
+  });
+
+  it('models a type-only sh:or but leaves a richer sh:or in residual', () => {
+    const ttl = `${PREFIXES}
+:S a sh:NodeShape ; sh:targetClass :Thing ;
+  sh:property [ sh:path dct:a ; sh:or ( [ sh:nodeKind sh:Literal ] [ sh:nodeKind sh:IRI ] ) ; dash:editor dash:TextFieldEditor ] ;
+  sh:property [ sh:path dct:b ; sh:or ( [ sh:datatype xsd:string ; sh:minLength 2 ] [ sh:nodeKind sh:IRI ] ) ; dash:editor dash:TextFieldEditor ] .`;
+    const { schema } = parseShacl(ttl);
+    const fields = schema!.groups.flatMap((g) => g.fields);
+    const a = fields.find((f) => f.path === 'dct:a')!;
+    const b = fields.find((f) => f.path === 'dct:b')!;
+    expect(a.orTypes).toEqual([{ nodeKind: 'sh:Literal' }, { nodeKind: 'sh:IRI' }]); // modeled
+    expect(b.orTypes).toBeUndefined();        // richer → not modeled
+    expect(typeof b.bnode).toBe('string');     // preserved via residual
+    expect(schema!.residual || '').toContain('#minLength');
   });
 
   it('a plain schema has no residual', () => {
