@@ -145,6 +145,7 @@ const en = {
       basic: 'Basic',
       constraints: 'Constraints',
       valueRange: 'Value range',
+      validation: 'Validation message',
       defaultsOrder: 'Defaults & order',
       identity: 'Identity',
       shapeDefinition: 'Shape definition',
@@ -166,6 +167,8 @@ const en = {
       maxInclusive: 'Max (≤)',
       minExclusive: 'Min (>)',
       maxExclusive: 'Max (<)',
+      message: 'Message (sh:message)',
+      severity: 'Severity (sh:severity)',
       pattern: 'Pattern (regex)',
       defaultValue: 'Default value',
       order: 'Order (sh:order)',
@@ -181,7 +184,9 @@ const en = {
     },
     placeholder: {
       descriptionHelp: 'Help text shown to the user',
+      message: 'Shown when validation fails',
     },
+    severityDefault: '— default (Violation) —',
     hint: {
       valueRange: 'Bounds on the value (sh:minInclusive / maxInclusive / minExclusive / maxExclusive). Numbers are written bare; dates as typed literals.',
       nestedShape: "sh:NodeShape that defines the nested object's fields.",
@@ -191,6 +196,7 @@ const en = {
       addFieldsDrag: 'Add fields by dragging widgets from the palette onto this shape.',
     },
     none: '— none —',
+    createLinkNested: 'Create & link nested shape',
     headingNestedShape: 'Nested shape',
     headingGroup: 'Group',
     headingSchema: 'Schema settings',
@@ -221,6 +227,7 @@ const en = {
     removeValue: 'Remove this value',
     nestedSubform: '{iri} sub-form',
     nestedSubformGeneric: 'Nested sub-form',
+    langTag: 'Language tag (e.g. en, pt-BR)',
   },
   fieldInput: {
     select: '— select —',

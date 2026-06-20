@@ -38,19 +38,25 @@ describe('residual preservation (F1)', () => {
     expect(error).toBeNull();
     const r = schema!.residual || '';
     expect(r).toContain('#closed');       // shape-level unknown predicate
-    expect(r).toContain('#message');      // property-level unknown predicate
-    expect(r).toContain('#or');           // sh:or
+    expect(r).toContain('#or');           // sh:or (property-level, still unmodeled)
     expect(r).toContain('versionInfo');   // unmanaged subject
+  });
+
+  it('models the now-supported constructs (sh:message) rather than preserving them', () => {
+    const { schema } = parseShacl(ADVANCED);
+    const r = schema!.residual || '';
+    expect(r).not.toContain('#message');  // sh:message is first-class as of Phase 3
+    const title = schema!.groups.flatMap((g) => g.fields).find((f) => f.path === 'dct:title');
+    expect(title!.message).toBe('Title is required');
   });
 
   it('still models the editable parts of advanced properties', () => {
     const { schema } = parseShacl(ADVANCED);
     const fields = schema!.groups.flatMap((g) => g.fields);
-    const title = fields.find((f) => f.path === 'dct:title');
-    expect(title).toBeTruthy();
-    expect(title!.datatype).toBe('xsd:string');
+    const subject = fields.find((f) => f.path === 'dct:subject'); // uses sh:or
+    expect(subject).toBeTruthy();
     // It carries a stable blank-node label so its preserved triples re-link.
-    expect(typeof title!.bnode).toBe('string');
+    expect(typeof subject!.bnode).toBe('string');
   });
 
   it('re-emits preserved constructs in generated Turtle', () => {
@@ -58,7 +64,7 @@ describe('residual preservation (F1)', () => {
     const out = generateShacl(schema!);
     expect(out).toContain('# ── Preserved');
     expect(out).toContain('#closed');
-    expect(out).toContain('#message');
+    expect(out).toContain('#or');
   });
 
   it('is stable across a full parse → generate → parse round-trip', () => {
@@ -68,7 +74,6 @@ describe('residual preservation (F1)', () => {
     expect(second.error).toBeNull();
     const r = second.schema!.residual || '';
     expect(r).toContain('#closed');
-    expect(r).toContain('#message');
     expect(r).toContain('#or');
     expect(r).toContain('versionInfo');
     // Editable structure is preserved too.

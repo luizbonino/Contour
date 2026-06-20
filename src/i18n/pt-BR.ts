@@ -144,6 +144,7 @@ const ptBR = {
       basic: 'Básico',
       constraints: 'Restrições',
       valueRange: 'Faixa de valores',
+      validation: 'Mensagem de validação',
       defaultsOrder: 'Padrões e ordem',
       identity: 'Identidade',
       shapeDefinition: 'Definição da forma',
@@ -165,6 +166,8 @@ const ptBR = {
       maxInclusive: 'Máx (≤)',
       minExclusive: 'Mín (>)',
       maxExclusive: 'Máx (<)',
+      message: 'Mensagem (sh:message)',
+      severity: 'Severidade (sh:severity)',
       pattern: 'Padrão (regex)',
       defaultValue: 'Valor padrão',
       order: 'Ordem (sh:order)',
@@ -180,7 +183,9 @@ const ptBR = {
     },
     placeholder: {
       descriptionHelp: 'Texto de ajuda exibido ao usuário',
+      message: 'Exibida quando a validação falha',
     },
+    severityDefault: '— padrão (Violation) —',
     hint: {
       valueRange: 'Limites do valor (sh:minInclusive / maxInclusive / minExclusive / maxExclusive). Números são escritos diretamente; datas como literais tipados.',
       nestedShape: 'sh:NodeShape que define os campos do objeto aninhado.',
@@ -190,6 +195,7 @@ const ptBR = {
       addFieldsDrag: 'Adicione campos arrastando widgets da paleta para esta forma.',
     },
     none: '— nenhum —',
+    createLinkNested: 'Criar e vincular forma aninhada',
     headingNestedShape: 'Forma aninhada',
     headingGroup: 'Grupo',
     headingSchema: 'Configurações do esquema',
@@ -220,6 +226,7 @@ const ptBR = {
     removeValue: 'Remover este valor',
     nestedSubform: 'Subformulário {iri}',
     nestedSubformGeneric: 'Subformulário aninhado',
+    langTag: 'Tag de idioma (ex.: en, pt-BR)',
   },
   fieldInput: {
     select: '— selecione —',

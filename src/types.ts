@@ -56,6 +56,10 @@ export interface Field {
   pattern: string;
   defaultValue: string;
   inValues: InValue[] | null;
+  // Custom validation feedback (sh:message) and its level (sh:severity —
+  // sh:Violation default, sh:Warning, sh:Info). Both optional.
+  message?: string;
+  severity?: string;
   // Stable blank-node label, set only when this property carries SHACL the
   // visual editor doesn't model (e.g. sh:or, sh:message). Those triples live in
   // Schema.residual keyed by this label; the generator emits the property as a

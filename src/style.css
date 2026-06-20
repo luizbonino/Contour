@@ -1180,6 +1180,32 @@ button {
   flex: 1;
   min-width: 0;
 }
+.form-preview__lang {
+  flex-shrink: 0;
+  width: 64px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+/* Cardinality hint chip beside a preview label */
+.form-preview__card {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-lighter);
+  background: var(--color-bg-highlight);
+  border-radius: var(--radius-pill);
+  padding: 1px 7px;
+}
+/* sh:message feedback under a field, coloured by severity */
+.form-preview__msg {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-text-lighter);
+}
+.form-preview__msg.sev-violation { color: var(--color-danger); }
+.form-preview__msg.sev-warning { color: #8a6d00; }
+.form-preview__msg.sev-info { color: var(--color-accent-darker); }
 .form-preview__remove-btn {
   flex-shrink: 0;
   padding: 6px 10px;

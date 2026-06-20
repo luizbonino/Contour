@@ -145,6 +145,27 @@ describe('shacl round-trip', () => {
     expect(roundtrip(schema).schemaDescription).toBe('A round-tripped description.');
   });
 
+  it('preserves sh:message and sh:severity', () => {
+    const schema = baseSchema({
+      groups: [{
+        id: 'g1', label: 'G', order: 0,
+        fields: [field({ message: 'Title is required', severity: 'sh:Warning' })],
+      }],
+    });
+    const rt = roundtrip(schema);
+    const f = rt.groups.flatMap((g) => g.fields)[0];
+    expect(f.message).toBe('Title is required');
+    expect(f.severity).toBe('sh:Warning');
+  });
+
+  it('does not push modeled message/severity into residual', () => {
+    const schema = baseSchema({
+      groups: [{ id: 'g1', label: 'G', order: 0, fields: [field({ message: 'x', severity: 'sh:Info' })] }],
+    });
+    const rt = roundtrip(schema);
+    expect(rt.residual).toBeUndefined();
+  });
+
   it('preserves value-range bounds', () => {
     const schema = baseSchema({
       groups: [{

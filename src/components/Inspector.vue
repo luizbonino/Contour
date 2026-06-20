@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { DATATYPES, NODE_KINDS, WIDGET_BY_ID } from '../data';
+import { DATATYPES, NODE_KINDS, WIDGET_BY_ID, newId } from '../data';
 import { useI18n } from '../composables/useI18n';
 import type { Field, Group, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
@@ -72,6 +72,8 @@ const subtitle = computed(() => {
 const fieldWidget = computed(() =>
   activeField.value ? WIDGET_BY_ID[activeField.value.widgetId] : null,
 );
+
+const SEVERITIES = ['sh:Violation', 'sh:Warning', 'sh:Info'];
 
 const isLiteral = computed(() => (activeField.value?.nodeKind || '').includes('Literal'));
 const isIRI = computed(() => (activeField.value?.nodeKind || '').includes('IRI'));
@@ -177,6 +179,35 @@ function deleteCurrentNestedShape() {
 function onNumber(e: Event): number | null {
   const v = (e.target as HTMLInputElement).value;
   return v === '' ? null : Number(v);
+}
+
+// Create a fresh nested shape and link the active DetailsEditor field to it via
+// sh:node — in one undo step. Works for a main field or a nested field.
+function createAndLinkNestedShape() {
+  const f = activeField.value;
+  if (!f) return;
+  const kind = props.selectedKind;
+  const fId = props.selectedId;
+  const parentNsId = props.selectedNestedShapeId;
+  props.mutate((draft) => {
+    if (!draft.nestedShapes) draft.nestedShapes = [];
+    const base = (f.name || 'Nested').replace(/[^A-Za-z0-9]+/g, '') || 'Nested';
+    const exists = (x: string) => draft.nestedShapes.some((ns) => ns.iri === x);
+    let iri = `:${base}Shape`;
+    let i = 2;
+    while (exists(iri)) iri = `:${base}Shape${i++}`;
+    draft.nestedShapes.push({ id: newId('ns'), iri, targetClass: f.class || '', fields: [] });
+    if (kind === 'field') {
+      for (const g of draft.groups) {
+        const ff = g.fields.find((x) => x.id === fId);
+        if (ff) { ff.node = iri; break; }
+      }
+    } else if (kind === 'nested-field' && parentNsId) {
+      const ns = draft.nestedShapes.find((x) => x.id === parentNsId);
+      const ff = ns?.fields.find((x) => x.id === fId);
+      if (ff) ff.node = iri;
+    }
+  });
 }
 </script>
 
@@ -309,6 +340,9 @@ function onNumber(e: Event): number | null {
                 {{ ns.targetClass ? ns.targetClass : '' }}
               </option>
             </datalist>
+            <button class="btn btn-secondary btn-xs" style="margin-top: 6px" @click="createAndLinkNestedShape">
+              <Icon name="plus" :size="11" /> {{ t('inspector.createLinkNested') }}
+            </button>
             <div class="hint">{{ t('inspector.hint.nestedShape') }}</div>
           </div>
           <template v-if="isLiteral">
@@ -401,6 +435,29 @@ function onNumber(e: Event): number | null {
             :values="activeField.inValues"
             @change="(v) => setField('inValues', v)"
           />
+        </div>
+
+        <div class="insp-section">
+          <div class="insp-section__title">{{ t('inspector.section.validation') }}</div>
+          <div class="form-row">
+            <label>{{ t('inspector.label.message') }}</label>
+            <input
+              type="text"
+              :value="activeField.message ?? ''"
+              :placeholder="t('inspector.placeholder.message')"
+              @input="setField('message', ($event.target as HTMLInputElement).value || undefined)"
+            />
+          </div>
+          <div class="form-row">
+            <label>{{ t('inspector.label.severity') }}</label>
+            <select
+              :value="activeField.severity || ''"
+              @change="setField('severity', (($event.target as HTMLSelectElement).value || undefined))"
+            >
+              <option value="">{{ t('inspector.severityDefault') }}</option>
+              <option v-for="s in SEVERITIES" :key="s" :value="s">{{ s }}</option>
+            </select>
+          </div>
         </div>
 
         <div class="insp-section">

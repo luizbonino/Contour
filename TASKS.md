@@ -32,7 +32,7 @@ engine that can **ingest and emit multiple RDF syntaxes**.
 |---|---|---|
 | 1 — Safety & correctness quick-wins | undo, autosave, bug fixes, linting, ranges | ✅ Done |
 | 2 — RDF engine + multi-syntax + lossless round-trip | real parser, syntax toggle, preserve-unknown | ✅ Done |
-| 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ⬜ Not started |
+| 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ✅ Done |
 | 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ⬜ Not started |
 | 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | ⬜ Not started |
 | 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | ⬜ Not started |
@@ -206,21 +206,28 @@ preserve-unknown round-trip (F1). The architectural heart of this plan. Shipped.
 
 ---
 
-## Phase 3 — Form fidelity & linking UX ⬜
+## Phase 3 — Form fidelity & linking UX ✅
 
-Make the Form Preview honest and nested shapes easy to wire up.
+Made the Form Preview honest and nested shapes easy to wire up. Shipped.
 
-- [ ] **`sh:message` / `sh:severity` (F7):** add to `Field`; author in the
-      Inspector (message text + Violation/Warning/Info); parse/generate.
-- [ ] **Preview fidelity (U4):** show cardinality hints ("1–3 values"), enforce
-      required, apply `pattern`/range/min-max to inputs, render language pickers
-      for `rdf:langString`, surface `sh:message`, and **recurse** into
-      nested-within-nested shapes ([FormPreview.vue](src/components/FormPreview.vue)).
-- [ ] **Create-&-link nested shape (U5):** a "Create & link nested shape" action
-      on a `DetailsEditor` field that mints the shape and sets `sh:node`
-      automatically ([Inspector.vue:291](src/components/Inspector.vue#L291)); draw a
-      visual link between the field and its target shape on the canvas; warn on
-      dangling references (ties into the Phase 1 linter).
+> **Verified:** `npm test` **136/136**; `npm run type-check` clean;
+> `npm run build` single-file `dist/index.html` 744 KB / 391 KB gzip.
+
+- [x] **`sh:message` / `sh:severity` (F7):** added to `Field`; authored in the
+      Inspector "Validation message" section (message text + Violation / Warning
+      / Info); parsed & generated as first-class (so they leave the residual
+      graph from Phase 2).
+- [x] **Preview fidelity (U4):** extracted a recursive
+      [`PreviewField.vue`](src/components/PreviewField.vue) that renders
+      nested-within-nested sub-forms at any depth; shows a cardinality chip
+      (e.g. "1–3"); reflects `required` / `pattern` / `minLength` / `maxLength` /
+      range onto the inputs ([FieldInput.vue](src/components/FieldInput.vue));
+      surfaces `sh:message` coloured by severity; adds a language-tag input for
+      `rdf:langString` / `rdf:HTML`.
+- [x] **Create-&-link nested shape (U5):** a "Create & link nested shape" button
+      on a `DetailsEditor` field mints a uniquely-named shape and sets `sh:node`
+      in one undo step; the field card shows the link (`→ :ShapeIri`); dangling
+      references are caught by the Phase 1 linter.
 
 ---
 
