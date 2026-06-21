@@ -135,6 +135,55 @@ async function run() {
   await tab('Editor Visual');
   await shot('interface-overview-ptbr', 'page');
 
+  // ── §6 Power features: configure one field per feature, capture the section ─
+  await page.getByRole('button', { name: 'EN' }).first().click(); await wait(200);
+  await loadDataset();
+  await tab('Visual Editor');
+  const snapSection = async (name, title) => {
+    try {
+      await page.locator('.insp-section').filter({ hasText: title }).first()
+        .screenshot({ path: path.join(IMG, `${name}.png`) });
+      ok.push(name);
+    } catch (e) { fail.push(`${name}: ${e.message.split('\n')[0]}`); }
+  };
+  const pickField = async (label) => {
+    await page.locator('.field').filter({ hasText: label }).first().click();
+    await wait(150);
+  };
+
+  // Inverse path (Keyword)
+  await pickField('Keyword');
+  await page.locator('.insp-check input[type=checkbox]').first().check(); await wait(150);
+  await snapSection('inverse-path', 'Basic');
+
+  // Multilingual label (Title)
+  await pickField('Title');
+  await page.locator('.lang-field__tag').first().fill('en'); await wait(150);
+  await page.locator('.trans-row--draft .trans-row__lang-input').first().fill('pt');
+  await page.locator('.trans-row--draft input:not(.trans-row__lang-input)').first().fill('Título');
+  await page.locator('.trans-row--draft button').first().click(); await wait(150);
+  await snapSection('label-languages', 'Basic');
+
+  // Value range (Issued — a date field)
+  await pickField('Issued');
+  await page.locator('.form-row').filter({ hasText: 'Min (≥)' }).locator('input').first().fill('2000-01-01');
+  await page.locator('.form-row').filter({ hasText: 'Max (≤)' }).locator('input').first().fill('2030-12-31');
+  await wait(150);
+  await snapSection('value-range', 'Constraints');
+
+  // Validation message (Description)
+  await pickField('Description');
+  await page.locator('.form-row').filter({ hasText: 'Message (sh:message)' }).locator('input').first()
+    .fill('Provide a description in at least one language.');
+  await page.locator('.form-row').filter({ hasText: 'Severity' }).locator('select').first().selectOption('sh:Warning');
+  await wait(150);
+  await snapSection('validation-message', 'Validation message');
+
+  // Alternative value types (Publisher)
+  await pickField('Publisher');
+  await page.getByRole('button', { name: /alternative value types/i }).first().click(); await wait(200);
+  await snapSection('alt-types', 'Constraints');
+
   await browser.close();
   console.log(`\nOK (${ok.length}): ${ok.join(', ')}`);
   if (fail.length) console.log(`\nFAILED (${fail.length}):\n  ${fail.join('\n  ')}`);

@@ -40,11 +40,12 @@ a study, a sample, a software package — without hand-writing Turtle.
    - [Choosing a syntax (and exporting JSON-LD)](#choosing-a-syntax-and-exporting-json-ld)
    - [Editing an existing schema is lossless](#editing-an-existing-schema-is-lossless)
 5. [Checking your work (the Issues panel)](#5-checking-your-work-the-issues-panel)
-6. [Reference](#6-reference)
+6. [Power features (advanced modelling)](#6-power-features-advanced-modelling)
+7. [Reference](#7-reference)
    - [Widget catalogue](#widget-catalogue)
    - [Property settings reference](#property-settings-reference)
-7. [Recipes — common modelling patterns](#7-recipes--common-modelling-patterns)
-8. [Tips & troubleshooting](#8-tips--troubleshooting)
+8. [Recipes — common modelling patterns](#8-recipes--common-modelling-patterns)
+9. [Tips & troubleshooting](#9-tips--troubleshooting)
 
 ---
 
@@ -308,8 +309,8 @@ up existing instances.
 
 > **Advanced:** a property can also accept *either* a literal *or* an IRI (and
 > similar "one of these types" rules) via **Alternative value types (`sh:or`)**,
-> or follow a relationship backwards with an **Inverse (`^`)** path — see the
-> [recipes](#7-recipes--common-modelling-patterns).
+> or follow a relationship backwards with an **Inverse (`^`)** path — see
+> [§6 Power features](#6-power-features-advanced-modelling).
 
 ### Step 10 — Model a sub-object with a nested shape
 
@@ -469,7 +470,64 @@ means the exported SHACL is well-formed and references only declared vocabularie
 
 ---
 
-## 6. Reference
+## 6. Power features (advanced modelling)
+
+Beyond the core widgets and constraints, the Inspector exposes a few advanced
+controls for richer schemas. Each is optional — reach for them when your model
+needs them.
+
+### Labels in multiple languages
+
+`sh:name` and `sh:description` can carry a **language tag**, and you can add
+**translations** so one field is labelled in several languages. In the **Basic**
+section, type a tag (e.g. `en`) in the small box beside the label; a
+**translations** editor then lets you add more (`pt` → "Título", …). Each becomes
+its own language-tagged statement (`sh:name "Title"@en, "Título"@pt`), and the
+form preview shows a language box on the field.
+
+![Setting a language tag and translations on a label](images/label-languages.png)
+
+### Numeric & date ranges
+
+Number, Date, and Date & time fields show a **Value range** block in
+**Constraints**. Set inclusive **Min (≥)** / **Max (≤)** or exclusive **(>)** /
+**(<)** bounds — e.g. a publication year ≥ 1900. Numbers export bare
+(`sh:minInclusive 1900`); dates as typed literals (`"2000-01-01"^^xsd:date`).
+
+![The Value range controls in the Constraints section](images/value-range.png)
+
+### Custom validation messages
+
+The **Validation message** section sets the text a platform shows when a value
+fails the rule (`sh:message`) and its **Severity** — *Violation* (default),
+*Warning*, or *Info* (`sh:severity`). Use it to turn a bare failure into
+steward-friendly guidance.
+
+![Authoring a validation message and severity](images/validation-message.png)
+
+### Alternative value types (literal *or* IRI)
+
+Some properties legitimately accept more than one kind of value — a subject that
+may be free text *or* a controlled-vocabulary IRI, say. Click **Allow alternative
+value types (`sh:or`)** and list the branches (each a node kind, datatype, or
+class). It exports as `sh:or ( [ … ] [ … ] )`. Richer logical shapes Contour
+doesn't model are still preserved on round-trip (see
+[§4](#4-working-directly-with-the-code-the-shacl-code-tab)).
+
+![Defining alternative value types with sh:or](images/alt-types.png)
+
+### Inverse paths
+
+Tick **Inverse (`^`)** next to the property path to match a relationship
+*backwards* — "resources that point at this one" rather than the other way
+round. It exports as `sh:path [ sh:inversePath … ]`, and the property card shows
+the path with a leading `^`.
+
+![The Inverse path checkbox on a property](images/inverse-path.png)
+
+---
+
+## 7. Reference
 
 ### Widget catalogue
 
@@ -530,7 +588,7 @@ Schema- and group-level controls:
 
 ---
 
-## 7. Recipes — common modelling patterns
+## 8. Recipes — common modelling patterns
 
 Short, self-contained patterns you can apply on top of the tutorial.
 
@@ -586,7 +644,7 @@ preserved (see [§4](#4-working-directly-with-the-code-the-shacl-code-tab)).
 
 ---
 
-## 8. Tips & troubleshooting
+## 9. Tips & troubleshooting
 
 - **Always set the property path.** New widgets get a placeholder path like
   `:textfield`; replace it with the real RDF term (`dct:title`, `dcat:theme`, …)
