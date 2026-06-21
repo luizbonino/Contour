@@ -1,43 +1,20 @@
-// Build a standalone, self-contained HTML version of the data-steward guide
-// (docs/data-steward-guide.md) into dist/guide/index.html, so it can be opened
-// from the app in a separate window. Images are inlined as data URIs; the
-// Markdown stays the single source of truth.
+// Build standalone, self-contained HTML versions of the data-steward guide
+// (English + Brazilian Portuguese) into dist/guide/ and dist/guide/pt-BR/, so
+// they can be opened from the app in a separate window. The Markdown files stay
+// the single source of truth; guide images are copied next to each page.
 import { readFileSync, writeFileSync, mkdirSync, cpSync } from 'node:fs';
 import path from 'node:path';
 import { marked } from 'marked';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
 
 const ROOT = process.cwd();
-const MD = path.join(ROOT, 'docs/data-steward-guide.md');
-const IMG_DIR = path.join(ROOT, 'docs/images');
-const OUT_DIR = path.join(ROOT, 'dist/guide');
-const OUT = path.join(OUT_DIR, 'index.html');
-
 marked.use(gfmHeadingId());
-
-const md = readFileSync(MD, 'utf8');
-const body = marked.parse(md);
-
-// Copy the guide images next to the page (hosted alongside it) so the HTML
-// stays small and images are browser-cached. src="images/x.png" stays as-is.
-mkdirSync(OUT_DIR, { recursive: true });
-cpSync(IMG_DIR, path.join(OUT_DIR, 'images'), { recursive: true });
 
 const favicon =
   'data:image/svg+xml;base64,' + readFileSync(path.join(ROOT, 'public/favicon.svg')).toString('base64');
 const mark = readFileSync(path.join(ROOT, 'src/assets/contour-icon.svg'), 'utf8');
 
-const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contour — Data steward guide</title>
-<link rel="icon" type="image/svg+xml" href="${favicon}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
+const STYLE = `<style>
   :root {
     --ink: #1b2a4a; --accent: #0e7c7b; --accent-dark: #0a5f5e;
     --sand: #eae7e0; --card: #fcfbf8; --border: #e4e0d6;
@@ -58,9 +35,9 @@ const html = `<!DOCTYPE html>
   .topbar .tag { font-family: var(--mono); font-weight: 500; font-size: 8.5px;
     letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
   .topbar .spacer { flex: 1; }
-  .topbar a.app { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+  .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
     border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
-  .topbar a.app:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
   main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
   main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
   main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
@@ -85,14 +62,34 @@ const html = `<!DOCTYPE html>
   th { background: var(--code-bg); color: var(--ink); }
   hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
   :target { scroll-margin-top: 70px; }
-</style>
+</style>`;
+
+function buildGuide(opts) {
+  const { mdPath, imgDir, outDir, htmlLang, title, openHref, openLabel, switchHref, switchLabel } = opts;
+  const body = marked.parse(readFileSync(path.join(ROOT, mdPath), 'utf8'));
+  const out = path.join(ROOT, outDir);
+  mkdirSync(out, { recursive: true });
+  cpSync(path.join(ROOT, imgDir), path.join(out, 'images'), { recursive: true });
+
+  const html = `<!DOCTYPE html>
+<html lang="${htmlLang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${title}</title>
+<link rel="icon" type="image/svg+xml" href="${favicon}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+${STYLE}
 </head>
 <body>
   <div class="topbar">
     ${mark}
     <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
     <div class="spacer"></div>
-    <a class="app" href="../" target="_blank" rel="noopener">Open the editor ↗</a>
+    <a class="btn" href="${switchHref}">${switchLabel}</a>
+    <a class="btn" href="${openHref}" target="_blank" rel="noopener">${openLabel}</a>
   </div>
   <main>
 ${body}
@@ -100,7 +97,20 @@ ${body}
 </body>
 </html>
 `;
+  const file = path.join(out, 'index.html');
+  writeFileSync(file, html);
+  console.log(`guide → ${path.relative(ROOT, file)} (${(html.length / 1024).toFixed(0)} KB)`);
+}
 
-mkdirSync(OUT_DIR, { recursive: true });
-writeFileSync(OUT, html);
-console.log(`guide → ${path.relative(ROOT, OUT)} (${(html.length / 1024).toFixed(0)} KB)`);
+buildGuide({
+  mdPath: 'docs/data-steward-guide.md', imgDir: 'docs/images', outDir: 'dist/guide',
+  htmlLang: 'en', title: 'Contour — Data steward guide',
+  openHref: '../', openLabel: 'Open the editor ↗',
+  switchHref: 'pt-BR/', switchLabel: 'Português',
+});
+buildGuide({
+  mdPath: 'docs/data-steward-guide.pt-BR.md', imgDir: 'docs/images-pt', outDir: 'dist/guide/pt-BR',
+  htmlLang: 'pt-BR', title: 'Contour — Guia do data steward',
+  openHref: '../../', openLabel: 'Abrir o editor ↗',
+  switchHref: '../', switchLabel: 'English',
+});
