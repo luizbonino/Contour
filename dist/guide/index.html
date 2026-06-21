@@ -126,13 +126,14 @@ Safari work too, with a download-style save.</p>
 </ul>
 </li>
 <li><a href="#5-checking-your-work-the-issues-panel">Checking your work (the Issues panel)</a></li>
-<li><a href="#6-reference">Reference</a><ul>
+<li><a href="#6-power-features-advanced-modelling">Power features (advanced modelling)</a></li>
+<li><a href="#7-reference">Reference</a><ul>
 <li><a href="#widget-catalogue">Widget catalogue</a></li>
 <li><a href="#property-settings-reference">Property settings reference</a></li>
 </ul>
 </li>
-<li><a href="#7-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
-<li><a href="#8-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
+<li><a href="#8-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
+<li><a href="#9-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
 </ol>
 <hr>
 <h2 id="1-what-you-are-building-key-concepts">1. What you are building (key concepts)</h2>
@@ -395,8 +396,8 @@ drop-down of instances). Use whichever fits how the value is chosen. The
 <blockquote>
 <p><strong>Advanced:</strong> a property can also accept <em>either</em> a literal <em>or</em> an IRI (and
 similar &quot;one of these types&quot; rules) via <strong>Alternative value types (<code>sh:or</code>)</strong>,
-or follow a relationship backwards with an <strong>Inverse (<code>^</code>)</strong> path — see the
-<a href="#7-recipes--common-modelling-patterns">recipes</a>.</p>
+or follow a relationship backwards with an <strong>Inverse (<code>^</code>)</strong> path — see
+<a href="#6-power-features-advanced-modelling">§6 Power features</a>.</p>
 </blockquote>
 <h3 id="step-10--model-a-sub-object-with-a-nested-shape">Step 10 — Model a sub-object with a nested shape</h3>
 <p>Sometimes a field is itself a small structured object. A <strong>contact point</strong>, for
@@ -526,7 +527,46 @@ declared</strong>;</li>
 <p>Issues are <strong>non-blocking</strong> — they&#39;re guidance, not gates — but clearing them
 means the exported SHACL is well-formed and references only declared vocabularies.</p>
 <hr>
-<h2 id="6-reference">6. Reference</h2>
+<h2 id="6-power-features-advanced-modelling">6. Power features (advanced modelling)</h2>
+<p>Beyond the core widgets and constraints, the Inspector exposes a few advanced
+controls for richer schemas. Each is optional — reach for them when your model
+needs them.</p>
+<h3 id="labels-in-multiple-languages">Labels in multiple languages</h3>
+<p><code>sh:name</code> and <code>sh:description</code> can carry a <strong>language tag</strong>, and you can add
+<strong>translations</strong> so one field is labelled in several languages. In the <strong>Basic</strong>
+section, type a tag (e.g. <code>en</code>) in the small box beside the label; a
+<strong>translations</strong> editor then lets you add more (<code>pt</code> → &quot;Título&quot;, …). Each becomes
+its own language-tagged statement (<code>sh:name &quot;Title&quot;@en, &quot;Título&quot;@pt</code>), and the
+form preview shows a language box on the field.</p>
+<p><img src="images/label-languages.png" alt="Setting a language tag and translations on a label"></p>
+<h3 id="numeric--date-ranges">Numeric &amp; date ranges</h3>
+<p>Number, Date, and Date &amp; time fields show a <strong>Value range</strong> block in
+<strong>Constraints</strong>. Set inclusive <strong>Min (≥)</strong> / <strong>Max (≤)</strong> or exclusive <strong>(&gt;)</strong> /
+<strong>(&lt;)</strong> bounds — e.g. a publication year ≥ 1900. Numbers export bare
+(<code>sh:minInclusive 1900</code>); dates as typed literals (<code>&quot;2000-01-01&quot;^^xsd:date</code>).</p>
+<p><img src="images/value-range.png" alt="The Value range controls in the Constraints section"></p>
+<h3 id="custom-validation-messages">Custom validation messages</h3>
+<p>The <strong>Validation message</strong> section sets the text a platform shows when a value
+fails the rule (<code>sh:message</code>) and its <strong>Severity</strong> — <em>Violation</em> (default),
+<em>Warning</em>, or <em>Info</em> (<code>sh:severity</code>). Use it to turn a bare failure into
+steward-friendly guidance.</p>
+<p><img src="images/validation-message.png" alt="Authoring a validation message and severity"></p>
+<h3 id="alternative-value-types-literal-or-iri">Alternative value types (literal <em>or</em> IRI)</h3>
+<p>Some properties legitimately accept more than one kind of value — a subject that
+may be free text <em>or</em> a controlled-vocabulary IRI, say. Click <strong>Allow alternative
+value types (<code>sh:or</code>)</strong> and list the branches (each a node kind, datatype, or
+class). It exports as <code>sh:or ( [ … ] [ … ] )</code>. Richer logical shapes Contour
+doesn&#39;t model are still preserved on round-trip (see
+<a href="#4-working-directly-with-the-code-the-shacl-code-tab">§4</a>).</p>
+<p><img src="images/alt-types.png" alt="Defining alternative value types with sh:or"></p>
+<h3 id="inverse-paths">Inverse paths</h3>
+<p>Tick <strong>Inverse (<code>^</code>)</strong> next to the property path to match a relationship
+<em>backwards</em> — &quot;resources that point at this one&quot; rather than the other way
+round. It exports as <code>sh:path [ sh:inversePath … ]</code>, and the property card shows
+the path with a leading <code>^</code>.</p>
+<p><img src="images/inverse-path.png" alt="The Inverse path checkbox on a property"></p>
+<hr>
+<h2 id="7-reference">7. Reference</h2>
 <h3 id="widget-catalogue">Widget catalogue</h3>
 <p>Every widget maps to a DASH editor and sensible default node kind / datatype.</p>
 <table>
@@ -743,7 +783,7 @@ Inspector whenever your model needs something different.</p>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="7-recipes--common-modelling-patterns">7. Recipes — common modelling patterns</h2>
+<h2 id="8-recipes--common-modelling-patterns">8. Recipes — common modelling patterns</h2>
 <p>Short, self-contained patterns you can apply on top of the tutorial.</p>
 <p><strong>Make a field required.</strong> Set <strong>Min count</strong> to <code>1</code>. The card shows a red dot and
 the form marks it with <code>*</code>.</p>
@@ -782,7 +822,7 @@ Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.</p>
 Visual Editor, then <strong>Save As…</strong> a new file — anything Contour doesn&#39;t model is
 preserved (see <a href="#4-working-directly-with-the-code-the-shacl-code-tab">§4</a>).</p>
 <hr>
-<h2 id="8-tips--troubleshooting">8. Tips &amp; troubleshooting</h2>
+<h2 id="9-tips--troubleshooting">9. Tips &amp; troubleshooting</h2>
 <ul>
 <li><strong>Always set the property path.</strong> New widgets get a placeholder path like
 <code>:textfield</code>; replace it with the real RDF term (<code>dct:title</code>, <code>dcat:theme</code>, …)
