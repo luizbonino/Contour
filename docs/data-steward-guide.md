@@ -1,7 +1,7 @@
 # Creating Metadata Schemas — A Guide for Data Stewards
 
 **Contour** lets you design custom metadata schemas visually —
-by dragging form widgets onto a canvas — and exports them as standards-compliant
+by dragging or clicking form widgets onto a canvas — and exports them as standards-compliant
 [SHACL](https://www.w3.org/TR/shacl/) shapes with [DASH](https://datashapes.org/forms.html)
 form annotations. The output drops straight into a
 [FAIR Data Point](https://fairdatapoint.org/) or any SHACL-aware platform.
@@ -36,12 +36,15 @@ a study, a sample, a software package — without hand-writing Turtle.
    - [Step 11 — Preview the data-entry form](#step-11--preview-the-data-entry-form)
    - [Step 12 — Review the generated SHACL](#step-12--review-the-generated-shacl)
    - [Step 13 — Save and export](#step-13--save-and-export)
-4. [Working directly with Turtle (the SHACL Code tab)](#4-working-directly-with-turtle-the-shacl-code-tab)
-5. [Reference](#5-reference)
+4. [Working directly with the code (the SHACL Code tab)](#4-working-directly-with-the-code-the-shacl-code-tab)
+   - [Choosing a syntax (and exporting JSON-LD)](#choosing-a-syntax-and-exporting-json-ld)
+   - [Editing an existing schema is lossless](#editing-an-existing-schema-is-lossless)
+5. [Checking your work (the Issues panel)](#5-checking-your-work-the-issues-panel)
+6. [Reference](#6-reference)
    - [Widget catalogue](#widget-catalogue)
    - [Property settings reference](#property-settings-reference)
-6. [Recipes — common modelling patterns](#6-recipes--common-modelling-patterns)
-7. [Tips & troubleshooting](#7-tips--troubleshooting)
+7. [Recipes — common modelling patterns](#7-recipes--common-modelling-patterns)
+8. [Tips & troubleshooting](#8-tips--troubleshooting)
 
 ---
 
@@ -72,8 +75,10 @@ The window has three tabs:
 
 ![The three tabs: SHACL Code, Visual Editor, Form Preview](images/tabs.png)
 
-- **SHACL Code** — the raw SHACL Turtle, with autocomplete. Edits here sync back
-  to the visual canvas. This is also where files you open are shown.
+- **SHACL Code** — the serialized schema. Turtle by default, with autocomplete;
+  edits sync back to the visual canvas. A **syntax** selector also offers
+  N-Triples, TriG, Notation3, and a **JSON-LD** export. This is also where files
+  you open are shown.
 - **Visual Editor** — the drag-and-drop workbench (shown above). This is where
   most of your work happens.
 - **Form Preview** — a realistic rendering of the data-entry form your schema
@@ -83,18 +88,27 @@ The **Visual Editor** is split into three columns:
 
 | Column | Purpose |
 |---|---|
-| **Widgets** (left) | The palette of form controls you drag onto the canvas. |
+| **Widgets** (left) | The palette of form controls. **Drag** one onto the canvas, or just **click** it (keyboard: focus + Enter) to add it. |
 | **Form canvas** (centre) | Your schema: the target banner, groups, properties, and nested shapes. |
 | **Inspector** (right) | Settings for whatever is currently selected — the schema, a group, or a property. |
 
-Below the workbench is an actions bar with a property/group counter and Save
-buttons. To see the generated Turtle, switch to the **SHACL Code** tab; to see
-the rendered form, switch to **Form Preview**.
+Below the workbench is an **actions bar** with a property/group counter, an
+**Issues** indicator (a live check of your schema — see
+[§5](#5-checking-your-work-the-issues-panel)), and Save / Copy buttons. To see
+the serialized schema, switch to the **SHACL Code** tab; to see the rendered
+form, switch to **Form Preview**.
 
-The header holds the file actions — **New**, **Examples**, **Open**, **Save**,
-**Save As** — plus the language toggle and a **Guide** link:
+The header holds the file actions — **Undo / Redo**, **New**, **Recent**,
+**Examples**, **Open**, **Save**, **Save As** — plus the language toggle and a
+**Guide** link:
 
-![New, Examples, Open, Save, and Save As buttons in the header](images/file-toolbar.png)
+![Undo/Redo, New, Recent, Examples, Open, Save, and Save As buttons in the header](images/file-toolbar.png)
+
+> **Your work is saved as you go.** Contour keeps an autosaved draft in your
+> browser, so a refresh or accidental tab-close won't lose it — you'll see a
+> *"Restored your unsaved draft"* notice on return. **Undo/Redo** (or
+> Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z) step through your edits, and the **Recent**
+> menu reopens schemas you've saved.
 
 ### Interface language
 
@@ -173,21 +187,23 @@ empty section to drop into:
 ![The blank canvas, ready for your first widget](images/blank-start.png)
 
 - **Rename** a group by clicking its title and typing — e.g. `General information`.
-- **Reorder** by setting the group's **Order** in the Inspector (select the group
-  header first).
+- **Reorder** with the **↑ / ↓** buttons on the group header (this renumbers the
+  groups for you).
 - **Delete** with the trash icon on the group header.
 
 For this tutorial, create two groups: **General information** and **Provenance**.
 
 ### Step 4 — Add your first property (a text field)
 
-From the **Widgets** palette on the left, **drag** a **Text field** onto the
-*General information* group. Widgets are organised by category (Text, References,
+From the **Widgets** palette on the left, add a **Text field** to the *General
+information* group — either **drag** it onto the group, or simply **click** it
+(it's added to the selected group, or the last one). Keyboard users can focus a
+widget and press **Enter**. Widgets are organised by category (Text, References,
 Choice, Date & number) and searchable via the box at the top.
 
 ![The widget palette grouped by category](images/widget-palette.png)
 
-When you drop a widget, it becomes a property card on the canvas and is selected
+When you add a widget, it becomes a property card on the canvas and is selected
 automatically. A property card shows its label, path, type, and status badges
 (a red dot for required, a "multi" badge for repeatable):
 
@@ -201,7 +217,9 @@ With the new field selected, the Inspector shows its **Property settings**. Set:
 - **Label (`sh:name`)** → `Title` — the field label shown to users.
 - **Description** → optional help text (appears as an ⓘ tooltip on the form).
 - **Property path (`sh:path`)** → `dct:title` — **the RDF term this field writes**.
-  Always set this; the default placeholder path is not meaningful.
+  Always set this; the default placeholder path is not meaningful. As you type,
+  Contour suggests common predicates (and your declared prefixes); pick one or
+  keep typing your own.
 
 ![The property Inspector with Basic, Constraints, and Defaults sections](images/field-inspector.png)
 
@@ -220,6 +238,15 @@ The **Constraints** section of the Inspector controls validation. For *Title*:
 > **Cardinality cheat-sheet:** *Min 1 / Max 1* = required, single value.
 > *Min 0 / Max 1* = optional, single value. *Min 1 / Max ∞* (leave Max empty) =
 > required, repeatable. *Min 0 / Max ∞* = optional, repeatable.
+
+**Value range** (numbers and dates). Number, Date, and Date & time fields show a
+**Value range** section — set **Min (≥)** / **Max (≤)** (inclusive) or the
+**(>)** / **(<)** exclusive bounds. Numbers are written bare
+(`sh:minInclusive 1900`), dates as typed literals (`"2020-01-01"^^xsd:date`).
+
+**Custom validation message** (optional). The **Validation message** section
+lets you set the text a platform shows when this field fails (`sh:message`) and
+its **Severity** — *Violation* (default), *Warning*, or *Info* (`sh:severity`).
 
 ### Step 6 — Add a multi-line description
 
@@ -255,6 +282,11 @@ In the Inspector, an **Allowed values** editor appears:
 
 The values are exported as `sh:in ( "public" "restricted" "private" )`.
 
+> **Literal vs. IRI values.** Each allowed value carries a **literal / IRI**
+> toggle (the small tag to its left). Keep it **literal** for plain text like
+> `public`; switch it to **IRI** when the choices are controlled-vocabulary terms
+> (e.g. `ex:Public`, a `skos:Concept`) so they export as IRIs, not strings.
+
 ### Step 9 — Reference another entity (IRI + class)
 
 Some properties point to *another resource* rather than holding a plain value —
@@ -271,7 +303,13 @@ up existing instances.
 - Min/Max count `1`/`1`.
 
 > Other reference widgets: **URI** (free-form link), **Instances select** (a
-> drop-down of instances). Use whichever fits how the value is chosen.
+> drop-down of instances). Use whichever fits how the value is chosen. The
+> **Class** box suggests common classes as you type.
+
+> **Advanced:** a property can also accept *either* a literal *or* an IRI (and
+> similar "one of these types" rules) via **Alternative value types (`sh:or`)**,
+> or follow a relationship backwards with an **Inverse (`^`)** path — see the
+> [recipes](#7-recipes--common-modelling-patterns).
 
 ### Step 10 — Model a sub-object with a nested shape
 
@@ -286,9 +324,15 @@ the **Details (nested)** widget.
    references it.*
 2. **Drag widgets onto the nested shape** just like a group — e.g. a **Text
    field** `Full name` (`vcard:fn`) and a **URI** `Email` (`vcard:hasEmail`).
-3. Back in a group, drag in a **Details (nested)** widget. In its Inspector, set
+3. Back in a group, add a **Details (nested)** widget. In its Inspector, set
    **Nested shape (`sh:node`)** to `:ContactShape` (the box offers your nested
    shapes as suggestions).
+
+> **Shortcut.** On a **Details** property you can click **Create & link nested
+> shape** to mint a new shape and wire `sh:node` to it in one step — then just
+> add its fields. The property card shows the link it points to (e.g.
+> `→ :ContactShape`), and the [Issues panel](#5-checking-your-work-the-issues-panel)
+> flags a Details property whose target is missing.
 
 ![A schema with a Details property and a populated nested ContactShape](images/nested-canvas.png)
 
@@ -303,9 +347,13 @@ The nested shape card on the canvas holds its own properties:
 ### Step 11 — Preview the data-entry form
 
 At any point, open the **Form Preview** tab to check what the person entering
-metadata will see. Required fields show a red asterisk, descriptions become ⓘ
-tooltips, repeatable fields get **+ Add** buttons, and **Details** properties
-render their nested shape's fields inline:
+metadata will see. The preview mirrors your constraints: required fields show a
+red asterisk, a small **cardinality** chip shows the allowed count (e.g. `1–3`),
+descriptions become ⓘ tooltips, repeatable fields get **+ Add** buttons,
+patterns / lengths / ranges are applied to the inputs, language-tagged text
+gets a small language box, any **validation message** appears under the field,
+and **Details** properties render their nested shape's fields inline — nesting
+to any depth:
 
 ![The rendered form preview, including an inline nested Contact form](images/form-preview-tab.png)
 
@@ -322,20 +370,24 @@ edit it directly):
 Everything you configured visually is here — `@prefix` declarations, the
 `PropertyGroup`s, the `NodeShape` with its `sh:property` blocks, and any nested
 shapes. The **Copy SHACL** button in the Visual Editor's actions bar puts the
-Turtle on your clipboard.
+serialization on your clipboard. Use the **Syntax** selector to view or export
+other formats, including JSON-LD (see [§4](#4-working-directly-with-the-code-the-shacl-code-tab)).
 
 ### Step 13 — Save and export
 
-Save your schema as a `.ttl` file:
+Save your schema (a `.ttl` file by default):
 
-- **Save As…** — choose a new file name and location.
+- **Save As…** — choose a new file name and location. The extension follows the
+  selected syntax (`.ttl`, `.nt`, `.trig`, `.n3`, or `.jsonld`).
 - **Save** — write back to the file you last opened/saved (Ctrl/Cmd+S). The
   button briefly shows **Saved!** to confirm.
-- **Copy SHACL** — copy the Turtle without saving a file.
+- **Copy SHACL** — copy the current serialization without saving a file.
+- **Recent** (header) — reopen a schema you saved earlier this session.
 
 > In Chrome/Edge the file is written directly to disk. In Firefox/Safari the
 > editor falls back to a normal download. The suggested file name is derived from
-> the schema name (e.g. `dataset.ttl`).
+> the schema name (e.g. `dataset.ttl`). Either way, an autosaved draft is kept in
+> your browser between sessions.
 
 Upload the resulting `.ttl` to your FAIR Data Point (or other SHACL platform) as
 a metadata schema, and records of the target class will be validated — and forms
@@ -343,7 +395,7 @@ rendered — according to your design.
 
 ---
 
-## 4. Working directly with Turtle (the SHACL Code tab)
+## 4. Working directly with the code (the SHACL Code tab)
 
 Prefer to write or paste SHACL by hand, or need to start from an existing shape?
 Use the **SHACL Code** tab.
@@ -353,25 +405,71 @@ Use the **SHACL Code** tab.
 - **Two-way sync.** Edits to the Turtle are parsed and pushed back to the Visual
   Editor automatically (after you pause typing). Conversely, anything you build
   visually appears here.
-- **Context-aware autocomplete.** As you type, the editor suggests SHACL
+- **Context-aware autocomplete** (Turtle). As you type, the editor suggests SHACL
   predicates, node kinds, XSD datatypes, DASH editors, declared property groups,
   and `@prefix` lines. Use **↑/↓** to move, **Tab**/**Enter** to accept,
   **Esc** to dismiss.
 
 ![Turtle autocomplete suggesting sh:datatype](images/turtle-autocomplete.png)
 
-- **Open an existing file.** **Open…** in the header loads a `.ttl`/`.shacl`
-  file into this tab and parses it into the Visual Editor — a fast way to adapt
-  an existing schema. If a file can't be parsed, an inline message points to the
-  problem line; you can still edit the raw text.
+- **Open an existing file.** **Open…** in the header loads a `.ttl`/`.nt`/
+  `.trig`/`.n3` file into this tab, detects its syntax, and parses it into the
+  Visual Editor — a fast way to adapt an existing schema. If a file can't be
+  parsed, an inline message points to the problem line; you can still edit the
+  raw text.
 - **Name & Description** for the schema also have plain inputs at the top of this
   tab.
 
 Click **Open in Visual Editor** to jump back to the drag-and-drop view.
 
+### Choosing a syntax (and exporting JSON-LD)
+
+A **Syntax** selector in this tab switches the serialization between **Turtle**
+(default), **N-Triples**, **TriG**, **Notation3**, and **JSON-LD (export)**. The
+first four are fully editable — edits sync back. **JSON-LD is export-only**
+(there's no JSON-LD parser): the editor shows it read-only so you can **Copy** it
+or **Save As** a `.jsonld` file, then switch back to Turtle to keep editing.
+
+![The syntax selector and JSON-LD export in the SHACL Code tab](images/syntax-jsonld.png)
+
+New schemas always start as Turtle, and **Save As** uses the extension that
+matches the selected syntax.
+
+### Editing an existing schema is lossless
+
+Contour parses files with a real RDF engine, so opening, editing, and saving a
+schema **never silently drops the parts it doesn't visually model**. Constructs
+the editor doesn't have a control for — say `sh:and`, qualified value shapes, or
+extra annotations — are **preserved verbatim** and re-emitted in a clearly
+commented *"Preserved"* block at the end of the output. When a loaded file
+contains such constructs you'll see a short notice in this tab; your edits to the
+parts Contour *does* model are applied as usual, and the rest round-trips intact.
+
 ---
 
-## 5. Reference
+## 5. Checking your work (the Issues panel)
+
+As you build, Contour continuously checks the schema and summarizes problems in
+the **Issues** indicator on the Visual Editor's actions bar. Click it to expand
+the list; click any item to jump straight to the offending element.
+
+![The Issues panel listing schema problems](images/issues-panel.png)
+
+It flags things like:
+
+- a property with **no path**, or **duplicate paths** in the same group;
+- a **Details** property whose nested shape is **missing**;
+- a path, class, datatype, or target class using a **prefix you haven't
+  declared**;
+- a missing **target class** or schema **name**;
+- nested shapes with a missing or duplicate IRI.
+
+Issues are **non-blocking** — they're guidance, not gates — but clearing them
+means the exported SHACL is well-formed and references only declared vocabularies.
+
+---
+
+## 6. Reference
 
 ### Widget catalogue
 
@@ -401,9 +499,9 @@ What each Inspector control writes into SHACL:
 
 | Inspector field | SHACL output | Notes |
 |---|---|---|
-| Label | `sh:name` | The form label. |
-| Description | `sh:description` | Help text / ⓘ tooltip. |
-| Property path | `sh:path` | **Required.** The RDF predicate. |
+| Label | `sh:name` | The form label. Optional **language tag** + additional **translations** emit one `sh:name` per language. |
+| Description | `sh:description` | Help text / ⓘ tooltip. Also language-taggable, with translations. |
+| Property path | `sh:path` | **Required.** The RDF predicate. **Inverse (`^`)** emits `[ sh:inversePath … ]`. |
 | Min count | `sh:minCount` | ≥ 1 makes the field required. |
 | Max count | `sh:maxCount` | Empty = unbounded (repeatable). |
 | Node kind | `sh:nodeKind` | `sh:Literal`, `sh:IRI`, `sh:BlankNode`, or combinations. |
@@ -411,8 +509,11 @@ What each Inspector control writes into SHACL:
 | Class | `sh:class` | Shown for IRI node kinds; restricts the target type. |
 | Nested shape | `sh:node` | Shown for **Details**; links to a nested shape. |
 | Min / Max length | `sh:minLength` / `sh:maxLength` | Literals only. |
+| Value range | `sh:minInclusive` / `maxInclusive` / `minExclusive` / `maxExclusive` | Numbers & dates. |
 | Pattern (regex) | `sh:pattern` | Literals only. |
-| Allowed values | `sh:in ( … )` | Enumeration choices. |
+| Allowed values | `sh:in ( … )` | Enumeration choices; each value literal or IRI. |
+| Alternative value types | `sh:or ( … )` | "Accept one of these types" (e.g. literal **or** IRI). |
+| Message / Severity | `sh:message` / `sh:severity` | Custom validation text + Violation / Warning / Info. |
 | Default value | `sh:defaultValue` | Pre-filled value. |
 | Order | `sh:order` | Field order within its group. |
 
@@ -429,7 +530,7 @@ Schema- and group-level controls:
 
 ---
 
-## 6. Recipes — common modelling patterns
+## 7. Recipes — common modelling patterns
 
 Short, self-contained patterns you can apply on top of the tutorial.
 
@@ -453,15 +554,39 @@ property at it via `sh:node`. See [Step 10](#step-10--model-a-sub-object-with-a-
 **Enforce a format.** For literals, set a **Pattern** (regex) and/or **Min/Max
 length** — e.g. an ORCID pattern, or a max length on a code field.
 
+**Bound a number or date.** On a Number / Date field, use the **Value range**
+section — e.g. *Min (≥)* `1900` for a year, or *Max (≤)* a cut-off date.
+
+**Offer a label in several languages.** Set a **language tag** on the **Label**
+(e.g. `en`) and add **translations** (`pt` → "Título", …). Each becomes a
+language-tagged `sh:name`, and the form preview shows a language box.
+
+**Accept a literal *or* an IRI** (or "one of these types"). Use **Alternative
+value types (`sh:or`)** on the property and list the branches (e.g.
+`sh:nodeKind sh:Literal` and `sh:nodeKind sh:IRI`). Common in DCAT-AP for values
+that may be inline text or a reference.
+
+**Follow a relationship backwards.** Tick **Inverse (`^`)** on the path to match
+"things that point at this resource" (e.g. members of a collection) — exported
+as `[ sh:inversePath … ]`.
+
+**Explain a validation rule.** Fill the **Validation message** with steward-
+friendly text and pick a **Severity** so a platform can show a helpful Warning
+instead of a bare failure.
+
+**Export to JSON-LD.** In the SHACL Code tab, set **Syntax** → *JSON-LD
+(export)* and **Copy** or **Save As** `.jsonld` for tools that consume JSON-LD.
+
 **Start from an example.** Use the **Examples** menu to load a Dataset (DCAT),
 Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.
 
-**Reuse an existing schema.** **Open…** the existing `.ttl`, adapt it in the
-Visual Editor, then **Save As…** a new file.
+**Reuse an existing schema.** **Open…** the existing file, adapt it in the
+Visual Editor, then **Save As…** a new file — anything Contour doesn't model is
+preserved (see [§4](#4-working-directly-with-the-code-the-shacl-code-tab)).
 
 ---
 
-## 7. Tips & troubleshooting
+## 8. Tips & troubleshooting
 
 - **Always set the property path.** New widgets get a placeholder path like
   `:textfield`; replace it with the real RDF term (`dct:title`, `dcat:theme`, …)
@@ -475,8 +600,14 @@ Visual Editor, then **Save As…** a new file.
   visual canvas keeps the last valid state until the text parses.
 - **Save button only downloads.** That's the expected fallback in Firefox/Safari.
   For in-place saves, use a Chromium-based browser (Chrome/Edge).
+- **Made a mistake?** **Undo** (Ctrl/Cmd+Z) / **Redo** (Ctrl/Cmd+Shift+Z) cover
+  every edit, and your work is autosaved — a refresh restores it.
+- **Check the Issues panel.** Before exporting, expand **Issues** in the actions
+  bar and clear any errors (empty paths, undeclared prefixes, broken `sh:node`).
+- **Editing JSON-LD?** You can't — it's export-only. Switch **Syntax** back to
+  Turtle (or N-Triples / TriG / N3) to keep editing.
 - **Start over.** Use the **New** button for a blank schema, load one from
-  **Examples**, or **Open…** an existing `.ttl`.
+  **Examples**, or **Open…** an existing file.
 
 ---
 

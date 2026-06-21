@@ -84,7 +84,7 @@
   <main>
 <h1 id="creating-metadata-schemas--a-guide-for-data-stewards">Creating Metadata Schemas — A Guide for Data Stewards</h1>
 <p><strong>Contour</strong> lets you design custom metadata schemas visually —
-by dragging form widgets onto a canvas — and exports them as standards-compliant
+by dragging or clicking form widgets onto a canvas — and exports them as standards-compliant
 <a href="https://www.w3.org/TR/shacl/">SHACL</a> shapes with <a href="https://datashapes.org/forms.html">DASH</a>
 form annotations. The output drops straight into a
 <a href="https://fairdatapoint.org/">FAIR Data Point</a> or any SHACL-aware platform.</p>
@@ -120,14 +120,19 @@ Safari work too, with a download-style save.</p>
 <li><a href="#step-13--save-and-export">Step 13 — Save and export</a></li>
 </ul>
 </li>
-<li><a href="#4-working-directly-with-turtle-the-shacl-code-tab">Working directly with Turtle (the SHACL Code tab)</a></li>
-<li><a href="#5-reference">Reference</a><ul>
+<li><a href="#4-working-directly-with-the-code-the-shacl-code-tab">Working directly with the code (the SHACL Code tab)</a><ul>
+<li><a href="#choosing-a-syntax-and-exporting-json-ld">Choosing a syntax (and exporting JSON-LD)</a></li>
+<li><a href="#editing-an-existing-schema-is-lossless">Editing an existing schema is lossless</a></li>
+</ul>
+</li>
+<li><a href="#5-checking-your-work-the-issues-panel">Checking your work (the Issues panel)</a></li>
+<li><a href="#6-reference">Reference</a><ul>
 <li><a href="#widget-catalogue">Widget catalogue</a></li>
 <li><a href="#property-settings-reference">Property settings reference</a></li>
 </ul>
 </li>
-<li><a href="#6-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
-<li><a href="#7-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
+<li><a href="#7-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
+<li><a href="#8-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
 </ol>
 <hr>
 <h2 id="1-what-you-are-building-key-concepts">1. What you are building (key concepts)</h2>
@@ -176,8 +181,10 @@ valid record of a given kind looks like. A few terms you will meet throughout:</
 <p>The window has three tabs:</p>
 <p><img src="images/tabs.png" alt="The three tabs: SHACL Code, Visual Editor, Form Preview"></p>
 <ul>
-<li><strong>SHACL Code</strong> — the raw SHACL Turtle, with autocomplete. Edits here sync back
-to the visual canvas. This is also where files you open are shown.</li>
+<li><strong>SHACL Code</strong> — the serialized schema. Turtle by default, with autocomplete;
+edits sync back to the visual canvas. A <strong>syntax</strong> selector also offers
+N-Triples, TriG, Notation3, and a <strong>JSON-LD</strong> export. This is also where files
+you open are shown.</li>
 <li><strong>Visual Editor</strong> — the drag-and-drop workbench (shown above). This is where
 most of your work happens.</li>
 <li><strong>Form Preview</strong> — a realistic rendering of the data-entry form your schema
@@ -193,7 +200,7 @@ produces, so you can test the experience before publishing.</li>
 </thead>
 <tbody><tr>
 <td><strong>Widgets</strong> (left)</td>
-<td>The palette of form controls you drag onto the canvas.</td>
+<td>The palette of form controls. <strong>Drag</strong> one onto the canvas, or just <strong>click</strong> it (keyboard: focus + Enter) to add it.</td>
 </tr>
 <tr>
 <td><strong>Form canvas</strong> (centre)</td>
@@ -204,12 +211,22 @@ produces, so you can test the experience before publishing.</li>
 <td>Settings for whatever is currently selected — the schema, a group, or a property.</td>
 </tr>
 </tbody></table>
-<p>Below the workbench is an actions bar with a property/group counter and Save
-buttons. To see the generated Turtle, switch to the <strong>SHACL Code</strong> tab; to see
-the rendered form, switch to <strong>Form Preview</strong>.</p>
-<p>The header holds the file actions — <strong>New</strong>, <strong>Examples</strong>, <strong>Open</strong>, <strong>Save</strong>,
-<strong>Save As</strong> — plus the language toggle and a <strong>Guide</strong> link:</p>
-<p><img src="images/file-toolbar.png" alt="New, Examples, Open, Save, and Save As buttons in the header"></p>
+<p>Below the workbench is an <strong>actions bar</strong> with a property/group counter, an
+<strong>Issues</strong> indicator (a live check of your schema — see
+<a href="#5-checking-your-work-the-issues-panel">§5</a>), and Save / Copy buttons. To see
+the serialized schema, switch to the <strong>SHACL Code</strong> tab; to see the rendered
+form, switch to <strong>Form Preview</strong>.</p>
+<p>The header holds the file actions — <strong>Undo / Redo</strong>, <strong>New</strong>, <strong>Recent</strong>,
+<strong>Examples</strong>, <strong>Open</strong>, <strong>Save</strong>, <strong>Save As</strong> — plus the language toggle and a
+<strong>Guide</strong> link:</p>
+<p><img src="images/file-toolbar.png" alt="Undo/Redo, New, Recent, Examples, Open, Save, and Save As buttons in the header"></p>
+<blockquote>
+<p><strong>Your work is saved as you go.</strong> Contour keeps an autosaved draft in your
+browser, so a refresh or accidental tab-close won&#39;t lose it — you&#39;ll see a
+<em>&quot;Restored your unsaved draft&quot;</em> notice on return. <strong>Undo/Redo</strong> (or
+Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z) step through your edits, and the <strong>Recent</strong>
+menu reopens schemas you&#39;ve saved.</p>
+</blockquote>
 <h3 id="interface-language">Interface language</h3>
 <p>Contour&#39;s interface is available in <strong>English</strong> (default) and <strong>Brazilian
 Portuguese</strong>. Switch with the <strong>EN / PT</strong> toggle in the header — your choice is
@@ -272,17 +289,19 @@ empty section to drop into:</p>
 <p><img src="images/blank-start.png" alt="The blank canvas, ready for your first widget"></p>
 <ul>
 <li><strong>Rename</strong> a group by clicking its title and typing — e.g. <code>General information</code>.</li>
-<li><strong>Reorder</strong> by setting the group&#39;s <strong>Order</strong> in the Inspector (select the group
-header first).</li>
+<li><strong>Reorder</strong> with the <strong>↑ / ↓</strong> buttons on the group header (this renumbers the
+groups for you).</li>
 <li><strong>Delete</strong> with the trash icon on the group header.</li>
 </ul>
 <p>For this tutorial, create two groups: <strong>General information</strong> and <strong>Provenance</strong>.</p>
 <h3 id="step-4--add-your-first-property-a-text-field">Step 4 — Add your first property (a text field)</h3>
-<p>From the <strong>Widgets</strong> palette on the left, <strong>drag</strong> a <strong>Text field</strong> onto the
-<em>General information</em> group. Widgets are organised by category (Text, References,
+<p>From the <strong>Widgets</strong> palette on the left, add a <strong>Text field</strong> to the <em>General
+information</em> group — either <strong>drag</strong> it onto the group, or simply <strong>click</strong> it
+(it&#39;s added to the selected group, or the last one). Keyboard users can focus a
+widget and press <strong>Enter</strong>. Widgets are organised by category (Text, References,
 Choice, Date &amp; number) and searchable via the box at the top.</p>
 <p><img src="images/widget-palette.png" alt="The widget palette grouped by category"></p>
-<p>When you drop a widget, it becomes a property card on the canvas and is selected
+<p>When you add a widget, it becomes a property card on the canvas and is selected
 automatically. A property card shows its label, path, type, and status badges
 (a red dot for required, a &quot;multi&quot; badge for repeatable):</p>
 <p><img src="images/field-card.png" alt="A property card on the canvas"></p>
@@ -293,7 +312,9 @@ and <strong>delete</strong> (the icons on the right, on hover).</p>
 <li><strong>Label (<code>sh:name</code>)</strong> → <code>Title</code> — the field label shown to users.</li>
 <li><strong>Description</strong> → optional help text (appears as an ⓘ tooltip on the form).</li>
 <li><strong>Property path (<code>sh:path</code>)</strong> → <code>dct:title</code> — <strong>the RDF term this field writes</strong>.
-Always set this; the default placeholder path is not meaningful.</li>
+Always set this; the default placeholder path is not meaningful. As you type,
+Contour suggests common predicates (and your declared prefixes); pick one or
+keep typing your own.</li>
 </ul>
 <p><img src="images/field-inspector.png" alt="The property Inspector with Basic, Constraints, and Defaults sections"></p>
 <h3 id="step-5--set-cardinality-and-validation-constraints">Step 5 — Set cardinality and validation constraints</h3>
@@ -312,6 +333,13 @@ red asterisk in the form preview.)</li>
 <em>Min 0 / Max 1</em> = optional, single value. <em>Min 1 / Max ∞</em> (leave Max empty) =
 required, repeatable. <em>Min 0 / Max ∞</em> = optional, repeatable.</p>
 </blockquote>
+<p><strong>Value range</strong> (numbers and dates). Number, Date, and Date &amp; time fields show a
+<strong>Value range</strong> section — set <strong>Min (≥)</strong> / <strong>Max (≤)</strong> (inclusive) or the
+<strong>(&gt;)</strong> / <strong>(&lt;)</strong> exclusive bounds. Numbers are written bare
+(<code>sh:minInclusive 1900</code>), dates as typed literals (<code>&quot;2020-01-01&quot;^^xsd:date</code>).</p>
+<p><strong>Custom validation message</strong> (optional). The <strong>Validation message</strong> section
+lets you set the text a platform shows when this field fails (<code>sh:message</code>) and
+its <strong>Severity</strong> — <em>Violation</em> (default), <em>Warning</em>, or <em>Info</em> (<code>sh:severity</code>).</p>
 <h3 id="step-6--add-a-multi-line-description">Step 6 — Add a multi-line description</h3>
 <p>Drag a <strong>Text area</strong> into <em>General information</em>. Set:</p>
 <ul>
@@ -340,6 +368,12 @@ creates a drop-down restricted to a fixed list of values (<code>sh:in</code>).</
 <li>Min/Max count <code>1</code>/<code>1</code> to require exactly one choice.</li>
 </ul>
 <p>The values are exported as <code>sh:in ( &quot;public&quot; &quot;restricted&quot; &quot;private&quot; )</code>.</p>
+<blockquote>
+<p><strong>Literal vs. IRI values.</strong> Each allowed value carries a <strong>literal / IRI</strong>
+toggle (the small tag to its left). Keep it <strong>literal</strong> for plain text like
+<code>public</code>; switch it to <strong>IRI</strong> when the choices are controlled-vocabulary terms
+(e.g. <code>ex:Public</code>, a <code>skos:Concept</code>) so they export as IRIs, not strings.</p>
+</blockquote>
 <h3 id="step-9--reference-another-entity-iri--class">Step 9 — Reference another entity (IRI + class)</h3>
 <p>Some properties point to <em>another resource</em> rather than holding a plain value —
 for example the dataset&#39;s <strong>publisher</strong> is an organisation, not a string. Drag an
@@ -355,7 +389,14 @@ that class. (The <strong>Class</strong> box only appears when the node kind is I
 </ul>
 <blockquote>
 <p>Other reference widgets: <strong>URI</strong> (free-form link), <strong>Instances select</strong> (a
-drop-down of instances). Use whichever fits how the value is chosen.</p>
+drop-down of instances). Use whichever fits how the value is chosen. The
+<strong>Class</strong> box suggests common classes as you type.</p>
+</blockquote>
+<blockquote>
+<p><strong>Advanced:</strong> a property can also accept <em>either</em> a literal <em>or</em> an IRI (and
+similar &quot;one of these types&quot; rules) via <strong>Alternative value types (<code>sh:or</code>)</strong>,
+or follow a relationship backwards with an <strong>Inverse (<code>^</code>)</strong> path — see the
+<a href="#7-recipes--common-modelling-patterns">recipes</a>.</p>
 </blockquote>
 <h3 id="step-10--model-a-sub-object-with-a-nested-shape">Step 10 — Model a sub-object with a nested shape</h3>
 <p>Sometimes a field is itself a small structured object. A <strong>contact point</strong>, for
@@ -369,10 +410,17 @@ under the <em>Nested shapes</em> divider and is selected. In the Inspector set i
 references it.</em></li>
 <li><strong>Drag widgets onto the nested shape</strong> just like a group — e.g. a <strong>Text
 field</strong> <code>Full name</code> (<code>vcard:fn</code>) and a <strong>URI</strong> <code>Email</code> (<code>vcard:hasEmail</code>).</li>
-<li>Back in a group, drag in a <strong>Details (nested)</strong> widget. In its Inspector, set
+<li>Back in a group, add a <strong>Details (nested)</strong> widget. In its Inspector, set
 <strong>Nested shape (<code>sh:node</code>)</strong> to <code>:ContactShape</code> (the box offers your nested
 shapes as suggestions).</li>
 </ol>
+<blockquote>
+<p><strong>Shortcut.</strong> On a <strong>Details</strong> property you can click <strong>Create &amp; link nested
+shape</strong> to mint a new shape and wire <code>sh:node</code> to it in one step — then just
+add its fields. The property card shows the link it points to (e.g.
+<code>→ :ContactShape</code>), and the <a href="#5-checking-your-work-the-issues-panel">Issues panel</a>
+flags a Details property whose target is missing.</p>
+</blockquote>
 <p><img src="images/nested-canvas.png" alt="A schema with a Details property and a populated nested ContactShape"></p>
 <p>The Details property&#39;s Inspector links it to the nested shape via <code>sh:node</code>:</p>
 <p><img src="images/details-inspector.png" alt="The Details property Inspector showing the Nested shape (sh:node) setting"></p>
@@ -380,9 +428,13 @@ shapes as suggestions).</li>
 <p><img src="images/nested-shape-card.png" alt="The nested shape card with its Full name and Email properties"></p>
 <h3 id="step-11--preview-the-data-entry-form">Step 11 — Preview the data-entry form</h3>
 <p>At any point, open the <strong>Form Preview</strong> tab to check what the person entering
-metadata will see. Required fields show a red asterisk, descriptions become ⓘ
-tooltips, repeatable fields get <strong>+ Add</strong> buttons, and <strong>Details</strong> properties
-render their nested shape&#39;s fields inline:</p>
+metadata will see. The preview mirrors your constraints: required fields show a
+red asterisk, a small <strong>cardinality</strong> chip shows the allowed count (e.g. <code>1–3</code>),
+descriptions become ⓘ tooltips, repeatable fields get <strong>+ Add</strong> buttons,
+patterns / lengths / ranges are applied to the inputs, language-tagged text
+gets a small language box, any <strong>validation message</strong> appears under the field,
+and <strong>Details</strong> properties render their nested shape&#39;s fields inline — nesting
+to any depth:</p>
 <p><img src="images/form-preview-tab.png" alt="The rendered form preview, including an inline nested Contact form"></p>
 <p>This preview is read-only — it is there to validate the design, not to capture
 real data.</p>
@@ -393,25 +445,29 @@ edit it directly):</p>
 <p>Everything you configured visually is here — <code>@prefix</code> declarations, the
 <code>PropertyGroup</code>s, the <code>NodeShape</code> with its <code>sh:property</code> blocks, and any nested
 shapes. The <strong>Copy SHACL</strong> button in the Visual Editor&#39;s actions bar puts the
-Turtle on your clipboard.</p>
+serialization on your clipboard. Use the <strong>Syntax</strong> selector to view or export
+other formats, including JSON-LD (see <a href="#4-working-directly-with-the-code-the-shacl-code-tab">§4</a>).</p>
 <h3 id="step-13--save-and-export">Step 13 — Save and export</h3>
-<p>Save your schema as a <code>.ttl</code> file:</p>
+<p>Save your schema (a <code>.ttl</code> file by default):</p>
 <ul>
-<li><strong>Save As…</strong> — choose a new file name and location.</li>
+<li><strong>Save As…</strong> — choose a new file name and location. The extension follows the
+selected syntax (<code>.ttl</code>, <code>.nt</code>, <code>.trig</code>, <code>.n3</code>, or <code>.jsonld</code>).</li>
 <li><strong>Save</strong> — write back to the file you last opened/saved (Ctrl/Cmd+S). The
 button briefly shows <strong>Saved!</strong> to confirm.</li>
-<li><strong>Copy SHACL</strong> — copy the Turtle without saving a file.</li>
+<li><strong>Copy SHACL</strong> — copy the current serialization without saving a file.</li>
+<li><strong>Recent</strong> (header) — reopen a schema you saved earlier this session.</li>
 </ul>
 <blockquote>
 <p>In Chrome/Edge the file is written directly to disk. In Firefox/Safari the
 editor falls back to a normal download. The suggested file name is derived from
-the schema name (e.g. <code>dataset.ttl</code>).</p>
+the schema name (e.g. <code>dataset.ttl</code>). Either way, an autosaved draft is kept in
+your browser between sessions.</p>
 </blockquote>
 <p>Upload the resulting <code>.ttl</code> to your FAIR Data Point (or other SHACL platform) as
 a metadata schema, and records of the target class will be validated — and forms
 rendered — according to your design.</p>
 <hr>
-<h2 id="4-working-directly-with-turtle-the-shacl-code-tab">4. Working directly with Turtle (the SHACL Code tab)</h2>
+<h2 id="4-working-directly-with-the-code-the-shacl-code-tab">4. Working directly with the code (the SHACL Code tab)</h2>
 <p>Prefer to write or paste SHACL by hand, or need to start from an existing shape?
 Use the <strong>SHACL Code</strong> tab.</p>
 <p><img src="images/shacl-code-tab.png" alt="The SHACL Code tab with the raw SHACL Turtle editor"></p>
@@ -419,23 +475,58 @@ Use the <strong>SHACL Code</strong> tab.</p>
 <li><strong>Two-way sync.</strong> Edits to the Turtle are parsed and pushed back to the Visual
 Editor automatically (after you pause typing). Conversely, anything you build
 visually appears here.</li>
-<li><strong>Context-aware autocomplete.</strong> As you type, the editor suggests SHACL
+<li><strong>Context-aware autocomplete</strong> (Turtle). As you type, the editor suggests SHACL
 predicates, node kinds, XSD datatypes, DASH editors, declared property groups,
 and <code>@prefix</code> lines. Use <strong>↑/↓</strong> to move, <strong>Tab</strong>/<strong>Enter</strong> to accept,
 <strong>Esc</strong> to dismiss.</li>
 </ul>
 <p><img src="images/turtle-autocomplete.png" alt="Turtle autocomplete suggesting sh:datatype"></p>
 <ul>
-<li><strong>Open an existing file.</strong> <strong>Open…</strong> in the header loads a <code>.ttl</code>/<code>.shacl</code>
-file into this tab and parses it into the Visual Editor — a fast way to adapt
-an existing schema. If a file can&#39;t be parsed, an inline message points to the
-problem line; you can still edit the raw text.</li>
+<li><strong>Open an existing file.</strong> <strong>Open…</strong> in the header loads a <code>.ttl</code>/<code>.nt</code>/
+<code>.trig</code>/<code>.n3</code> file into this tab, detects its syntax, and parses it into the
+Visual Editor — a fast way to adapt an existing schema. If a file can&#39;t be
+parsed, an inline message points to the problem line; you can still edit the
+raw text.</li>
 <li><strong>Name &amp; Description</strong> for the schema also have plain inputs at the top of this
 tab.</li>
 </ul>
 <p>Click <strong>Open in Visual Editor</strong> to jump back to the drag-and-drop view.</p>
+<h3 id="choosing-a-syntax-and-exporting-json-ld">Choosing a syntax (and exporting JSON-LD)</h3>
+<p>A <strong>Syntax</strong> selector in this tab switches the serialization between <strong>Turtle</strong>
+(default), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong>, and <strong>JSON-LD (export)</strong>. The
+first four are fully editable — edits sync back. <strong>JSON-LD is export-only</strong>
+(there&#39;s no JSON-LD parser): the editor shows it read-only so you can <strong>Copy</strong> it
+or <strong>Save As</strong> a <code>.jsonld</code> file, then switch back to Turtle to keep editing.</p>
+<p><img src="images/syntax-jsonld.png" alt="The syntax selector and JSON-LD export in the SHACL Code tab"></p>
+<p>New schemas always start as Turtle, and <strong>Save As</strong> uses the extension that
+matches the selected syntax.</p>
+<h3 id="editing-an-existing-schema-is-lossless">Editing an existing schema is lossless</h3>
+<p>Contour parses files with a real RDF engine, so opening, editing, and saving a
+schema <strong>never silently drops the parts it doesn&#39;t visually model</strong>. Constructs
+the editor doesn&#39;t have a control for — say <code>sh:and</code>, qualified value shapes, or
+extra annotations — are <strong>preserved verbatim</strong> and re-emitted in a clearly
+commented <em>&quot;Preserved&quot;</em> block at the end of the output. When a loaded file
+contains such constructs you&#39;ll see a short notice in this tab; your edits to the
+parts Contour <em>does</em> model are applied as usual, and the rest round-trips intact.</p>
 <hr>
-<h2 id="5-reference">5. Reference</h2>
+<h2 id="5-checking-your-work-the-issues-panel">5. Checking your work (the Issues panel)</h2>
+<p>As you build, Contour continuously checks the schema and summarizes problems in
+the <strong>Issues</strong> indicator on the Visual Editor&#39;s actions bar. Click it to expand
+the list; click any item to jump straight to the offending element.</p>
+<p><img src="images/issues-panel.png" alt="The Issues panel listing schema problems"></p>
+<p>It flags things like:</p>
+<ul>
+<li>a property with <strong>no path</strong>, or <strong>duplicate paths</strong> in the same group;</li>
+<li>a <strong>Details</strong> property whose nested shape is <strong>missing</strong>;</li>
+<li>a path, class, datatype, or target class using a <strong>prefix you haven&#39;t
+declared</strong>;</li>
+<li>a missing <strong>target class</strong> or schema <strong>name</strong>;</li>
+<li>nested shapes with a missing or duplicate IRI.</li>
+</ul>
+<p>Issues are <strong>non-blocking</strong> — they&#39;re guidance, not gates — but clearing them
+means the exported SHACL is well-formed and references only declared vocabularies.</p>
+<hr>
+<h2 id="6-reference">6. Reference</h2>
 <h3 id="widget-catalogue">Widget catalogue</h3>
 <p>Every widget maps to a DASH editor and sensible default node kind / datatype.</p>
 <table>
@@ -535,17 +626,17 @@ Inspector whenever your model needs something different.</p>
 <tbody><tr>
 <td>Label</td>
 <td><code>sh:name</code></td>
-<td>The form label.</td>
+<td>The form label. Optional <strong>language tag</strong> + additional <strong>translations</strong> emit one <code>sh:name</code> per language.</td>
 </tr>
 <tr>
 <td>Description</td>
 <td><code>sh:description</code></td>
-<td>Help text / ⓘ tooltip.</td>
+<td>Help text / ⓘ tooltip. Also language-taggable, with translations.</td>
 </tr>
 <tr>
 <td>Property path</td>
 <td><code>sh:path</code></td>
-<td><strong>Required.</strong> The RDF predicate.</td>
+<td><strong>Required.</strong> The RDF predicate. <strong>Inverse (<code>^</code>)</strong> emits <code>[ sh:inversePath … ]</code>.</td>
 </tr>
 <tr>
 <td>Min count</td>
@@ -583,6 +674,11 @@ Inspector whenever your model needs something different.</p>
 <td>Literals only.</td>
 </tr>
 <tr>
+<td>Value range</td>
+<td><code>sh:minInclusive</code> / <code>maxInclusive</code> / <code>minExclusive</code> / <code>maxExclusive</code></td>
+<td>Numbers &amp; dates.</td>
+</tr>
+<tr>
 <td>Pattern (regex)</td>
 <td><code>sh:pattern</code></td>
 <td>Literals only.</td>
@@ -590,7 +686,17 @@ Inspector whenever your model needs something different.</p>
 <tr>
 <td>Allowed values</td>
 <td><code>sh:in ( … )</code></td>
-<td>Enumeration choices.</td>
+<td>Enumeration choices; each value literal or IRI.</td>
+</tr>
+<tr>
+<td>Alternative value types</td>
+<td><code>sh:or ( … )</code></td>
+<td>&quot;Accept one of these types&quot; (e.g. literal <strong>or</strong> IRI).</td>
+</tr>
+<tr>
+<td>Message / Severity</td>
+<td><code>sh:message</code> / <code>sh:severity</code></td>
+<td>Custom validation text + Violation / Warning / Info.</td>
 </tr>
 <tr>
 <td>Default value</td>
@@ -637,7 +743,7 @@ Inspector whenever your model needs something different.</p>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="6-recipes--common-modelling-patterns">6. Recipes — common modelling patterns</h2>
+<h2 id="7-recipes--common-modelling-patterns">7. Recipes — common modelling patterns</h2>
 <p>Short, self-contained patterns you can apply on top of the tutorial.</p>
 <p><strong>Make a field required.</strong> Set <strong>Min count</strong> to <code>1</code>. The card shows a red dot and
 the form marks it with <code>*</code>.</p>
@@ -653,12 +759,30 @@ Create a <strong>nested shape</strong>, add its fields, then point a <strong>Det
 property at it via <code>sh:node</code>. See <a href="#step-10--model-a-sub-object-with-a-nested-shape">Step 10</a>.</p>
 <p><strong>Enforce a format.</strong> For literals, set a <strong>Pattern</strong> (regex) and/or <strong>Min/Max
 length</strong> — e.g. an ORCID pattern, or a max length on a code field.</p>
+<p><strong>Bound a number or date.</strong> On a Number / Date field, use the <strong>Value range</strong>
+section — e.g. <em>Min (≥)</em> <code>1900</code> for a year, or <em>Max (≤)</em> a cut-off date.</p>
+<p><strong>Offer a label in several languages.</strong> Set a <strong>language tag</strong> on the <strong>Label</strong>
+(e.g. <code>en</code>) and add <strong>translations</strong> (<code>pt</code> → &quot;Título&quot;, …). Each becomes a
+language-tagged <code>sh:name</code>, and the form preview shows a language box.</p>
+<p><strong>Accept a literal <em>or</em> an IRI</strong> (or &quot;one of these types&quot;). Use <strong>Alternative
+value types (<code>sh:or</code>)</strong> on the property and list the branches (e.g.
+<code>sh:nodeKind sh:Literal</code> and <code>sh:nodeKind sh:IRI</code>). Common in DCAT-AP for values
+that may be inline text or a reference.</p>
+<p><strong>Follow a relationship backwards.</strong> Tick <strong>Inverse (<code>^</code>)</strong> on the path to match
+&quot;things that point at this resource&quot; (e.g. members of a collection) — exported
+as <code>[ sh:inversePath … ]</code>.</p>
+<p><strong>Explain a validation rule.</strong> Fill the <strong>Validation message</strong> with steward-
+friendly text and pick a <strong>Severity</strong> so a platform can show a helpful Warning
+instead of a bare failure.</p>
+<p><strong>Export to JSON-LD.</strong> In the SHACL Code tab, set <strong>Syntax</strong> → <em>JSON-LD
+(export)</em> and <strong>Copy</strong> or <strong>Save As</strong> <code>.jsonld</code> for tools that consume JSON-LD.</p>
 <p><strong>Start from an example.</strong> Use the <strong>Examples</strong> menu to load a Dataset (DCAT),
 Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.</p>
-<p><strong>Reuse an existing schema.</strong> <strong>Open…</strong> the existing <code>.ttl</code>, adapt it in the
-Visual Editor, then <strong>Save As…</strong> a new file.</p>
+<p><strong>Reuse an existing schema.</strong> <strong>Open…</strong> the existing file, adapt it in the
+Visual Editor, then <strong>Save As…</strong> a new file — anything Contour doesn&#39;t model is
+preserved (see <a href="#4-working-directly-with-the-code-the-shacl-code-tab">§4</a>).</p>
 <hr>
-<h2 id="7-tips--troubleshooting">7. Tips &amp; troubleshooting</h2>
+<h2 id="8-tips--troubleshooting">8. Tips &amp; troubleshooting</h2>
 <ul>
 <li><strong>Always set the property path.</strong> New widgets get a placeholder path like
 <code>:textfield</code>; replace it with the real RDF term (<code>dct:title</code>, <code>dcat:theme</code>, …)
@@ -672,8 +796,14 @@ typing. If a parse error is shown (with a line number), fix the Turtle — the
 visual canvas keeps the last valid state until the text parses.</li>
 <li><strong>Save button only downloads.</strong> That&#39;s the expected fallback in Firefox/Safari.
 For in-place saves, use a Chromium-based browser (Chrome/Edge).</li>
+<li><strong>Made a mistake?</strong> <strong>Undo</strong> (Ctrl/Cmd+Z) / <strong>Redo</strong> (Ctrl/Cmd+Shift+Z) cover
+every edit, and your work is autosaved — a refresh restores it.</li>
+<li><strong>Check the Issues panel.</strong> Before exporting, expand <strong>Issues</strong> in the actions
+bar and clear any errors (empty paths, undeclared prefixes, broken <code>sh:node</code>).</li>
+<li><strong>Editing JSON-LD?</strong> You can&#39;t — it&#39;s export-only. Switch <strong>Syntax</strong> back to
+Turtle (or N-Triples / TriG / N3) to keep editing.</li>
 <li><strong>Start over.</strong> Use the <strong>New</strong> button for a blank schema, load one from
-<strong>Examples</strong>, or <strong>Open…</strong> an existing <code>.ttl</code>.</li>
+<strong>Examples</strong>, or <strong>Open…</strong> an existing file.</li>
 </ul>
 <hr>
 <p><em>Built with Contour for the FAIR Data Point ecosystem. Output is
