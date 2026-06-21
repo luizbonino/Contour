@@ -20,6 +20,9 @@ import { LOCALES } from './i18n';
 const { schema, mutate, undo, redo, canUndo, canRedo } = useSchemaStore();
 const { t, plural, locale, setLocale } = useI18n();
 
+// The guide is published per-locale; point at the matching build.
+const guideHref = computed(() => (locale.value === 'pt-BR' ? './guide/pt-BR/' : './guide/'));
+
 // "Edit <name>" once the schema is named, otherwise "New metadata schema".
 const pageTitle = computed(() =>
   schema.schemaName ? t('page.edit', { name: schema.schemaName }) : t('page.newSchema'),
@@ -657,7 +660,7 @@ async function saveAsShacl() {
       </div>
       <a
         class="app-header__guide"
-        href="./guide/"
+        :href="guideHref"
         target="_blank"
         rel="noopener"
         :title="t('header.guideTitle')"
