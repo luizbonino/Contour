@@ -44,6 +44,8 @@ const en = {
     title: 'Schema graph',
     fit: 'Fit',
     close: 'Close',
+    collapseLists: 'Collapse lists',
+    hideAnnotations: 'Hide annotations',
     empty: 'Nothing to graph yet — add some properties first.',
     hint: 'Scroll to zoom · drag the background to pan · drag a node to move it',
     legend: { shape: 'Shape', property: 'Property / blank node', iri: 'IRI', literal: 'Literal' },

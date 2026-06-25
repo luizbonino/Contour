@@ -452,8 +452,11 @@ parts Contour *does* model are applied as usual, and the rest round-trips intact
 Click **Graph** in this tab to open a node-link visualization of the schema's
 RDF in an overlay — shapes, property nodes, classes, and literals, linked by
 their predicates. Scroll to zoom, drag the background to pan, and drag a node to
-reposition it. It's a quick way to see the structure (and any nested shapes or
-preserved constructs) at a glance.
+reposition it. Two toggles tame the detail (both on by default): **Collapse
+lists** folds an `sh:in`/`sh:or` list into a single chip, and **Hide
+annotations** drops labels and form hints (`sh:name`, `dash:editor`, `sh:order`,
+…) so the structure stands out. It's a quick way to see the shape graph (and any
+nested shapes or preserved constructs) at a glance.
 
 ![The schema rendered as an RDF node-link graph](images/schema-graph.png)
 

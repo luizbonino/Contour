@@ -515,8 +515,11 @@ parts Contour <em>does</em> model are applied as usual, and the rest round-trips
 <p>Click <strong>Graph</strong> in this tab to open a node-link visualization of the schema&#39;s
 RDF in an overlay — shapes, property nodes, classes, and literals, linked by
 their predicates. Scroll to zoom, drag the background to pan, and drag a node to
-reposition it. It&#39;s a quick way to see the structure (and any nested shapes or
-preserved constructs) at a glance.</p>
+reposition it. Two toggles tame the detail (both on by default): <strong>Collapse
+lists</strong> folds an <code>sh:in</code>/<code>sh:or</code> list into a single chip, and <strong>Hide
+annotations</strong> drops labels and form hints (<code>sh:name</code>, <code>dash:editor</code>, <code>sh:order</code>,
+…) so the structure stands out. It&#39;s a quick way to see the shape graph (and any
+nested shapes or preserved constructs) at a glance.</p>
 <p><img src="images/schema-graph.png" alt="The schema rendered as an RDF node-link graph"></p>
 <hr>
 <h2 id="5-checking-your-work-the-issues-panel">5. Checking your work (the Issues panel)</h2>
