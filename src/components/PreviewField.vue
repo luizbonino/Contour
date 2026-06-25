@@ -11,7 +11,6 @@ import Icon from './Icon.vue';
 const props = defineProps<{ field: Field; schema: Schema }>();
 const { t } = useI18n();
 
-const count = ref(1);
 const tipOpen = ref(false);
 
 const required = computed(() => (props.field.minCount || 0) > 0);
@@ -19,6 +18,16 @@ const multi = computed(() => {
   const mc = props.field.maxCount;
   return mc === null || mc === undefined || mc > 1;
 });
+
+// Honour the cardinality bounds: start at the minimum (≥1 so something shows),
+// never add past maxCount, never remove below minCount.
+const minN = computed(() => Math.max(1, props.field.minCount || 0));
+const maxN = computed(() => (props.field.maxCount == null ? Infinity : props.field.maxCount));
+const count = ref(Math.max(1, props.field.minCount || 0));
+const canAdd = computed(() => count.value < maxN.value);
+const canRemove = computed(() => count.value > minN.value);
+function addValue() { if (count.value < maxN.value) count.value++; }
+function removeValue() { if (count.value > minN.value) count.value--; }
 const isLangTagged = computed(() =>
   props.field.datatype === 'rdf:langString' || props.field.datatype === 'rdf:HTML',
 );
@@ -79,6 +88,13 @@ function labelFromPath(path: string): string {
     <template v-if="field.widgetId === 'DetailsEditor'">
       <template v-if="nestedShape">
         <div v-for="i in count" :key="i" class="form-preview__nested-form">
+          <button
+            v-if="multi && canRemove"
+            class="form-preview__remove-btn form-preview__nested-remove"
+            type="button"
+            :title="t('formPreview.removeValue')"
+            @click="removeValue"
+          >×</button>
           <PreviewField v-for="nf in nestedFields" :key="nf.id" :field="nf" :schema="schema" />
         </div>
       </template>
@@ -95,16 +111,23 @@ function labelFromPath(path: string): string {
         </div>
         <input v-if="isLangTagged" class="form-preview__lang" type="text" placeholder="en" :title="t('formPreview.langTag')" />
         <button
-          v-if="multi && count > 1"
+          v-if="multi && canRemove"
           class="form-preview__remove-btn"
           type="button"
           :title="t('formPreview.removeValue')"
-          @click="count--"
+          @click="removeValue"
         >×</button>
       </div>
     </template>
 
-    <button v-if="multi" class="form-preview__add-btn" type="button" @click="count++">
+    <button
+      v-if="multi"
+      class="form-preview__add-btn"
+      type="button"
+      :disabled="!canAdd"
+      :title="canAdd ? '' : t('formPreview.maxReached', { max: maxN })"
+      @click="addValue"
+    >
       {{ t('formPreview.add') }}
     </button>
 

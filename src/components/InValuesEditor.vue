@@ -58,7 +58,7 @@ function onKey(e: KeyboardEvent) {
         <button @click="removeItem(i)"><Icon name="x" :size="11" /></button>
       </span>
     </div>
-    <div class="form-row-2" style="margin-top: 6px">
+    <div class="inval-add">
       <input
         v-model="input"
         :placeholder="t('inValues.placeholder')"
@@ -68,6 +68,9 @@ function onKey(e: KeyboardEvent) {
         <option value="literal">{{ t('inValues.literal') }}</option>
         <option value="iri">{{ t('inValues.iri') }}</option>
       </select>
+      <button class="btn btn-secondary btn-sm" :title="t('inValues.add')" :disabled="!input.trim()" @click="addItem">
+        <Icon name="plus" :size="13" />
+      </button>
     </div>
     <div class="hint">{{ t('inValues.hint') }}</div>
   </div>

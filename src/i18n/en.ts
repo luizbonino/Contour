@@ -233,7 +233,8 @@ const en = {
   inValues: {
     label: 'Allowed values (sh:in)',
     placeholder: 'Add value + Enter',
-    hint: 'Press Enter to add. Each value is a literal or an IRI — toggle with the tag on its left.',
+    hint: 'Add each value with + (or Enter). Each is a literal or an IRI — toggle with the tag on its left.',
+    add: 'Add value',
     kind: 'Value kind',
     toggleKind: 'Toggle literal / IRI',
     literal: 'literal',
@@ -243,6 +244,7 @@ const en = {
     empty: 'Add fields to see a live preview of the rendered form.',
     add: '+ Add',
     removeValue: 'Remove this value',
+    maxReached: 'Maximum of {max} reached (sh:maxCount)',
     nestedSubform: '{iri} sub-form',
     nestedSubformGeneric: 'Nested sub-form',
     langTag: 'Language tag (e.g. en, pt-BR)',
@@ -250,6 +252,7 @@ const en = {
   fieldInput: {
     select: '— select —',
     search: 'Start typing to search…',
+    searchClass: 'Search {class} instances…',
   },
   count: {
     properties: { one: '{n} property', other: '{n} properties' },

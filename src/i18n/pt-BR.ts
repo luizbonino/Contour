@@ -232,7 +232,8 @@ const ptBR = {
   inValues: {
     label: 'Valores permitidos (sh:in)',
     placeholder: 'Adicionar valor + Enter',
-    hint: 'Pressione Enter para adicionar. Cada valor é um literal ou um IRI — alterne com a etiqueta à esquerda.',
+    hint: 'Adicione cada valor com + (ou Enter). Cada um é um literal ou um IRI — alterne com a etiqueta à esquerda.',
+    add: 'Adicionar valor',
     kind: 'Tipo de valor',
     toggleKind: 'Alternar literal / IRI',
     literal: 'literal',
@@ -242,6 +243,7 @@ const ptBR = {
     empty: 'Adicione campos para ver uma pré-visualização do formulário renderizado.',
     add: '+ Adicionar',
     removeValue: 'Remover este valor',
+    maxReached: 'Máximo de {max} atingido (sh:maxCount)',
     nestedSubform: 'Subformulário {iri}',
     nestedSubformGeneric: 'Subformulário aninhado',
     langTag: 'Tag de idioma (ex.: en, pt-BR)',
@@ -249,6 +251,7 @@ const ptBR = {
   fieldInput: {
     select: '— selecione —',
     search: 'Comece a digitar para buscar…',
+    searchClass: 'Buscar instâncias de {class}…',
   },
   count: {
     properties: { one: '{n} propriedade', other: '{n} propriedades' },

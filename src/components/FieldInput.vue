@@ -13,6 +13,17 @@ const maxlength = computed(() => props.field.maxLength ?? undefined);
 const minlength = computed(() => props.field.minLength ?? undefined);
 const pattern = computed(() => props.field.pattern || undefined);
 const numStep = computed(() => (props.field.datatype === 'xsd:integer' ? '1' : undefined));
+
+// Reference widgets (AutoComplete / Instances select) look up *instances* — that
+// index is supplied by the host platform (e.g. the FAIR Data Point) at
+// data-entry time, scoped to the field's sh:class. Contour has no such source,
+// so the preview just signals what would be searched.
+const refPlaceholder = computed(() => {
+  if (props.field.widgetId === 'URIEditor') return 'http://…';
+  return props.field.class
+    ? t('fieldInput.searchClass', { class: props.field.class })
+    : t('fieldInput.search');
+});
 </script>
 
 <template>
@@ -61,7 +72,7 @@ const numStep = computed(() => (props.field.datatype === 'xsd:integer' ? '1' : u
       type="text"
       class="mono"
       :required="required"
-      :placeholder="field.widgetId === 'AutoCompleteEditor' ? t('fieldInput.search') : 'http://…'"
+      :placeholder="refPlaceholder"
     />
   </template>
   <template v-else>

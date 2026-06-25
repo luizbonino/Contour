@@ -360,7 +360,10 @@ button {
   grid-template-columns: 268px 1fr 340px;
   gap: 16px;
   margin-top: 20px;
-  min-height: 720px;
+  /* Bound the workbench to the viewport so the three columns each scroll
+     vertically on their own (their .panel__body has overflow:auto). */
+  height: calc(100vh - 300px);
+  min-height: 460px;
 }
 
 .panel {
@@ -1154,10 +1157,18 @@ button {
   background: var(--color-surface-card);
 }
 .form-preview__nested-form {
+  position: relative;
   border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 16px 16px 4px;
   background: var(--color-surface-card);
+  margin-bottom: 6px;
+}
+.form-preview__nested-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
 }
 .form-preview__nested-row {
   margin-bottom: 14px;
@@ -1240,9 +1251,32 @@ button {
   font-family: inherit;
   transition: background 0.1s, border-color 0.1s;
 }
-.form-preview__add-btn:hover {
+.form-preview__add-btn:hover:not(:disabled) {
   background: var(--color-accent-tint);
   border-color: var(--color-accent-soft);
+}
+.form-preview__add-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Enumeration (sh:in) add row: value + kind + add button */
+.inval-add {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+.inval-add input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.inval-add select {
+  flex: 0 0 auto;
+  width: auto;
+}
+.inval-add .btn {
+  flex: 0 0 auto;
 }
 .form-preview__datetime {
   display: flex;
