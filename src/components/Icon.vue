@@ -97,6 +97,12 @@ const props = withDefaults(defineProps<Props>(), { size: 16 });
       <path d="m15 14 5-5-5-5" />
       <path d="M20 9H9a5 5 0 0 0-5 5 5 5 0 0 0 5 5h3" />
     </template>
+    <template v-else-if="name === 'share'">
+      <circle cx="6" cy="12" r="2.6" />
+      <circle cx="18" cy="5" r="2.6" />
+      <circle cx="18" cy="19" r="2.6" />
+      <path d="M8.3 10.8 15.7 6.2M8.3 13.2 15.7 17.8" />
+    </template>
     <template v-else-if="name === 'warning'">
       <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
       <path d="M12 9v4" />

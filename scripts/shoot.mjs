@@ -17,6 +17,7 @@ const APP = pathToFileURL(path.join(ROOT, 'dist/index.html')).href;
 const LOCALE = process.argv[2] || 'en';
 const IMG = path.join(ROOT, LOCALE === 'en' ? 'docs/images' : 'docs/images-pt');
 const NEW_NAME = { en: 'New', 'pt-BR': 'Novo' }[LOCALE] || 'New';
+const GRAPH_NAME = { en: 'Graph', 'pt-BR': 'Grafo' }[LOCALE] || 'Graph';
 const VIEWPORT = { width: 1680, height: 1020 };
 const EXPAND_CSS = `.workbench, .panel, .panel__body, .canvas__inner {
   height: auto !important; max-height: none !important; overflow: visible !important; }`;
@@ -101,6 +102,11 @@ async function run() {
   // ── Form preview + SHACL Code (+ JSON-LD, autocomplete) ────────────────────
   await tab(2); await shot('form-preview-tab', '.preview-pane');
   await tab(0); await wait(300); await shot('shacl-code-tab', 'page');
+  // Graph overlay (deterministic layout: spiral seed + fixed warm-up)
+  await page.getByRole('button', { name: GRAPH_NAME }).first().click();
+  await wait(1800);
+  await shot('schema-graph', '.graph-modal');
+  await page.keyboard.press('Escape'); await wait(200);
   await page.locator('.syntax-select select').selectOption('jsonld'); await wait(300);
   await shot('syntax-jsonld', 'page');
   await page.locator('.syntax-select select').selectOption('turtle'); await wait(300);

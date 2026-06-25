@@ -38,6 +38,16 @@ const en = {
     empty: 'No recently saved schemas yet.',
     confirm: 'Replace the current schema with this recent one?',
   },
+  graph: {
+    open: 'Graph',
+    openTitle: 'Visualize the schema as an RDF graph',
+    title: 'Schema graph',
+    fit: 'Fit',
+    close: 'Close',
+    empty: 'Nothing to graph yet — add some properties first.',
+    hint: 'Scroll to zoom · drag the background to pan · drag a node to move it',
+    legend: { shape: 'Shape', property: 'Property / blank node', iri: 'IRI', literal: 'Literal' },
+  },
   issues: {
     title: 'Issues',
     none: 'No issues — the schema looks valid.',

@@ -1624,6 +1624,115 @@ button {
   color: #8a6d00;
 }
 
+/* ---------- Graph visualization overlay ---------- */
+.graph-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(27, 42, 74, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+.graph-modal {
+  width: min(1200px, 94vw);
+  height: min(840px, 90vh);
+  background: var(--color-bg-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.graph-modal__bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-separator);
+  background: var(--color-surface-card);
+}
+.graph-modal__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--color-text-dark);
+}
+.graph-modal__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--color-text-lighter);
+}
+.graph-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.graph-legend .lg { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+.graph-legend .lg--shape { background: var(--color-primary); }
+.graph-legend .lg--bnode { background: #fff; border: 2px solid var(--color-accent); border-radius: 50%; }
+.graph-legend .lg--iri { background: var(--color-surface-input); border: 1px solid var(--color-primary-soft); }
+.graph-legend .lg--literal { background: var(--color-code-bg); border: 1px solid var(--color-border); }
+.graph-svg {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  background:
+    radial-gradient(circle, var(--color-separator) 1px, transparent 1px) 0 0 / 22px 22px;
+  background-color: var(--color-bg-canvas);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.graph-svg:active { cursor: grabbing; }
+.graph-empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  color: var(--color-text-lighter);
+  font-size: 14px;
+}
+.graph-hint {
+  padding: 8px 16px;
+  border-top: 1px solid var(--color-separator);
+  background: var(--color-surface-card);
+  font-size: 11px;
+  color: var(--color-text-lighter);
+}
+.gv-edge { stroke: var(--color-primary-soft); stroke-width: 1.2; }
+.gv-edge-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--color-text-lighter);
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--color-bg-canvas);
+  stroke-width: 3px;
+  pointer-events: none;
+}
+.gv-node { cursor: grab; }
+.gv-node:active { cursor: grabbing; }
+.gv-node text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  pointer-events: none;
+}
+.gv-node--shape rect { fill: var(--color-primary); stroke: var(--color-primary-darker); }
+.gv-node--shape text { fill: #fff; font-weight: 600; }
+.gv-node--group rect { fill: var(--color-accent-tint); stroke: var(--color-accent-soft); }
+.gv-node--group text { fill: var(--color-accent-darker); font-weight: 600; }
+.gv-node--iri rect { fill: var(--color-surface-input); stroke: var(--color-primary-soft); }
+.gv-node--iri text { fill: var(--color-text-dark); }
+.gv-node--literal rect { fill: var(--color-code-bg); stroke: var(--color-border); }
+.gv-node--literal text { fill: var(--color-text-default); }
+.gv-node--bnode circle { fill: #fff; stroke: var(--color-accent); stroke-width: 2; }
+
 /* ---------- Inline inspector checkbox ---------- */
 .insp-check {
   display: flex;
