@@ -39,6 +39,7 @@ a study, a sample, a software package — without hand-writing Turtle.
 4. [Working directly with the code (the SHACL Code tab)](#4-working-directly-with-the-code-the-shacl-code-tab)
    - [Choosing a syntax (and exporting JSON-LD)](#choosing-a-syntax-and-exporting-json-ld)
    - [Editing an existing schema is lossless](#editing-an-existing-schema-is-lossless)
+   - [Visualize the graph](#visualize-the-graph)
 5. [Checking your work (the Issues panel)](#5-checking-your-work-the-issues-panel)
 6. [Power features (advanced modelling)](#6-power-features-advanced-modelling)
 7. [Reference](#7-reference)
@@ -445,6 +446,16 @@ extra annotations — are **preserved verbatim** and re-emitted in a clearly
 commented *"Preserved"* block at the end of the output. When a loaded file
 contains such constructs you'll see a short notice in this tab; your edits to the
 parts Contour *does* model are applied as usual, and the rest round-trips intact.
+
+### Visualize the graph
+
+Click **Graph** in this tab to open a node-link visualization of the schema's
+RDF in an overlay — shapes, property nodes, classes, and literals, linked by
+their predicates. Scroll to zoom, drag the background to pan, and drag a node to
+reposition it. It's a quick way to see the structure (and any nested shapes or
+preserved constructs) at a glance.
+
+![The schema rendered as an RDF node-link graph](images/schema-graph.png)
 
 ---
 

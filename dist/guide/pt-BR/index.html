@@ -128,6 +128,7 @@ download.</p>
 <li><a href="#trabalhando-diretamente-com-o-c%C3%B3digo-a-aba-c%C3%B3digo-shacl">Trabalhando diretamente com o código (a aba Código SHACL)</a><ul>
 <li><a href="#escolhendo-uma-sintaxe-e-exportando-json-ld">Escolhendo uma sintaxe (e exportando JSON-LD)</a></li>
 <li><a href="#editar-um-esquema-existente-%C3%A9-sem-perdas">Editar um esquema existente é sem perdas</a></li>
+<li><a href="#visualizar-o-grafo">Visualizar o grafo</a></li>
 </ul>
 </li>
 <li><a href="#verificando-seu-trabalho-o-painel-de-problemas">Verificando seu trabalho (o painel de Problemas)</a></li>
@@ -534,6 +535,13 @@ integralmente</strong> e reemitidas em um bloco <em>&quot;Preserved&quot;</em> c
 final da saída. Quando um arquivo carregado contém tais construções você verá um
 breve aviso nesta aba; suas edições nas partes que o Contour <em>de fato</em> modela são
 aplicadas normalmente, e o restante é mantido intacto.</p>
+<h3 id="visualizar-o-grafo">Visualizar o grafo</h3>
+<p>Clique em <strong>Grafo</strong> nesta aba para abrir uma visualização em nós e arestas do RDF
+do esquema em uma sobreposição — formas, nós de propriedade, classes e literais,
+ligados pelos seus predicados. Role para dar zoom, arraste o fundo para mover e
+arraste um nó para reposicioná-lo. É uma forma rápida de ver a estrutura (e
+quaisquer formas aninhadas ou construções preservadas) num relance.</p>
+<p><img src="images/schema-graph.png" alt="O esquema renderizado como um grafo RDF de nós e arestas"></p>
 <hr>
 <h2 id="verificando-seu-trabalho-o-painel-de-problemas">Verificando seu trabalho (o painel de Problemas)</h2>
 <p>Enquanto você constrói, o Contour verifica o esquema continuamente e resume os

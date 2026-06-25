@@ -124,6 +124,7 @@ Safari work too, with a download-style save.</p>
 <li><a href="#4-working-directly-with-the-code-the-shacl-code-tab">Working directly with the code (the SHACL Code tab)</a><ul>
 <li><a href="#choosing-a-syntax-and-exporting-json-ld">Choosing a syntax (and exporting JSON-LD)</a></li>
 <li><a href="#editing-an-existing-schema-is-lossless">Editing an existing schema is lossless</a></li>
+<li><a href="#visualize-the-graph">Visualize the graph</a></li>
 </ul>
 </li>
 <li><a href="#5-checking-your-work-the-issues-panel">Checking your work (the Issues panel)</a></li>
@@ -510,6 +511,13 @@ extra annotations — are <strong>preserved verbatim</strong> and re-emitted in 
 commented <em>&quot;Preserved&quot;</em> block at the end of the output. When a loaded file
 contains such constructs you&#39;ll see a short notice in this tab; your edits to the
 parts Contour <em>does</em> model are applied as usual, and the rest round-trips intact.</p>
+<h3 id="visualize-the-graph">Visualize the graph</h3>
+<p>Click <strong>Graph</strong> in this tab to open a node-link visualization of the schema&#39;s
+RDF in an overlay — shapes, property nodes, classes, and literals, linked by
+their predicates. Scroll to zoom, drag the background to pan, and drag a node to
+reposition it. It&#39;s a quick way to see the structure (and any nested shapes or
+preserved constructs) at a glance.</p>
+<p><img src="images/schema-graph.png" alt="The schema rendered as an RDF node-link graph"></p>
 <hr>
 <h2 id="5-checking-your-work-the-issues-panel">5. Checking your work (the Issues panel)</h2>
 <p>As you build, Contour continuously checks the schema and summarizes problems in

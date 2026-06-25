@@ -2,8 +2,10 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSchemaStore, fieldFromWidget } from './composables/useSchema';
 import { serializeSchema, parseShacl } from './shacl';
-import { SYNTAXES, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax } from './rdf';
+import { SYNTAXES, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf } from './rdf';
+import type { Quad } from './rdf';
 import { validateSchema } from './validation';
+import GraphView from './components/GraphView.vue';
 import { loadDraft, saveDraft, clearDraft, listRecent, addRecent, type RecentEntry } from './composables/usePersistence';
 import { WIDGET_BY_ID, blankSchema, newId, EXAMPLES } from './data';
 import type { SchemaExample } from './data';
@@ -86,6 +88,18 @@ function onShaclDraftInput(e: Event) {
   // Autocomplete is Turtle-specific.
   if (rdfSyntax.value === 'turtle') updateAc(ta);
   else acItems.value = [];
+}
+
+// ── Graph visualization overlay ───────────────────────────────────────────────
+const showGraph = ref(false);
+const graphQuads = ref<Quad[]>([]);
+const graphPrefixes = ref<{ prefix: string; uri: string }[]>([]);
+function openGraph() {
+  // Always parse the Turtle serialization (independent of the active syntax).
+  const parsed = parseRdf(serializeSchema(schema, DEFAULT_SYNTAX), DEFAULT_SYNTAX);
+  graphQuads.value = parsed.quads;
+  graphPrefixes.value = parsed.prefixes;
+  showGraph.value = true;
 }
 
 // Switching syntax re-serializes the current model in the chosen syntax.
@@ -909,6 +923,9 @@ async function saveAsShacl() {
                     <option v-for="s in SYNTAXES" :key="s.id" :value="s.id">{{ s.label }}</option>
                   </select>
                 </label>
+                <button class="btn btn-ghost btn-sm" :title="t('graph.openTitle')" @click="openGraph">
+                  <Icon name="share" :size="13" /> {{ t('graph.open') }}
+                </button>
                 <button
                   v-if="loadedShaclSource"
                   class="btn btn-ghost btn-sm"
@@ -990,5 +1007,12 @@ async function saveAsShacl() {
         >{{ item }}</div>
       </div>
     </Teleport>
+
+    <GraphView
+      v-if="showGraph"
+      :quads="graphQuads"
+      :prefixes="graphPrefixes"
+      @close="showGraph = false"
+    />
   </div>
 </template>

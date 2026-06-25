@@ -37,6 +37,16 @@ const ptBR = {
     empty: 'Nenhum esquema salvo recentemente ainda.',
     confirm: 'Substituir o esquema atual por este recente?',
   },
+  graph: {
+    open: 'Grafo',
+    openTitle: 'Visualizar o esquema como um grafo RDF',
+    title: 'Grafo do esquema',
+    fit: 'Ajustar',
+    close: 'Fechar',
+    empty: 'Nada para exibir ainda — adicione algumas propriedades primeiro.',
+    hint: 'Role para dar zoom · arraste o fundo para mover · arraste um nó para reposicioná-lo',
+    legend: { shape: 'Forma', property: 'Propriedade / nó em branco', iri: 'IRI', literal: 'Literal' },
+  },
   issues: {
     title: 'Problemas',
     none: 'Sem problemas — o esquema parece válido.',

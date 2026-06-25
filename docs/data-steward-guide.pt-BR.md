@@ -43,6 +43,7 @@ Turtle à mão.
 4. [Trabalhando diretamente com o código (a aba Código SHACL)](#trabalhando-diretamente-com-o-código-a-aba-código-shacl)
    - [Escolhendo uma sintaxe (e exportando JSON-LD)](#escolhendo-uma-sintaxe-e-exportando-json-ld)
    - [Editar um esquema existente é sem perdas](#editar-um-esquema-existente-é-sem-perdas)
+   - [Visualizar o grafo](#visualizar-o-grafo)
 5. [Verificando seu trabalho (o painel de Problemas)](#verificando-seu-trabalho-o-painel-de-problemas)
 6. [Recursos avançados (modelagem avançada)](#recursos-avançados-modelagem-avançada)
 7. [Referência](#referência)
@@ -468,6 +469,16 @@ integralmente** e reemitidas em um bloco *"Preserved"* claramente comentado ao
 final da saída. Quando um arquivo carregado contém tais construções você verá um
 breve aviso nesta aba; suas edições nas partes que o Contour *de fato* modela são
 aplicadas normalmente, e o restante é mantido intacto.
+
+### Visualizar o grafo
+
+Clique em **Grafo** nesta aba para abrir uma visualização em nós e arestas do RDF
+do esquema em uma sobreposição — formas, nós de propriedade, classes e literais,
+ligados pelos seus predicados. Role para dar zoom, arraste o fundo para mover e
+arraste um nó para reposicioná-lo. É uma forma rápida de ver a estrutura (e
+quaisquer formas aninhadas ou construções preservadas) num relance.
+
+![O esquema renderizado como um grafo RDF de nós e arestas](images/schema-graph.png)
 
 ---
 
