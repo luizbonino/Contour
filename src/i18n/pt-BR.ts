@@ -43,6 +43,8 @@ const ptBR = {
     title: 'Grafo do esquema',
     fit: 'Ajustar',
     close: 'Fechar',
+    collapseLists: 'Recolher listas',
+    hideAnnotations: 'Ocultar anotações',
     empty: 'Nada para exibir ainda — adicione algumas propriedades primeiro.',
     hint: 'Role para dar zoom · arraste o fundo para mover · arraste um nó para reposicioná-lo',
     legend: { shape: 'Forma', property: 'Propriedade / nó em branco', iri: 'IRI', literal: 'Literal' },

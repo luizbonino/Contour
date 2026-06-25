@@ -475,8 +475,12 @@ aplicadas normalmente, e o restante é mantido intacto.
 Clique em **Grafo** nesta aba para abrir uma visualização em nós e arestas do RDF
 do esquema em uma sobreposição — formas, nós de propriedade, classes e literais,
 ligados pelos seus predicados. Role para dar zoom, arraste o fundo para mover e
-arraste um nó para reposicioná-lo. É uma forma rápida de ver a estrutura (e
-quaisquer formas aninhadas ou construções preservadas) num relance.
+arraste um nó para reposicioná-lo. Dois interruptores reduzem o detalhe (ambos
+ligados por padrão): **Recolher listas** dobra uma lista `sh:in`/`sh:or` em uma
+única etiqueta, e **Ocultar anotações** remove rótulos e dicas de formulário
+(`sh:name`, `dash:editor`, `sh:order`, …) para destacar a estrutura. É uma forma
+rápida de ver o grafo de formas (e quaisquer formas aninhadas ou construções
+preservadas) num relance.
 
 ![O esquema renderizado como um grafo RDF de nós e arestas](images/schema-graph.png)
 
