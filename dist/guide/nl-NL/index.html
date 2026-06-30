@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="nl-NL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contour — Handleiding voor data stewards</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJDb250b3VyIj4KICAKICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMUIyQTRBIj48L3JlY3Q+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjUuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0gNjYuMjEgNjcuNzAgQSAyNCAyNCAwIDEgMSA2Ni4yMSAzMi4zMCI+PC9wYXRoPgogICAgPHBhdGggZD0iTSA1OS40NiA2MC4zMiBBIDE0IDE0IDAgMSAxIDU5LjQ2IDM5LjY4Ij48L3BhdGg+CiAgPC9nPgogIDxwYXRoIGQ9Ik0gNzIuOTcgNzUuMDcgTCA0My44MSA4My40MyBMIDE5LjU3IDY1LjE3IEwgMTkuNTcgMzQuODMgTCA0My44MSAxNi41NyBMIDcyLjk3IDI0LjkzIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQkIzQUIiIHN0cm9rZS13aWR0aD0iMy40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjwvcGF0aD4KICA8ZyBmaWxsPSIjMkJCM0FCIj4KICAgIDxjaXJjbGUgY3g9IjcyLjk3IiBjeT0iNzUuMDciIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjgzLjQzIiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iMTkuNTciIGN5PSI2NS4xNyIgcj0iNC42Ij48L2NpcmNsZT4KICAgIDxjaXJjbGUgY3g9IjE5LjU3IiBjeT0iMzQuODMiIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjE2LjU3IiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iNzIuOTciIGN5PSIyNC45MyIgcj0iNC42Ij48L2NpcmNsZT4KICA8L2c+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1b2a4a; --accent: #0e7c7b; --accent-dark: #0a5f5e;
+    --sand: #eae7e0; --card: #fcfbf8; --border: #e4e0d6;
+    --text: #3a3d45; --muted: #8a8c94; --code-bg: #faf8f3;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--sand); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: var(--card);
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px; }
+  .topbar svg { height: 30px; width: 30px; display: block; }
+  .topbar .wm { font-family: var(--sans); font-weight: 600; font-size: 18px;
+    letter-spacing: -0.015em; color: var(--ink); }
+  .topbar .tag { font-family: var(--mono); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+  .topbar .spacer { flex: 1; }
+  .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
+  .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar .langs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar .langs a, .topbar .langs span { font-weight: 600; font-size: 13px; text-decoration: none;
+    border-radius: 999px; padding: 4px 10px; }
+  .topbar .langs a { color: var(--muted); border: 1px solid transparent; }
+  .topbar .langs a:hover { color: var(--accent-dark); border-color: var(--border); text-decoration: none; }
+  .topbar .langs span.current { color: var(--ink); background: var(--sand); border: 1px solid var(--border); }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
+  main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
+  main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
+    padding-top: 14px; border-top: 1px solid var(--border); }
+  main h3 { font-size: 18px; color: var(--ink); margin: 28px 0 8px; }
+  main h4 { font-size: 15px; color: var(--ink); margin: 22px 0 6px; }
+  a { color: var(--accent-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p, li { font-size: 16px; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--ink); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,32,60,.06); margin: 12px 0; }
+  blockquote { margin: 16px 0; padding: 10px 16px; background: var(--card);
+    border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; }
+  blockquote p { margin: 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-size: 14px; }
+  th { background: var(--code-bg); color: var(--ink); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+  :target { scroll-margin-top: 70px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" role="img" aria-label="Contour">
+  
+  <g stroke="#1B2A4A" stroke-width="5.5" stroke-linecap="round">
+    <path d="M 66.21 67.70 A 24 24 0 1 1 66.21 32.30"></path>
+    <path d="M 59.46 60.32 A 14 14 0 1 1 59.46 39.68"></path>
+  </g>
+  
+  <path d="M 72.97 75.07 L 43.81 83.43 L 19.57 65.17 L 19.57 34.83 L 43.81 16.57 L 72.97 24.93" stroke="#0E7C7B" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"></path>
+  <g fill="#0E7C7B">
+    <circle cx="72.97" cy="75.07" r="4.6"></circle>
+    <circle cx="43.81" cy="83.43" r="4.6"></circle>
+    <circle cx="19.57" cy="65.17" r="4.6"></circle>
+    <circle cx="19.57" cy="34.83" r="4.6"></circle>
+    <circle cx="43.81" cy="16.57" r="4.6"></circle>
+    <circle cx="72.97" cy="24.93" r="4.6"></circle>
+  </g>
+</svg>
+    <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
+    <div class="spacer"></div>
+    <nav class="langs"><a href="../">English</a><a href="../pt-BR/">Português</a><span class="current">Nederlands</span><a href="../de-DE/">Deutsch</a><a href="../es-ES/">Español</a><a href="../fr-FR/">Français</a></nav>
+    <a class="btn" href="../../" target="_blank" rel="noopener">Editor openen ↗</a>
+  </div>
+  <main>
+<h1 id="metadataschemas-maken--een-gids-voor-data-stewards">Metadataschema&#39;s maken — Een gids voor data stewards</h1>
+<p>Met <strong>Contour</strong> ontwerp je aangepaste metadataschema&#39;s op een visuele manier —
+door formulierwidgets op een canvas te slepen of aan te klikken — en exporteer je
+ze als standaardconforme <a href="https://www.w3.org/TR/shacl/">SHACL</a>-vormen met
+<a href="https://datashapes.org/forms.html">DASH</a>-formulierannotaties. De uitvoer past
+rechtstreeks in een <a href="https://fairdatapoint.org/">FAIR Data Point</a> of in elk
+SHACL-bewust platform.</p>
+<blockquote>
+<p><em>De tagline van Contour: <strong>Visual schemas. Clean SHACL.</strong></em></p>
+</blockquote>
+<p>Deze gids is geschreven voor <strong>data stewards</strong> die willen vastleggen welke
+metadata hun gemeenschap moet (of mag) aanleveren voor een bepaald type bron — een
+dataset, een onderzoek, een monster, een softwarepakket — zonder met de hand
+Turtle te schrijven.</p>
+<blockquote>
+<p><strong>Geen installatie, geen server.</strong> De editor is één op zichzelf staande
+webpagina. Open hem in Chrome of Edge (aanbevolen, om bestanden rechtstreeks op
+te slaan) — Firefox en Safari werken ook, met een opslagmethode in
+downloadstijl.</p>
+</blockquote>
+<hr>
+<h2 id="inhoudsopgave">Inhoudsopgave</h2>
+<ol>
+<li><a href="#1-wat-je-bouwt-kernbegrippen">Wat je bouwt (kernbegrippen)</a></li>
+<li><a href="#2-de-interface-in-een-oogopslag">De interface in een oogopslag</a></li>
+<li><a href="#3-tutorial-bouw-een-dataset-schema-vanaf-nul">Tutorial: bouw een <em>Dataset</em>-schema vanaf nul</a><ul>
+<li><a href="#stap-1--bepaal-de-identiteit-van-het-schema">Stap 1 — Bepaal de identiteit van het schema</a></li>
+<li><a href="#stap-2--beheer-vocabulaires-prefixes">Stap 2 — Beheer vocabulaires (prefixes)</a></li>
+<li><a href="#stap-3--organiseer-het-formulier-in-groepen">Stap 3 — Organiseer het formulier in groepen</a></li>
+<li><a href="#stap-4--voeg-je-eerste-eigenschap-toe-een-tekstveld">Stap 4 — Voeg je eerste eigenschap toe (een tekstveld)</a></li>
+<li><a href="#stap-5--stel-cardinaliteit-en-validatiebeperkingen-in">Stap 5 — Stel cardinaliteit en validatiebeperkingen in</a></li>
+<li><a href="#stap-6--voeg-een-meerregelige-beschrijving-toe">Stap 6 — Voeg een meerregelige beschrijving toe</a></li>
+<li><a href="#stap-7--voeg-een-datum-eigenschap-toe">Stap 7 — Voeg een datum-eigenschap toe</a></li>
+<li><a href="#stap-8--voeg-een-gecontroleerd-vocabulaire-toe-enumeratie">Stap 8 — Voeg een gecontroleerd vocabulaire toe (enumeratie)</a></li>
+<li><a href="#stap-9--verwijs-naar-een-andere-entiteit-iri--klasse">Stap 9 — Verwijs naar een andere entiteit (IRI + klasse)</a></li>
+<li><a href="#stap-10--modelleer-een-subobject-met-een-geneste-vorm">Stap 10 — Modelleer een subobject met een geneste vorm</a></li>
+<li><a href="#stap-11--bekijk-een-voorbeeld-van-het-invoerformulier">Stap 11 — Bekijk een voorbeeld van het invoerformulier</a></li>
+<li><a href="#stap-12--bekijk-de-gegenereerde-shacl">Stap 12 — Bekijk de gegenereerde SHACL</a></li>
+<li><a href="#stap-13--opslaan-en-exporteren">Stap 13 — Opslaan en exporteren</a></li>
+</ul>
+</li>
+<li><a href="#4-rechtstreeks-met-de-code-werken-het-tabblad-shacl-code">Rechtstreeks met de code werken (het tabblad SHACL-code)</a><ul>
+<li><a href="#een-syntaxis-kiezen-en-json-ld-exporteren">Een syntaxis kiezen (en JSON-LD exporteren)</a></li>
+<li><a href="#een-bestaand-schema-bewerken-gebeurt-zonder-verlies">Een bestaand schema bewerken gebeurt zonder verlies</a></li>
+<li><a href="#de-graaf-visualiseren">De graaf visualiseren</a></li>
+</ul>
+</li>
+<li><a href="#5-je-werk-controleren-het-paneel-problemen">Je werk controleren (het paneel Problemen)</a></li>
+<li><a href="#6-geavanceerde-functies-geavanceerd-modelleren">Geavanceerde functies (geavanceerd modelleren)</a></li>
+<li><a href="#7-referentie">Referentie</a><ul>
+<li><a href="#widgetcatalogus">Widgetcatalogus</a></li>
+<li><a href="#referentie-van-eigenschapsinstellingen">Referentie van eigenschapsinstellingen</a></li>
+</ul>
+</li>
+<li><a href="#8-recepten--veelvoorkomende-modelleerpatronen">Recepten — veelvoorkomende modelleerpatronen</a></li>
+<li><a href="#9-tips-en-probleemoplossing">Tips en probleemoplossing</a></li>
+</ol>
+<hr>
+<h2 id="1-wat-je-bouwt-kernbegrippen">1. Wat je bouwt (kernbegrippen)</h2>
+<p>Een metadataschema is in dit gereedschap een <strong>SHACL NodeShape</strong>: een beschrijving
+van hoe een geldig record van een bepaald type eruitziet. Een paar begrippen die je
+overal zult tegenkomen:</p>
+<table>
+<thead>
+<tr>
+<th>Begrip</th>
+<th>Wat het voor jou betekent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NodeShape</strong></td>
+<td>Het schema zelf — bijv. &quot;wat een Dataset-record moet bevatten&quot;.</td>
+</tr>
+<tr>
+<td><strong>Doelklasse</strong> (<code>sh:targetClass</code>)</td>
+<td>Het RDF-type waarop het schema van toepassing is, bijv. <code>dcat:Dataset</code>. Records van dit type worden gevalideerd tegen jouw schema.</td>
+</tr>
+<tr>
+<td><strong>Eigenschap</strong> (<code>sh:property</code>)</td>
+<td>Eén veld — titel, uitgever, uitgiftedatum, … Elke eigenschap heeft een <em>pad</em>, een <em>widget</em> en <em>beperkingen</em>.</td>
+</tr>
+<tr>
+<td><strong>Eigenschapspad</strong> (<code>sh:path</code>)</td>
+<td>Het RDF-predicaat waarin het veld schrijft, bijv. <code>dct:title</code>. Dit is de term die daadwerkelijk in de metadata wordt opgeslagen.</td>
+</tr>
+<tr>
+<td><strong>Widget</strong> (<code>dash:editor</code>)</td>
+<td>Het formulierelement dat wordt getoond aan degene die de metadata invult — een tekstvak, een datumkiezer, een vervolgkeuzelijst, enz.</td>
+</tr>
+<tr>
+<td><strong>Groep</strong> (<code>sh:PropertyGroup</code>)</td>
+<td>Een visuele sectie die verwante velden bundelt, bijv. &quot;Algemene informatie&quot;.</td>
+</tr>
+<tr>
+<td><strong>Prefix</strong> (<code>@prefix</code>)</td>
+<td>Een korte alias voor een vocabulaire-namespace, bijv. <code>dct:</code> → <code>http://purl.org/dc/terms/</code>.</td>
+</tr>
+</tbody></table>
+<p>Je ontwerpt dit allemaal visueel; het gereedschap schrijft de SHACL voor je.</p>
+<hr>
+<h2 id="2-de-interface-in-een-oogopslag">2. De interface in een oogopslag</h2>
+<p><img src="images/interface-overview.png" alt="Contour met het voorbeeldschema Dataset geladen"></p>
+<p>Het venster heeft drie tabbladen:</p>
+<p><img src="images/tabs.png" alt="De drie tabbladen: SHACL-code, Visuele editor, Formuliervoorbeeld"></p>
+<ul>
+<li><strong>SHACL-code</strong> — het geserialiseerde schema. Standaard Turtle, met
+autoaanvullen; bewerkingen worden teruggesynchroniseerd naar het visuele canvas.
+Een <strong>syntaxis</strong>-keuzemenu biedt daarnaast N-Triples, TriG, Notation3 en een
+<strong>JSON-LD</strong>-export. Hier worden ook de bestanden getoond die je opent.</li>
+<li><strong>Visuele editor</strong> — de werkbank voor slepen en neerzetten (hierboven getoond).
+Hier vindt het meeste werk plaats.</li>
+<li><strong>Formuliervoorbeeld</strong> — een realistische weergave van het invoerformulier dat
+je schema oplevert, zodat je de ervaring kunt testen voordat je publiceert.</li>
+</ul>
+<p>De <strong>Visuele editor</strong> is verdeeld in drie kolommen:</p>
+<table>
+<thead>
+<tr>
+<th>Kolom</th>
+<th>Doel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Widgets</strong> (links)</td>
+<td>Het palet met formulierelementen. <strong>Sleep</strong> er een naar het canvas, of <strong>klik</strong> er gewoon op (toetsenbord: focus + Enter) om hem toe te voegen.</td>
+</tr>
+<tr>
+<td><strong>Formuliercanvas</strong> (midden)</td>
+<td>Je schema: de doelbanner, groepen, eigenschappen en geneste vormen.</td>
+</tr>
+<tr>
+<td><strong>Inspector</strong> (rechts)</td>
+<td>Instellingen voor wat op dat moment geselecteerd is — het schema, een groep of een eigenschap.</td>
+</tr>
+</tbody></table>
+<p>Onder de werkbank staat een <strong>actiebalk</strong> met een teller voor
+eigenschappen/groepen, een <strong>Problemen</strong>-indicator (een live controle van je
+schema — zie <a href="#5-je-werk-controleren-het-paneel-problemen">§5</a>) en knoppen voor
+Opslaan / Kopiëren. Om het geserialiseerde schema te zien, ga je naar het tabblad
+<strong>SHACL-code</strong>; om het weergegeven formulier te zien, ga je naar
+<strong>Formuliervoorbeeld</strong>.</p>
+<p>De koptekst bevat de bestandsacties — <strong>Ongedaan maken / Opnieuw</strong>, <strong>Nieuw</strong>,
+<strong>Recent</strong>, <strong>Voorbeelden</strong>, <strong>Openen</strong>, <strong>Opslaan</strong>, <strong>Opslaan als</strong> — plus de
+taalschakelaar en een <strong>Gids</strong>-koppeling:</p>
+<p><img src="images/file-toolbar.png" alt="De knoppen Ongedaan maken/Opnieuw, Nieuw, Recent, Voorbeelden, Openen, Opslaan en Opslaan als in de koptekst"></p>
+<blockquote>
+<p><strong>Je werk wordt onderweg opgeslagen.</strong> Contour bewaart automatisch een concept
+in je browser, zodat een herlaadbeurt of een per ongeluk gesloten tabblad niets
+verloren laat gaan — bij terugkomst zie je de melding <em>&quot;Je niet-opgeslagen
+concept is hersteld&quot;</em>. <strong>Ongedaan maken/Opnieuw</strong> (of Ctrl/Cmd+Z en
+Ctrl/Cmd+Shift+Z) lopen door je bewerkingen, en het menu <strong>Recent</strong> opent
+schema&#39;s die je hebt opgeslagen opnieuw.</p>
+</blockquote>
+<h3 id="taal-van-de-interface">Taal van de interface</h3>
+<p>De interface van Contour is beschikbaar in het <strong>Engels</strong> (standaard),
+<strong>Braziliaans-Portugees</strong>, <strong>Nederlands</strong>, <strong>Duits</strong>, <strong>Spaans</strong> en <strong>Frans</strong>.
+Schakel met de taalknop (<strong>EN / PT / NL / DE / ES / FR</strong>) in de koptekst — je
+keuze wordt onthouden tussen sessies. Als de voorkeurstaal van je browser een
+van deze talen is, opent Contour daar automatisch in; anders valt het terug op
+het Engels. Alleen de interface wordt vertaald; de inhoud van je schema (namen,
+beschrijvingen, eigenschapspaden) en de gegenereerde SHACL worden nooit
+gewijzigd, dus de geëxporteerde Turtle is in elke taal identiek.</p>
+<hr>
+<h2 id="3-tutorial-bouw-een-dataset-schema-vanaf-nul">3. Tutorial: bouw een <em>Dataset</em>-schema vanaf nul</h2>
+<p>We bouwen een metadataschema voor een <strong>Dataset</strong> in
+<a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT</a>-stijl. Elke stap introduceert één
+functie van het gereedschap, en aan het eind heb je elke belangrijke mogelijkheid
+gebruikt.</p>
+<p>Contour <strong>begint leeg</strong> zodat je je eigen schema vanaf nul kunt bouwen — de
+paginatitel luidt <em>Nieuw metadataschema</em> totdat je het een naam geeft. Wil je
+liever een voltooid schema verkennen, dan laadt het menu <strong>Voorbeelden</strong> in de
+koptekst kant-en-klare sjablonen (Dataset, Agent, Concept); het voorbeeld
+<em>Dataset</em> komt overeen met wat we hieronder bouwen:</p>
+<p><img src="images/examples-menu.png" alt="Het menu Voorbeelden met de sjablonen Dataset, Agent en Concept"></p>
+<blockquote>
+<p>Ga gedurende de hele tutorial naar het tabblad <strong>Visuele editor</strong> om te werken.
+Gebruik de knop <strong>Nieuw</strong> om op elk moment een vers schema te beginnen.</p>
+</blockquote>
+<h3 id="stap-1--bepaal-de-identiteit-van-het-schema">Stap 1 — Bepaal de identiteit van het schema</h3>
+<p>Klik op de <strong>schemabanner</strong> boven aan het canvas (deze leest <em>Naamloos schema</em>
+totdat je het een naam geeft), of op de knop <strong>Schema-instellingen</strong>. De Inspector
+schakelt over naar instellingen op schemaniveau:</p>
+<p><img src="images/schema-settings.png" alt="Schema-instellingen in de Inspector: naam, beschrijving, vorm-IRI, doelklasse en prefixes"></p>
+<p>Vul in:</p>
+<ul>
+<li><strong>Schemanaam</strong> — een leesbaar label, bijv. <code>Dataset</code>. (Zodra dit is ingesteld,
+verandert de paginatitel van <em>Nieuw metadataschema</em> in <em>Dataset bewerken</em>; geef
+het een naam voor elk domein — een ontologieklasse, een catalogus — en de titel
+volgt.)</li>
+<li><strong>Beschrijving</strong> — een zin die het doel van het schema beschrijft.</li>
+<li><strong>Vorm-IRI</strong> — de identificator van de vorm, bijv. <code>:DatasetShape</code>. De
+voorloop-<code>:</code> gebruikt je standaard-namespace; je kunt de voorgestelde waarde
+laten staan.</li>
+<li><strong>Doelklasse</strong> (<code>sh:targetClass</code>) — de RDF-klasse die dit schema valideert, bijv.
+<code>dcat:Dataset</code>. <strong>Dit is verplicht</strong> om het schema bruikbaar te maken — het is
+wat een platform vertelt &quot;pas deze regels toe op Dataset-records&quot;.</li>
+</ul>
+<h3 id="stap-2--beheer-vocabulaires-prefixes">Stap 2 — Beheer vocabulaires (prefixes)</h3>
+<p>Scroll, nog steeds in de schema-instellingen, naar <strong>Vocabulaires</strong>. Met prefixes
+kun je korte termen als <code>dct:title</code> schrijven in plaats van volledige URL&#39;s.</p>
+<p>De editor wordt geleverd met de gangbare prefixes al gedeclareerd — <code>sh</code>, <code>dash</code>,
+<code>rdf</code>, <code>rdfs</code>, <code>xsd</code>, <code>dcat</code>, <code>dct</code>, <code>foaf</code> en de standaard lege prefix <code>:</code>. Om er
+zelf een toe te voegen (bijvoorbeeld een domeinvocabulaire):</p>
+<ol>
+<li>Typ in de lege rij onderaan de prefixtabel de <strong>alias</strong> (bijv. <code>vcard</code>) in het
+eerste vakje.</li>
+<li>Typ de <strong>namespace-URL</strong> (bijv. <code>http://www.w3.org/2006/vcard/ns#</code>) in het
+tweede vakje.</li>
+<li>Druk op <strong>Enter</strong> of klik op de knop <strong>+</strong>.</li>
+</ol>
+<p>Verwijder een prefix met de <strong>×</strong> ernaast. Elke prefix die je in een
+eigenschapspad of klasse gebruikt, moet hier worden gedeclareerd, zodat de
+geëxporteerde Turtle geldig is.</p>
+<h3 id="stap-3--organiseer-het-formulier-in-groepen">Stap 3 — Organiseer het formulier in groepen</h3>
+<p>Groepen (<code>sh:PropertyGroup</code>) zijn de secties van je formulier. Op een leeg canvas
+kun je gewoon <strong>je eerste widget naar het canvas slepen</strong> en maakt Contour de
+eerste groep voor je — of klik op <strong>Groep toevoegen</strong> (rechtsboven op het canvas)
+om een lege sectie te maken om in te neer te zetten:</p>
+<p><img src="images/blank-start.png" alt="Het lege canvas, klaar voor je eerste widget"></p>
+<ul>
+<li><strong>Hernoem</strong> een groep door op de titel te klikken en te typen — bijv. <code>Algemene informatie</code>.</li>
+<li><strong>Herorden</strong> met de knoppen <strong>↑ / ↓</strong> op de groepskop (dit hernummert de groepen
+voor je).</li>
+<li><strong>Verwijder</strong> met het prullenbakpictogram op de groepskop.</li>
+</ul>
+<p>Maak voor deze tutorial twee groepen: <strong>General information</strong> en <strong>Provenance</strong>.</p>
+<h3 id="stap-4--voeg-je-eerste-eigenschap-toe-een-tekstveld">Stap 4 — Voeg je eerste eigenschap toe (een tekstveld)</h3>
+<p>Voeg vanuit het <strong>Widgets</strong>-palet aan de linkerkant een <strong>Tekstveld</strong> toe aan de
+groep <em>General information</em> — <strong>sleep</strong> het op de groep, of <strong>klik</strong> er gewoon op
+(het wordt toegevoegd aan de geselecteerde groep, of aan de laatste).
+Toetsenbordgebruikers kunnen een widget focussen en op <strong>Enter</strong> drukken. De
+widgets zijn geordend op categorie (Tekst, Verwijzingen, Keuze, Datum en getal) en
+doorzoekbaar via het vak bovenaan.</p>
+<p><img src="images/widget-palette.png" alt="Het widgetpalet geordend op categorie"></p>
+<p>Wanneer je een widget toevoegt, wordt het een eigenschapkaart op het canvas en
+wordt het automatisch geselecteerd. Een eigenschapkaart toont zijn label, pad,
+type en statusbadges (een rode stip voor verplicht, een &quot;multi&quot;-badge voor
+herhaalbaar):</p>
+<p><img src="images/field-card.png" alt="Een eigenschapkaart op het canvas"></p>
+<p>Elke kaart heeft handvatten om te <strong>slepen en herordenen</strong> (de greep links), te
+<strong>dupliceren</strong> en te <strong>verwijderen</strong> (de pictogrammen rechts, bij aanwijzen).</p>
+<p>Met het nieuwe veld geselecteerd toont de Inspector de <strong>Eigenschapsinstellingen</strong>
+ervan. Stel in:</p>
+<ul>
+<li><strong>Label (<code>sh:name</code>)</strong> → <code>Title</code> — het veldlabel dat aan gebruikers wordt getoond.</li>
+<li><strong>Beschrijving</strong> → optionele helptekst (verschijnt als een ⓘ-tooltip op het
+formulier).</li>
+<li><strong>Eigenschapspad (<code>sh:path</code>)</strong> → <code>dct:title</code> — <strong>de RDF-term waarin dit veld
+schrijft</strong>. Stel dit altijd in; het standaard tijdelijke pad is niet
+betekenisvol. Terwijl je typt, stelt Contour gangbare predicaten voor (en je
+gedeclareerde prefixes); kies er een of typ je eigen verder.</li>
+</ul>
+<p><img src="images/field-inspector.png" alt="De eigenschap-Inspector met de secties Basis, Beperkingen en Standaardwaarden"></p>
+<h3 id="stap-5--stel-cardinaliteit-en-validatiebeperkingen-in">Stap 5 — Stel cardinaliteit en validatiebeperkingen in</h3>
+<p>De sectie <strong>Beperkingen</strong> van de Inspector regelt de validatie. Voor <em>Title</em>:</p>
+<ul>
+<li><strong>Min. aantal</strong> = <code>1</code>, <strong>Max. aantal</strong> = <code>1</code> → precies één titel is verplicht.
+(Min. aantal ≥ 1 maakt het veld verplicht — let op de rode stip op de kaart en
+het rode sterretje in het formuliervoorbeeld.)</li>
+<li><strong>Node kind</strong> = <code>sh:Literal</code> (een gewone waarde in plaats van een koppeling).</li>
+<li><strong>Datatype</strong> = <code>xsd:string</code>.</li>
+<li>Optioneel <strong>Min./Max. lengte</strong> en een <strong>Patroon</strong> (een reguliere expressie,
+bijv. <code>^[A-Z].*</code> om een beginhoofdletter te vereisen).</li>
+</ul>
+<blockquote>
+<p><strong>Spiekbriefje cardinaliteit:</strong> <em>Min 1 / Max 1</em> = verplicht, enkele waarde.
+<em>Min 0 / Max 1</em> = optioneel, enkele waarde. <em>Min 1 / Max ∞</em> (laat Max leeg) =
+verplicht, herhaalbaar. <em>Min 0 / Max ∞</em> = optioneel, herhaalbaar.</p>
+</blockquote>
+<p><strong>Waardebereik</strong> (getallen en datums). Velden van het type Getal, Datum en Datum en
+tijd tonen een sectie <strong>Waardebereik</strong> — stel <strong>Min (≥)</strong> / <strong>Max (≤)</strong> (inclusief)
+of de exclusieve grenzen <strong>(&gt;)</strong> / <strong>(&lt;)</strong> in. Getallen worden kaal geschreven
+(<code>sh:minInclusive 1900</code>), datums als getypeerde literalen
+(<code>&quot;2020-01-01&quot;^^xsd:date</code>).</p>
+<p><strong>Aangepast validatiebericht</strong> (optioneel). Met de sectie <strong>Validatiebericht</strong> stel
+je de tekst in die een platform toont wanneer dit veld faalt (<code>sh:message</code>) en de
+<strong>Ernst</strong> ervan — <em>Violation</em> (standaard), <em>Warning</em> of <em>Info</em> (<code>sh:severity</code>).</p>
+<h3 id="stap-6--voeg-een-meerregelige-beschrijving-toe">Stap 6 — Voeg een meerregelige beschrijving toe</h3>
+<p>Sleep een <strong>Tekstgebied</strong> naar <em>General information</em>. Stel in:</p>
+<ul>
+<li><strong>Label</strong> → <code>Description</code>, <strong>Pad</strong> → <code>dct:description</code>.</li>
+<li><strong>Min. aantal</strong> = <code>1</code>, laat <strong>Max. aantal</strong> leeg (∞), zodat er meerdere
+taalvarianten kunnen worden aangeleverd. De kaart toont nu een <strong>multi</strong>-badge,
+en het formuliervoorbeeld krijgt een knop <strong>+ Toevoegen</strong>.</li>
+</ul>
+<h3 id="stap-7--voeg-een-datum-eigenschap-toe">Stap 7 — Voeg een datum-eigenschap toe</h3>
+<p>Sleep een <strong>Datumkiezer</strong> naar <em>General information</em>. Stel in:</p>
+<ul>
+<li><strong>Label</strong> → <code>Issued</code>, <strong>Pad</strong> → <code>dct:issued</code>.</li>
+<li><strong>Min. aantal</strong> = <code>0</code>, <strong>Max. aantal</strong> = <code>1</code> (optioneel, enkel).</li>
+<li>Het datatype staat standaard op <code>xsd:date</code>, wat correct is voor een
+kalenderdatum. (Gebruik in plaats daarvan <strong>Datum en tijd</strong> als je een tijdstempel
+nodig hebt — <code>xsd:dateTime</code>.)</li>
+</ul>
+<h3 id="stap-8--voeg-een-gecontroleerd-vocabulaire-toe-enumeratie">Stap 8 — Voeg een gecontroleerd vocabulaire toe (enumeratie)</h3>
+<p>Schakel over naar de groep <em>Provenance</em> en sleep er een <strong>Enumeratie</strong>-widget in.
+Dit maakt een vervolgkeuzelijst die beperkt is tot een vaste lijst met waarden
+(<code>sh:in</code>).</p>
+<p>In de Inspector verschijnt een editor voor <strong>Toegestane waarden</strong>:</p>
+<p><img src="images/enum-inspector.png" alt="De Inspector van de Enumeratie-eigenschap met de editor voor Toegestane waarden (sh:in)"></p>
+<ul>
+<li><strong>Label</strong> → <code>Access rights</code>, <strong>Pad</strong> → <code>dct:accessRights</code>.</li>
+<li>Typ in <strong>Toegestane waarden</strong> elke optie en druk op <strong>Enter</strong>: <code>public</code>,
+<code>restricted</code>, <code>private</code>. Verwijder er een met de bijbehorende <strong>×</strong>.</li>
+<li>Min./Max. aantal <code>1</code>/<code>1</code> om precies één keuze te vereisen.</li>
+</ul>
+<p>De waarden worden geëxporteerd als <code>sh:in ( &quot;public&quot; &quot;restricted&quot; &quot;private&quot; )</code>.</p>
+<blockquote>
+<p><strong>Literale waarden versus IRI-waarden.</strong> Elke toegestane waarde heeft een
+<strong>literal / IRI</strong>-schakelaar (het kleine label links ervan). Houd hem op
+<strong>literal</strong> voor gewone tekst zoals <code>public</code>; zet hem op <strong>IRI</strong> wanneer de
+keuzes termen uit een gecontroleerd vocabulaire zijn (bijv. <code>ex:Public</code>, een
+<code>skos:Concept</code>), zodat ze als IRI&#39;s worden geëxporteerd in plaats van als
+strings.</p>
+</blockquote>
+<h3 id="stap-9--verwijs-naar-een-andere-entiteit-iri--klasse">Stap 9 — Verwijs naar een andere entiteit (IRI + klasse)</h3>
+<p>Sommige eigenschappen verwijzen naar <em>een andere bron</em> in plaats van een gewone
+waarde te bevatten — de <strong>uitgever</strong> van de dataset is bijvoorbeeld een
+organisatie, geen string. Sleep een <strong>Autoaanvullen</strong>-widget naar <em>Provenance</em>.
+Dit geeft een zoekvak weer dat bestaande instanties opzoekt.</p>
+<p><img src="images/iri-class-inspector.png" alt="De Inspector voor een eigenschap met IRI-waarde met een Klasse-beperking (sh:class)"></p>
+<ul>
+<li><strong>Label</strong> → <code>Publisher</code>, <strong>Pad</strong> → <code>dct:publisher</code>.</li>
+<li><strong>Node kind</strong> = <code>sh:IRI</code> (de waarde is een koppeling/identificator).</li>
+<li><strong>Klasse (<code>sh:class</code>)</strong> → <code>foaf:Agent</code> — beperkt de kiezer tot instanties van die
+klasse. (Het vak <strong>Klasse</strong> verschijnt alleen wanneer de node kind op IRI is
+gebaseerd.)</li>
+<li>Min./Max. aantal <code>1</code>/<code>1</code>.</li>
+</ul>
+<blockquote>
+<p>Andere verwijzingswidgets: <strong>URI</strong> (vrije koppeling), <strong>Instanties selecteren</strong>
+(een vervolgkeuzelijst van instanties). Gebruik wat het beste past bij hoe de
+waarde wordt gekozen. Het vak <strong>Klasse</strong> stelt gangbare klassen voor terwijl je
+typt.</p>
+</blockquote>
+<blockquote>
+<p><strong>Geavanceerd:</strong> een eigenschap kan ook <em>ofwel</em> een literal <em>of</em> een IRI
+accepteren (en vergelijkbare &quot;een van deze types&quot;-regels) via <strong>Alternatieve
+waardetypes (<code>sh:or</code>)</strong>, of een relatie achterstevoren volgen met een
+<strong>Inverse (<code>^</code>)</strong>-pad — zie <a href="#6-geavanceerde-functies-geavanceerd-modelleren">§6 Geavanceerde functies</a>.</p>
+</blockquote>
+<h3 id="stap-10--modelleer-een-subobject-met-een-geneste-vorm">Stap 10 — Modelleer een subobject met een geneste vorm</h3>
+<p>Soms is een veld zelf een klein gestructureerd object. Een <strong>contactpunt</strong> heeft
+bijvoorbeeld een eigen <em>naam</em> en <em>e-mailadres</em>. Modelleer dit met een <strong>geneste
+vorm</strong> en de widget <strong>Details (genest)</strong>.</p>
+<ol>
+<li>Klik onder aan het canvas op <strong>Geneste vorm toevoegen</strong>. Er verschijnt een
+nieuwe vorm onder de scheidingslijn <em>Geneste vormen</em> die wordt geselecteerd.
+Stel in de Inspector de <strong>Vorm-IRI</strong> ervan in (bijv. <code>:ContactShape</code>) en
+eventueel een <strong>Doelklasse</strong> (bijv. <code>vcard:Kind</code>). <em>Het hernoemen van de IRI
+werkt automatisch elke eigenschap bij die ernaar verwijst.</em></li>
+<li><strong>Sleep widgets op de geneste vorm</strong> net als bij een groep — bijv. een
+<strong>Tekstveld</strong> <code>Full name</code> (<code>vcard:fn</code>) en een <strong>URI</strong> <code>Email</code>
+(<code>vcard:hasEmail</code>).</li>
+<li>Voeg, terug in een groep, een widget <strong>Details (genest)</strong> toe. Stel in de
+bijbehorende Inspector <strong>Geneste vorm (<code>sh:node</code>)</strong> in op <code>:ContactShape</code> (het
+vak biedt je geneste vormen als suggesties aan).</li>
+</ol>
+<blockquote>
+<p><strong>Sneltoets.</strong> Op een <strong>Details</strong>-eigenschap kun je klikken op <strong>Geneste vorm
+maken en koppelen</strong> om in één stap een nieuwe vorm te creëren en <code>sh:node</code> eraan
+te koppelen — voeg er vervolgens gewoon de velden aan toe. De eigenschapkaart
+toont de koppeling waarnaar hij verwijst (bijv. <code>→ :ContactShape</code>), en het
+<a href="#5-je-werk-controleren-het-paneel-problemen">paneel Problemen</a> markeert een
+Details-eigenschap waarvan het doel ontbreekt.</p>
+</blockquote>
+<p><img src="images/nested-canvas.png" alt="Een schema met een Details-eigenschap en een ingevulde geneste ContactShape"></p>
+<p>De Inspector van de Details-eigenschap koppelt deze via <code>sh:node</code> aan de geneste
+vorm:</p>
+<p><img src="images/details-inspector.png" alt="De Inspector van de Details-eigenschap met de instelling Geneste vorm (sh:node)"></p>
+<p>De kaart van de geneste vorm op het canvas bevat zijn eigen eigenschappen:</p>
+<p><img src="images/nested-shape-card.png" alt="De kaart van de geneste vorm met de eigenschappen Full name en Email"></p>
+<h3 id="stap-11--bekijk-een-voorbeeld-van-het-invoerformulier">Stap 11 — Bekijk een voorbeeld van het invoerformulier</h3>
+<p>Open op elk moment het tabblad <strong>Formuliervoorbeeld</strong> om te controleren wat degene
+die de metadata invoert te zien krijgt. Het voorbeeld weerspiegelt je beperkingen:
+verplichte velden tonen een rood sterretje, een kleine <strong>cardinaliteit</strong>-chip toont
+het toegestane aantal (bijv. <code>1–3</code>), beschrijvingen worden ⓘ-tooltips, herhaalbare
+velden krijgen <strong>+ Toevoegen</strong>-knoppen, patronen / lengtes / bereiken worden op de
+invoervelden toegepast, taalgemarkeerde tekst krijgt een klein taalvak, een
+eventueel <strong>validatiebericht</strong> verschijnt onder het veld, en
+<strong>Details</strong>-eigenschappen geven de velden van hun geneste vorm inline weer — tot
+elke gewenste diepte genest:</p>
+<p><img src="images/form-preview-tab.png" alt="Het weergegeven formuliervoorbeeld, inclusief een inline genest Contact-formulier"></p>
+<p>Dit voorbeeld is alleen-lezen — het is er om het ontwerp te valideren, niet om
+echte gegevens vast te leggen.</p>
+<h3 id="stap-12--bekijk-de-gegenereerde-shacl">Stap 12 — Bekijk de gegenereerde SHACL</h3>
+<p>Het tabblad <strong>SHACL-code</strong> toont de Turtle die uit je ontwerp wordt gegenereerd (en
+laat je deze rechtstreeks bewerken):</p>
+<p><img src="images/shacl-code-tab.png" alt="Het tabblad SHACL-code met de gegenereerde Turtle"></p>
+<p>Alles wat je visueel hebt geconfigureerd staat hier — <code>@prefix</code>-declaraties, de
+<code>PropertyGroup</code>s, de <code>NodeShape</code> met zijn <code>sh:property</code>-blokken en eventuele
+geneste vormen. De knop <strong>SHACL kopiëren</strong> in de actiebalk van de Visuele editor
+zet de serialisatie op je klembord. Gebruik het keuzemenu <strong>Syntaxis</strong> om andere
+formaten te bekijken of te exporteren, waaronder JSON-LD (zie
+<a href="#4-rechtstreeks-met-de-code-werken-het-tabblad-shacl-code">§4</a>).</p>
+<h3 id="stap-13--opslaan-en-exporteren">Stap 13 — Opslaan en exporteren</h3>
+<p>Sla je schema op (standaard een <code>.ttl</code>-bestand):</p>
+<ul>
+<li><strong>Opslaan als…</strong> — kies een nieuwe bestandsnaam en locatie. De extensie volgt de
+geselecteerde syntaxis (<code>.ttl</code>, <code>.nt</code>, <code>.trig</code>, <code>.n3</code> of <code>.jsonld</code>).</li>
+<li><strong>Opslaan</strong> — schrijf terug naar het bestand dat je het laatst hebt
+geopend/opgeslagen (Ctrl/Cmd+S). De knop toont kort <strong>Opgeslagen!</strong> ter
+bevestiging.</li>
+<li><strong>SHACL kopiëren</strong> — kopieer de huidige serialisatie zonder een bestand op te
+slaan.</li>
+<li><strong>Recent</strong> (koptekst) — open een schema opnieuw dat je eerder in deze sessie hebt
+opgeslagen.</li>
+</ul>
+<blockquote>
+<p>In Chrome/Edge wordt het bestand rechtstreeks naar schijf geschreven. In
+Firefox/Safari valt de editor terug op een normale download. De voorgestelde
+bestandsnaam wordt afgeleid van de schemanaam (bijv. <code>dataset.ttl</code>). Hoe dan ook
+wordt er tussen sessies een automatisch opgeslagen concept in je browser
+bewaard.</p>
+</blockquote>
+<p>Upload de resulterende <code>.ttl</code> naar je FAIR Data Point (of een ander SHACL-platform)
+als metadataschema, en records van de doelklasse worden gevalideerd — en
+formulieren weergegeven — volgens jouw ontwerp.</p>
+<hr>
+<h2 id="4-rechtstreeks-met-de-code-werken-het-tabblad-shacl-code">4. Rechtstreeks met de code werken (het tabblad SHACL-code)</h2>
+<p>Schrijf of plak je SHACL liever met de hand, of moet je vanuit een bestaande vorm
+beginnen? Gebruik het tabblad <strong>SHACL-code</strong>.</p>
+<p><img src="images/shacl-code-tab.png" alt="Het tabblad SHACL-code met de ruwe SHACL Turtle-editor"></p>
+<ul>
+<li><strong>Tweerichtingssynchronisatie.</strong> Bewerkingen aan de Turtle worden geparseerd en
+automatisch teruggestuurd naar de Visuele editor (nadat je even stopt met typen).
+Omgekeerd verschijnt alles wat je visueel bouwt hier.</li>
+<li><strong>Contextbewust autoaanvullen</strong> (Turtle). Terwijl je typt, stelt de editor
+SHACL-predicaten, node kinds, XSD-datatypes, DASH-editors, gedeclareerde
+eigenschapsgroepen en <code>@prefix</code>-regels voor. Gebruik <strong>↑/↓</strong> om te verplaatsen,
+<strong>Tab</strong>/<strong>Enter</strong> om te accepteren, <strong>Esc</strong> om te sluiten.</li>
+</ul>
+<p><img src="images/turtle-autocomplete.png" alt="Turtle-autoaanvullen dat sh:datatype voorstelt"></p>
+<ul>
+<li><strong>Een bestaand bestand openen.</strong> <strong>Openen…</strong> in de koptekst laadt een
+<code>.ttl</code>/<code>.nt</code>/<code>.trig</code>/<code>.n3</code>-bestand in dit tabblad, detecteert de syntaxis en
+parseert het in de Visuele editor — een snelle manier om een bestaand schema aan
+te passen. Als een bestand niet kan worden geparseerd, wijst een inline-melding
+naar de probleemregel; je kunt de ruwe tekst nog altijd bewerken.</li>
+<li><strong>Naam en Beschrijving</strong> voor het schema hebben ook eenvoudige invoervelden boven
+aan dit tabblad.</li>
+</ul>
+<p>Klik op <strong>Openen in Visuele editor</strong> om terug te springen naar de
+slepen-en-neerzetten-weergave.</p>
+<h3 id="een-syntaxis-kiezen-en-json-ld-exporteren">Een syntaxis kiezen (en JSON-LD exporteren)</h3>
+<p>Een keuzemenu <strong>Syntaxis</strong> in dit tabblad schakelt de serialisatie tussen
+<strong>Turtle</strong> (standaard), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> en <strong>JSON-LD
+(export)</strong>. De eerste vier zijn volledig bewerkbaar — bewerkingen synchroniseren
+terug. <strong>JSON-LD is alleen voor export</strong> (er is geen JSON-LD-parser): de editor
+toont het alleen-lezen, zodat je het kunt <strong>kopiëren</strong> of als <code>.jsonld</code>-bestand kunt
+<strong>opslaan als</strong>, en daarna terug kunt schakelen naar Turtle om verder te bewerken.</p>
+<p><img src="images/syntax-jsonld.png" alt="Het syntaxis-keuzemenu en de JSON-LD-export in het tabblad SHACL-code"></p>
+<p>Nieuwe schema&#39;s beginnen altijd als Turtle, en <strong>Opslaan als</strong> gebruikt de extensie
+die bij de geselecteerde syntaxis past.</p>
+<h3 id="een-bestaand-schema-bewerken-gebeurt-zonder-verlies">Een bestaand schema bewerken gebeurt zonder verlies</h3>
+<p>Contour parseert bestanden met een echte RDF-engine, dus het openen, bewerken en
+opslaan van een schema <strong>laat nooit stilletjes de onderdelen vallen die het niet
+visueel modelleert</strong>. Constructies waarvoor de editor geen besturingselement heeft
+— bijvoorbeeld <code>sh:and</code>, qualified value shapes of extra annotaties — worden
+<strong>woordelijk bewaard</strong> en opnieuw uitgevoerd in een duidelijk becommentarieerd
+<em>&quot;Preserved&quot;</em>-blok aan het einde van de uitvoer. Wanneer een geladen bestand zulke
+constructies bevat, zie je een korte melding in dit tabblad; je bewerkingen aan de
+onderdelen die Contour <em>wel</em> modelleert worden zoals gebruikelijk toegepast, en de
+rest blijft bij een round-trip intact.</p>
+<h3 id="de-graaf-visualiseren">De graaf visualiseren</h3>
+<p>Klik op <strong>Graaf</strong> in dit tabblad om in een overlay een knoop-link-visualisatie van
+het RDF van het schema te openen — vormen, eigenschapsknopen, klassen en literalen,
+verbonden door hun predicaten. Scroll om te zoomen, sleep de achtergrond om te
+pannen en sleep een knoop om hem te verplaatsen. Twee schakelaars temmen het detail
+(beide standaard aan): <strong>Lijsten inklappen</strong> vouwt een <code>sh:in</code>/<code>sh:or</code>-lijst samen
+tot één chip, en <strong>Annotaties verbergen</strong> laat labels en formulierhints (<code>sh:name</code>,
+<code>dash:editor</code>, <code>sh:order</code>, …) weg, zodat de structuur eruit springt. Het is een
+snelle manier om de vormgraaf (en eventuele geneste vormen of bewaarde constructies)
+in één oogopslag te zien.</p>
+<p><img src="images/schema-graph.png" alt="Het schema weergegeven als een RDF-knoop-link-graaf"></p>
+<hr>
+<h2 id="5-je-werk-controleren-het-paneel-problemen">5. Je werk controleren (het paneel Problemen)</h2>
+<p>Terwijl je bouwt, controleert Contour het schema voortdurend en vat het problemen
+samen in de <strong>Problemen</strong>-indicator op de actiebalk van de Visuele editor. Klik
+erop om de lijst uit te klappen; klik op een item om direct naar het betreffende
+element te springen.</p>
+<p><img src="images/issues-panel.png" alt="Het paneel Problemen met een lijst van schemaproblemen"></p>
+<p>Het markeert zaken zoals:</p>
+<ul>
+<li>een eigenschap <strong>zonder pad</strong>, of <strong>dubbele paden</strong> in dezelfde groep;</li>
+<li>een <strong>Details</strong>-eigenschap waarvan de geneste vorm <strong>ontbreekt</strong>;</li>
+<li>een pad, klasse, datatype of doelklasse die een <strong>prefix gebruikt die je niet hebt
+gedeclareerd</strong>;</li>
+<li>een ontbrekende <strong>doelklasse</strong> of schema-<strong>naam</strong>;</li>
+<li>geneste vormen met een ontbrekende of dubbele IRI.</li>
+</ul>
+<p>Problemen zijn <strong>niet-blokkerend</strong> — het is begeleiding, geen poortwachter — maar
+ze oplossen betekent dat de geëxporteerde SHACL welgevormd is en alleen verwijst
+naar gedeclareerde vocabulaires.</p>
+<hr>
+<h2 id="6-geavanceerde-functies-geavanceerd-modelleren">6. Geavanceerde functies (geavanceerd modelleren)</h2>
+<p>Naast de kernwidgets en -beperkingen biedt de Inspector een paar geavanceerde
+besturingselementen voor rijkere schema&#39;s. Elk is optioneel — grijp ernaar wanneer
+je model het nodig heeft.</p>
+<h3 id="labels-in-meerdere-talen">Labels in meerdere talen</h3>
+<p><code>sh:name</code> en <code>sh:description</code> kunnen een <strong>taalmarkering</strong> dragen, en je kunt
+<strong>vertalingen</strong> toevoegen zodat één veld in meerdere talen wordt gelabeld. Typ in
+de sectie <strong>Basis</strong> een markering (bijv. <code>en</code>) in het kleine vak naast het label;
+een editor voor <strong>vertalingen</strong> laat je er vervolgens meer toevoegen (<code>pt</code> →
+&quot;Título&quot;, …). Elk wordt een eigen taalgemarkeerde uitspraak (<code>sh:name &quot;Title&quot;@en, &quot;Título&quot;@pt</code>), en het formuliervoorbeeld toont een taalvak op het veld.</p>
+<p><img src="images/label-languages.png" alt="Een taalmarkering en vertalingen op een label instellen"></p>
+<h3 id="numerieke-en-datumbereiken">Numerieke en datumbereiken</h3>
+<p>Velden van het type Getal, Datum en Datum en tijd tonen een blok <strong>Waardebereik</strong>
+onder <strong>Beperkingen</strong>. Stel inclusieve <strong>Min (≥)</strong> / <strong>Max (≤)</strong> of exclusieve
+<strong>(&gt;)</strong> / <strong>(&lt;)</strong>-grenzen in — bijv. een publicatiejaar ≥ 1900. Getallen worden
+kaal geëxporteerd (<code>sh:minInclusive 1900</code>); datums als getypeerde literalen
+(<code>&quot;2000-01-01&quot;^^xsd:date</code>).</p>
+<p><img src="images/value-range.png" alt="De besturingselementen voor Waardebereik in de sectie Beperkingen"></p>
+<h3 id="aangepaste-validatieberichten">Aangepaste validatieberichten</h3>
+<p>De sectie <strong>Validatiebericht</strong> stelt de tekst in die een platform toont wanneer een
+waarde de regel niet doorstaat (<code>sh:message</code>) en de <strong>Ernst</strong> ervan — <em>Violation</em>
+(standaard), <em>Warning</em> of <em>Info</em> (<code>sh:severity</code>). Gebruik het om een kale fout om te
+zetten in begeleiding die de steward begrijpt.</p>
+<p><img src="images/validation-message.png" alt="Een validatiebericht en ernst opstellen"></p>
+<h3 id="alternatieve-waardetypes-literal-of-iri">Alternatieve waardetypes (literal <em>of</em> IRI)</h3>
+<p>Sommige eigenschappen accepteren terecht meer dan één soort waarde — een onderwerp
+dat vrije tekst <em>of</em> een IRI uit een gecontroleerd vocabulaire mag zijn, bijvoorbeeld.
+Klik op <strong>Alternatieve waardetypes toestaan (<code>sh:or</code>)</strong> en som de takken op (elk een
+node kind, datatype of klasse). Het wordt geëxporteerd als <code>sh:or ( [ … ] [ … ] )</code>.
+Rijkere logische vormen die Contour niet modelleert blijven bij een round-trip
+bewaard (zie <a href="#4-rechtstreeks-met-de-code-werken-het-tabblad-shacl-code">§4</a>).</p>
+<p><img src="images/alt-types.png" alt="Alternatieve waardetypes definiëren met sh:or"></p>
+<h3 id="inverse-paden">Inverse paden</h3>
+<p>Vink <strong>Inverse (<code>^</code>)</strong> aan naast het eigenschapspad om een relatie <em>achterstevoren</em>
+te matchen — &quot;bronnen die naar deze verwijzen&quot; in plaats van andersom. Het wordt
+geëxporteerd als <code>sh:path [ sh:inversePath … ]</code>, en de eigenschapkaart toont het pad
+met een voorloop-<code>^</code>.</p>
+<p><img src="images/inverse-path.png" alt="Het selectievakje Inverse pad op een eigenschap"></p>
+<hr>
+<h2 id="7-referentie">7. Referentie</h2>
+<h3 id="widgetcatalogus">Widgetcatalogus</h3>
+<p>Elke widget verwijst naar een DASH-editor en een verstandige standaard node kind /
+datatype.</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>DASH-editor</th>
+<th>Typisch gebruik</th>
+<th>Standaardwaarden</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tekstveld</strong></td>
+<td><code>dash:TextFieldEditor</code></td>
+<td>Tekst van één regel</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Tekstgebied</strong></td>
+<td><code>dash:TextAreaEditor</code></td>
+<td>Meerregelige tekst</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Rijke tekst</strong></td>
+<td><code>dash:RichTextEditor</code></td>
+<td>Opgemaakte tekst met taalmarkering</td>
+<td><code>sh:Literal</code>, <code>rdf:HTML</code></td>
+</tr>
+<tr>
+<td><strong>URI</strong></td>
+<td><code>dash:URIEditor</code></td>
+<td>Vrije koppeling / IRI</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Autoaanvullen</strong></td>
+<td><code>dash:AutoCompleteEditor</code></td>
+<td>Een instantie opzoeken op label</td>
+<td><code>sh:IRI</code>, <code>sh:class foaf:Agent</code></td>
+</tr>
+<tr>
+<td><strong>Instanties selecteren</strong></td>
+<td><code>dash:InstancesSelectEditor</code></td>
+<td>Vervolgkeuzelijst van instanties</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Details (genest)</strong></td>
+<td><code>dash:DetailsEditor</code></td>
+<td>Ingebed subformulier via een geneste vorm</td>
+<td><code>sh:BlankNodeOrIRI</code></td>
+</tr>
+<tr>
+<td><strong>Enumeratie</strong></td>
+<td><code>dash:EnumSelectEditor</code></td>
+<td>Keuze uit een vaste <code>sh:in</code>-lijst</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Booleaans</strong></td>
+<td><code>dash:BooleanSelectEditor</code></td>
+<td>waar / onwaar</td>
+<td><code>sh:Literal</code>, <code>xsd:boolean</code></td>
+</tr>
+<tr>
+<td><strong>Datumkiezer</strong></td>
+<td><code>dash:DatePickerEditor</code></td>
+<td>Kalenderdatum</td>
+<td><code>sh:Literal</code>, <code>xsd:date</code></td>
+</tr>
+<tr>
+<td><strong>Datum en tijd</strong></td>
+<td><code>dash:DateTimePickerEditor</code></td>
+<td>Tijdstempel</td>
+<td><code>sh:Literal</code>, <code>xsd:dateTime</code></td>
+</tr>
+<tr>
+<td><strong>Getal</strong></td>
+<td><code>dash:NumberFieldEditor</code></td>
+<td>Numerieke waarde</td>
+<td><code>sh:Literal</code>, <code>xsd:integer</code></td>
+</tr>
+</tbody></table>
+<p>Standaardwaarden zijn vertrekpunten — overschrijf de node kind, het datatype of de
+klasse in de Inspector wanneer je model iets anders nodig heeft.</p>
+<h3 id="referentie-van-eigenschapsinstellingen">Referentie van eigenschapsinstellingen</h3>
+<p>Wat elk besturingselement van de Inspector in SHACL schrijft:</p>
+<table>
+<thead>
+<tr>
+<th>Inspector-veld</th>
+<th>SHACL-uitvoer</th>
+<th>Opmerkingen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Label</td>
+<td><code>sh:name</code></td>
+<td>Het formulierlabel. Een optionele <strong>taalmarkering</strong> + aanvullende <strong>vertalingen</strong> geven één <code>sh:name</code> per taal.</td>
+</tr>
+<tr>
+<td>Beschrijving</td>
+<td><code>sh:description</code></td>
+<td>Helptekst / ⓘ-tooltip. Ook van een taalmarkering te voorzien, met vertalingen.</td>
+</tr>
+<tr>
+<td>Eigenschapspad</td>
+<td><code>sh:path</code></td>
+<td><strong>Verplicht.</strong> Het RDF-predicaat. <strong>Inverse (<code>^</code>)</strong> geeft <code>[ sh:inversePath … ]</code>.</td>
+</tr>
+<tr>
+<td>Min. aantal</td>
+<td><code>sh:minCount</code></td>
+<td>≥ 1 maakt het veld verplicht.</td>
+</tr>
+<tr>
+<td>Max. aantal</td>
+<td><code>sh:maxCount</code></td>
+<td>Leeg = onbegrensd (herhaalbaar).</td>
+</tr>
+<tr>
+<td>Node kind</td>
+<td><code>sh:nodeKind</code></td>
+<td><code>sh:Literal</code>, <code>sh:IRI</code>, <code>sh:BlankNode</code> of combinaties.</td>
+</tr>
+<tr>
+<td>Datatype</td>
+<td><code>sh:datatype</code></td>
+<td>Getoond voor literale node kinds.</td>
+</tr>
+<tr>
+<td>Klasse</td>
+<td><code>sh:class</code></td>
+<td>Getoond voor IRI-node kinds; beperkt het doeltype.</td>
+</tr>
+<tr>
+<td>Geneste vorm</td>
+<td><code>sh:node</code></td>
+<td>Getoond voor <strong>Details</strong>; koppelt aan een geneste vorm.</td>
+</tr>
+<tr>
+<td>Min. / Max. lengte</td>
+<td><code>sh:minLength</code> / <code>sh:maxLength</code></td>
+<td>Alleen literalen.</td>
+</tr>
+<tr>
+<td>Waardebereik</td>
+<td><code>sh:minInclusive</code> / <code>maxInclusive</code> / <code>minExclusive</code> / <code>maxExclusive</code></td>
+<td>Getallen en datums.</td>
+</tr>
+<tr>
+<td>Patroon (regex)</td>
+<td><code>sh:pattern</code></td>
+<td>Alleen literalen.</td>
+</tr>
+<tr>
+<td>Toegestane waarden</td>
+<td><code>sh:in ( … )</code></td>
+<td>Enumeratiekeuzes; elke waarde literal of IRI.</td>
+</tr>
+<tr>
+<td>Alternatieve waardetypes</td>
+<td><code>sh:or ( … )</code></td>
+<td>&quot;Accepteer een van deze types&quot; (bijv. literal <strong>of</strong> IRI).</td>
+</tr>
+<tr>
+<td>Bericht / Ernst</td>
+<td><code>sh:message</code> / <code>sh:severity</code></td>
+<td>Aangepaste validatietekst + Violation / Warning / Info.</td>
+</tr>
+<tr>
+<td>Standaardwaarde</td>
+<td><code>sh:defaultValue</code></td>
+<td>Vooraf ingevulde waarde.</td>
+</tr>
+<tr>
+<td>Volgorde</td>
+<td><code>sh:order</code></td>
+<td>Veldvolgorde binnen de groep.</td>
+</tr>
+</tbody></table>
+<p>Besturingselementen op schema- en groepsniveau:</p>
+<table>
+<thead>
+<tr>
+<th>Besturingselement</th>
+<th>SHACL-uitvoer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Schemanaam</td>
+<td><code>rdfs:label</code> op de NodeShape</td>
+</tr>
+<tr>
+<td>Vorm-IRI</td>
+<td>het subject van de NodeShape</td>
+</tr>
+<tr>
+<td>Doelklasse</td>
+<td><code>sh:targetClass</code></td>
+</tr>
+<tr>
+<td>Prefixes</td>
+<td><code>@prefix</code>-declaraties</td>
+</tr>
+<tr>
+<td>Groepslabel</td>
+<td><code>rdfs:label</code> op de <code>sh:PropertyGroup</code></td>
+</tr>
+<tr>
+<td>Groepsvolgorde</td>
+<td><code>sh:order</code> op de groep; de <code>sh:group</code> van het veld koppelt het</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-recepten--veelvoorkomende-modelleerpatronen">8. Recepten — veelvoorkomende modelleerpatronen</h2>
+<p>Korte, op zichzelf staande patronen die je boven op de tutorial kunt toepassen.</p>
+<p><strong>Een veld verplicht maken.</strong> Stel <strong>Min. aantal</strong> in op <code>1</code>. De kaart toont een
+rode stip en het formulier markeert het met <code>*</code>.</p>
+<p><strong>Meerdere waarden toestaan.</strong> Laat <strong>Max. aantal</strong> leeg (∞). De kaart toont een
+<strong>multi</strong>-badge en het formulier krijgt <strong>+ Toevoegen</strong>.</p>
+<p><strong>Beperken tot een vaste lijst.</strong> Gebruik de <strong>Enumeratie</strong>-widget en vul
+<strong>Toegestane waarden</strong> in. Exporteert als <code>sh:in</code>.</p>
+<p><strong>Koppelen aan een organisatie of persoon.</strong> Gebruik <strong>Autoaanvullen</strong> (of
+<strong>Instanties selecteren</strong>), node kind <code>sh:IRI</code> en <strong>Klasse</strong> = <code>foaf:Agent</code> (of de
+klasse die je kiest).</p>
+<p><strong>Een gestructureerd subobject vastleggen</strong> (adres, contactpunt, distributie). Maak
+een <strong>geneste vorm</strong>, voeg de velden ervan toe en wijs er vervolgens een <strong>Details
+(genest)</strong>-eigenschap naar via <code>sh:node</code>. Zie
+<a href="#stap-10--modelleer-een-subobject-met-een-geneste-vorm">Stap 10</a>.</p>
+<p><strong>Een formaat afdwingen.</strong> Stel voor literalen een <strong>Patroon</strong> (regex) en/of
+<strong>Min./Max. lengte</strong> in — bijv. een ORCID-patroon, of een maximumlengte op een
+codeveld.</p>
+<p><strong>Een getal of datum begrenzen.</strong> Gebruik op een Getal-/Datum-veld de sectie
+<strong>Waardebereik</strong> — bijv. <em>Min (≥)</em> <code>1900</code> voor een jaar, of <em>Max (≤)</em> een
+afsluitdatum.</p>
+<p><strong>Een label in meerdere talen aanbieden.</strong> Stel een <strong>taalmarkering</strong> in op het
+<strong>Label</strong> (bijv. <code>en</code>) en voeg <strong>vertalingen</strong> toe (<code>pt</code> → &quot;Título&quot;, …). Elk wordt
+een taalgemarkeerde <code>sh:name</code>, en het formuliervoorbeeld toont een taalvak.</p>
+<p><strong>Een literal <em>of</em> een IRI accepteren</strong> (of &quot;een van deze types&quot;). Gebruik
+<strong>Alternatieve waardetypes (<code>sh:or</code>)</strong> op de eigenschap en som de takken op (bijv.
+<code>sh:nodeKind sh:Literal</code> en <code>sh:nodeKind sh:IRI</code>). Gangbaar in DCAT-AP voor waarden
+die inline tekst of een verwijzing mogen zijn.</p>
+<p><strong>Een relatie achterstevoren volgen.</strong> Vink <strong>Inverse (<code>^</code>)</strong> aan op het pad om
+&quot;dingen die naar deze bron verwijzen&quot; te matchen (bijv. leden van een collectie) —
+geëxporteerd als <code>[ sh:inversePath … ]</code>.</p>
+<p><strong>Een validatieregel uitleggen.</strong> Vul het <strong>Validatiebericht</strong> met tekst die de
+steward begrijpt en kies een <strong>Ernst</strong> zodat een platform een nuttige Warning kan
+tonen in plaats van een kale fout.</p>
+<p><strong>Naar JSON-LD exporteren.</strong> Stel in het tabblad SHACL-code <strong>Syntaxis</strong> in op
+<em>JSON-LD (export)</em> en <strong>Kopieer</strong> of <strong>Sla op als</strong> <code>.jsonld</code> voor gereedschappen
+die JSON-LD verwerken.</p>
+<p><strong>Beginnen vanuit een voorbeeld.</strong> Gebruik het menu <strong>Voorbeelden</strong> om een sjabloon
+Dataset (DCAT), Agent (FOAF) of Concept (SKOS) te laden en pas het vervolgens aan
+je behoeften aan.</p>
+<p><strong>Een bestaand schema hergebruiken.</strong> <strong>Open…</strong> het bestaande bestand, pas het aan
+in de Visuele editor en gebruik vervolgens <strong>Opslaan als…</strong> voor een nieuw bestand
+— alles wat Contour niet modelleert blijft bewaard (zie
+<a href="#4-rechtstreeks-met-de-code-werken-het-tabblad-shacl-code">§4</a>).</p>
+<hr>
+<h2 id="9-tips-en-probleemoplossing">9. Tips en probleemoplossing</h2>
+<ul>
+<li><strong>Stel altijd het eigenschapspad in.</strong> Nieuwe widgets krijgen een tijdelijk pad
+als <code>:textfield</code>; vervang het door de echte RDF-term (<code>dct:title</code>, <code>dcat:theme</code>,
+…) anders gebruikt de geëxporteerde metadata niet de term die je bedoelt.</li>
+<li><strong>Declareer de prefixes die je gebruikt.</strong> Als een pad of klasse een alias
+gebruikt (bijv. <code>vcard:</code>), voeg deze dan toe onder <strong>Vocabulaires</strong> zodat de
+Turtle geldig is.</li>
+<li><strong>Een veld is in de verkeerde groep beland.</strong> Sleep de eigenschapkaart naar de
+juiste groep; het vak <strong>Groep</strong> in de Inspector is alleen-lezen en weerspiegelt
+de verplaatsing.</li>
+<li><strong>Bewerkingen in de SHACL-code zijn niet gesynchroniseerd.</strong> Synchronisatie
+gebeurt kort nadat je stopt met typen. Als er een parseerfout wordt getoond (met
+een regelnummer), corrigeer dan de Turtle — het visuele canvas behoudt de laatste
+geldige toestand tot de tekst parseert.</li>
+<li><strong>De knop Opslaan downloadt alleen.</strong> Dat is de verwachte terugval in
+Firefox/Safari. Gebruik voor opslaan op de plek zelf een browser op Chromium-basis
+(Chrome/Edge).</li>
+<li><strong>Een fout gemaakt?</strong> <strong>Ongedaan maken</strong> (Ctrl/Cmd+Z) / <strong>Opnieuw</strong>
+(Ctrl/Cmd+Shift+Z) dekken elke bewerking, en je werk wordt automatisch opgeslagen
+— een herlaadbeurt herstelt het.</li>
+<li><strong>Controleer het paneel Problemen.</strong> Klap vóór het exporteren <strong>Problemen</strong> in de
+actiebalk uit en los eventuele fouten op (lege paden, niet-gedeclareerde
+prefixes, gebroken <code>sh:node</code>).</li>
+<li><strong>JSON-LD aan het bewerken?</strong> Dat kan niet — het is alleen voor export. Schakel
+<strong>Syntaxis</strong> terug naar Turtle (of N-Triples / TriG / N3) om verder te bewerken.</li>
+<li><strong>Opnieuw beginnen.</strong> Gebruik de knop <strong>Nieuw</strong> voor een leeg schema, laad er een
+uit <strong>Voorbeelden</strong>, of <strong>Open…</strong> een bestaand bestand.</li>
+</ul>
+<hr>
+<p><em>Gebouwd met Contour voor het FAIR Data Point-ecosysteem. De uitvoer is standaard
+SHACL + DASH en werkt met elk SHACL-bewust gereedschap.</em></p>
+
+  </main>
+</body>
+</html>

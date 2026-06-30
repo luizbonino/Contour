@@ -1,17 +1,52 @@
 import { ref } from 'vue';
-import { messages, type Locale } from '../i18n';
+import { LOCALES, messages, type Locale } from '../i18n';
 
 const STORAGE_KEY = 'contour.locale';
 const DEFAULT_LOCALE: Locale = 'en';
 
+const SUPPORTED = LOCALES.map((l) => l.code);
+
+function isLocale(value: unknown): value is Locale {
+  return typeof value === 'string' && (SUPPORTED as string[]).includes(value);
+}
+
+/**
+ * Pick a supported locale for a BCP-47 browser tag: prefer an exact match
+ * (case-insensitive), then fall back to the primary subtag (e.g. `nl-BE` → `nl-NL`,
+ * `de-AT` → `de-DE`, `en-US` → `en`). Returns undefined if nothing matches.
+ */
+function matchBrowserTag(tag: string): Locale | undefined {
+  const lower = tag.toLowerCase();
+  const exact = SUPPORTED.find((code) => code.toLowerCase() === lower);
+  if (exact) return exact;
+  const primary = lower.split('-')[0];
+  return SUPPORTED.find((code) => code.toLowerCase().split('-')[0] === primary);
+}
+
+function detectFromBrowser(): Locale | undefined {
+  try {
+    const prefs = navigator.languages?.length ? navigator.languages : [navigator.language];
+    for (const tag of prefs) {
+      if (!tag) continue;
+      const match = matchBrowserTag(tag);
+      if (match) return match;
+    }
+  } catch {
+    /* navigator unavailable */
+  }
+  return undefined;
+}
+
 function detectInitial(): Locale {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'en' || saved === 'pt-BR') return saved;
+    if (isLocale(saved)) return saved;
   } catch {
     /* localStorage unavailable (e.g. file://, privacy mode) */
   }
-  return DEFAULT_LOCALE;
+  // No explicit choice yet — honour the browser's preferred language if supported,
+  // otherwise fall back to English.
+  return detectFromBrowser() ?? DEFAULT_LOCALE;
 }
 
 // Module-level reactive locale — shared across every component that calls useI18n().

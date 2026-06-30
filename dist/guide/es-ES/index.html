@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contour — Guía para data stewards</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJDb250b3VyIj4KICAKICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMUIyQTRBIj48L3JlY3Q+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjUuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0gNjYuMjEgNjcuNzAgQSAyNCAyNCAwIDEgMSA2Ni4yMSAzMi4zMCI+PC9wYXRoPgogICAgPHBhdGggZD0iTSA1OS40NiA2MC4zMiBBIDE0IDE0IDAgMSAxIDU5LjQ2IDM5LjY4Ij48L3BhdGg+CiAgPC9nPgogIDxwYXRoIGQ9Ik0gNzIuOTcgNzUuMDcgTCA0My44MSA4My40MyBMIDE5LjU3IDY1LjE3IEwgMTkuNTcgMzQuODMgTCA0My44MSAxNi41NyBMIDcyLjk3IDI0LjkzIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQkIzQUIiIHN0cm9rZS13aWR0aD0iMy40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjwvcGF0aD4KICA8ZyBmaWxsPSIjMkJCM0FCIj4KICAgIDxjaXJjbGUgY3g9IjcyLjk3IiBjeT0iNzUuMDciIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjgzLjQzIiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iMTkuNTciIGN5PSI2NS4xNyIgcj0iNC42Ij48L2NpcmNsZT4KICAgIDxjaXJjbGUgY3g9IjE5LjU3IiBjeT0iMzQuODMiIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjE2LjU3IiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iNzIuOTciIGN5PSIyNC45MyIgcj0iNC42Ij48L2NpcmNsZT4KICA8L2c+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1b2a4a; --accent: #0e7c7b; --accent-dark: #0a5f5e;
+    --sand: #eae7e0; --card: #fcfbf8; --border: #e4e0d6;
+    --text: #3a3d45; --muted: #8a8c94; --code-bg: #faf8f3;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--sand); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: var(--card);
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px; }
+  .topbar svg { height: 30px; width: 30px; display: block; }
+  .topbar .wm { font-family: var(--sans); font-weight: 600; font-size: 18px;
+    letter-spacing: -0.015em; color: var(--ink); }
+  .topbar .tag { font-family: var(--mono); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+  .topbar .spacer { flex: 1; }
+  .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
+  .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar .langs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar .langs a, .topbar .langs span { font-weight: 600; font-size: 13px; text-decoration: none;
+    border-radius: 999px; padding: 4px 10px; }
+  .topbar .langs a { color: var(--muted); border: 1px solid transparent; }
+  .topbar .langs a:hover { color: var(--accent-dark); border-color: var(--border); text-decoration: none; }
+  .topbar .langs span.current { color: var(--ink); background: var(--sand); border: 1px solid var(--border); }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
+  main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
+  main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
+    padding-top: 14px; border-top: 1px solid var(--border); }
+  main h3 { font-size: 18px; color: var(--ink); margin: 28px 0 8px; }
+  main h4 { font-size: 15px; color: var(--ink); margin: 22px 0 6px; }
+  a { color: var(--accent-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p, li { font-size: 16px; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--ink); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,32,60,.06); margin: 12px 0; }
+  blockquote { margin: 16px 0; padding: 10px 16px; background: var(--card);
+    border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; }
+  blockquote p { margin: 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-size: 14px; }
+  th { background: var(--code-bg); color: var(--ink); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+  :target { scroll-margin-top: 70px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" role="img" aria-label="Contour">
+  
+  <g stroke="#1B2A4A" stroke-width="5.5" stroke-linecap="round">
+    <path d="M 66.21 67.70 A 24 24 0 1 1 66.21 32.30"></path>
+    <path d="M 59.46 60.32 A 14 14 0 1 1 59.46 39.68"></path>
+  </g>
+  
+  <path d="M 72.97 75.07 L 43.81 83.43 L 19.57 65.17 L 19.57 34.83 L 43.81 16.57 L 72.97 24.93" stroke="#0E7C7B" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"></path>
+  <g fill="#0E7C7B">
+    <circle cx="72.97" cy="75.07" r="4.6"></circle>
+    <circle cx="43.81" cy="83.43" r="4.6"></circle>
+    <circle cx="19.57" cy="65.17" r="4.6"></circle>
+    <circle cx="19.57" cy="34.83" r="4.6"></circle>
+    <circle cx="43.81" cy="16.57" r="4.6"></circle>
+    <circle cx="72.97" cy="24.93" r="4.6"></circle>
+  </g>
+</svg>
+    <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
+    <div class="spacer"></div>
+    <nav class="langs"><a href="../">English</a><a href="../pt-BR/">Português</a><a href="../nl-NL/">Nederlands</a><a href="../de-DE/">Deutsch</a><span class="current">Español</span><a href="../fr-FR/">Français</a></nav>
+    <a class="btn" href="../../" target="_blank" rel="noopener">Abrir el editor ↗</a>
+  </div>
+  <main>
+<h1 id="creación-de-esquemas-de-metadatos--una-guía-para-data-stewards">Creación de esquemas de metadatos — Una guía para data stewards</h1>
+<p><strong>Contour</strong> te permite diseñar esquemas de metadatos personalizados de forma
+visual —arrastrando o haciendo clic en widgets de formulario sobre un lienzo— y
+los exporta como formas <a href="https://www.w3.org/TR/shacl/">SHACL</a> conformes con los
+estándares, con anotaciones de formulario <a href="https://datashapes.org/forms.html">DASH</a>.
+El resultado encaja directamente en un
+<a href="https://fairdatapoint.org/">FAIR Data Point</a> o en cualquier plataforma
+compatible con SHACL.</p>
+<blockquote>
+<p><em>Eslogan de Contour: <strong>Visual schemas. Clean SHACL.</strong></em></p>
+</blockquote>
+<p>Esta guía está pensada para <strong>data stewards</strong> que quieran definir qué metadatos
+debe (o puede) aportar su comunidad para un tipo determinado de recurso —un
+conjunto de datos, un estudio, una muestra, un paquete de software— sin escribir
+Turtle a mano.</p>
+<blockquote>
+<p><strong>Sin instalación, sin servidor.</strong> El editor es una única página web
+autocontenida. Ábrela en Chrome o Edge (recomendado, para guardar archivos
+directamente) — Firefox y Safari también funcionan, con un guardado en forma
+de descarga.</p>
+</blockquote>
+<hr>
+<h2 id="índice">Índice</h2>
+<ol>
+<li><a href="#1-qu%C3%A9-est%C3%A1s-creando-conceptos-clave">Qué estás creando (conceptos clave)</a></li>
+<li><a href="#2-la-interfaz-de-un-vistazo">La interfaz de un vistazo</a></li>
+<li><a href="#3-tutorial-crear-un-esquema-dataset-desde-cero">Tutorial: crear un esquema <em>Dataset</em> desde cero</a><ul>
+<li><a href="#paso-1--definir-la-identidad-del-esquema">Paso 1 — Definir la identidad del esquema</a></li>
+<li><a href="#paso-2--gestionar-vocabularios-prefijos">Paso 2 — Gestionar vocabularios (prefijos)</a></li>
+<li><a href="#paso-3--organizar-el-formulario-en-grupos">Paso 3 — Organizar el formulario en grupos</a></li>
+<li><a href="#paso-4--a%C3%B1adir-tu-primera-propiedad-un-campo-de-texto">Paso 4 — Añadir tu primera propiedad (un campo de texto)</a></li>
+<li><a href="#paso-5--establecer-la-cardinalidad-y-las-restricciones-de-validaci%C3%B3n">Paso 5 — Establecer la cardinalidad y las restricciones de validación</a></li>
+<li><a href="#paso-6--a%C3%B1adir-una-descripci%C3%B3n-de-varias-l%C3%ADneas">Paso 6 — Añadir una descripción de varias líneas</a></li>
+<li><a href="#paso-7--a%C3%B1adir-una-propiedad-de-fecha">Paso 7 — Añadir una propiedad de fecha</a></li>
+<li><a href="#paso-8--a%C3%B1adir-un-vocabulario-controlado-enumeraci%C3%B3n">Paso 8 — Añadir un vocabulario controlado (enumeración)</a></li>
+<li><a href="#paso-9--referenciar-otra-entidad-iri--clase">Paso 9 — Referenciar otra entidad (IRI + clase)</a></li>
+<li><a href="#paso-10--modelar-un-subobjeto-con-una-forma-anidada">Paso 10 — Modelar un subobjeto con una forma anidada</a></li>
+<li><a href="#paso-11--previsualizar-el-formulario-de-entrada-de-datos">Paso 11 — Previsualizar el formulario de entrada de datos</a></li>
+<li><a href="#paso-12--revisar-el-shacl-generado">Paso 12 — Revisar el SHACL generado</a></li>
+<li><a href="#paso-13--guardar-y-exportar">Paso 13 — Guardar y exportar</a></li>
+</ul>
+</li>
+<li><a href="#4-trabajar-directamente-con-el-c%C3%B3digo-la-pesta%C3%B1a-c%C3%B3digo-shacl">Trabajar directamente con el código (la pestaña Código SHACL)</a><ul>
+<li><a href="#elegir-una-sintaxis-y-exportar-json-ld">Elegir una sintaxis (y exportar JSON-LD)</a></li>
+<li><a href="#editar-un-esquema-existente-es-sin-p%C3%A9rdidas">Editar un esquema existente es sin pérdidas</a></li>
+<li><a href="#visualizar-el-grafo">Visualizar el grafo</a></li>
+</ul>
+</li>
+<li><a href="#5-comprobar-tu-trabajo-el-panel-de-problemas">Comprobar tu trabajo (el panel de Problemas)</a></li>
+<li><a href="#6-funciones-avanzadas-modelado-avanzado">Funciones avanzadas (modelado avanzado)</a></li>
+<li><a href="#7-referencia">Referencia</a><ul>
+<li><a href="#cat%C3%A1logo-de-widgets">Catálogo de widgets</a></li>
+<li><a href="#referencia-de-los-ajustes-de-propiedad">Referencia de los ajustes de propiedad</a></li>
+</ul>
+</li>
+<li><a href="#8-recetas--patrones-de-modelado-habituales">Recetas — patrones de modelado habituales</a></li>
+<li><a href="#9-consejos-y-resoluci%C3%B3n-de-problemas">Consejos y resolución de problemas</a></li>
+</ol>
+<hr>
+<h2 id="1-qué-estás-creando-conceptos-clave">1. Qué estás creando (conceptos clave)</h2>
+<p>Un esquema de metadatos en esta herramienta es una <strong>NodeShape SHACL</strong>: la
+descripción de cómo es un registro válido de un tipo determinado. Algunos
+términos que encontrarás a lo largo de la guía:</p>
+<table>
+<thead>
+<tr>
+<th>Término</th>
+<th>Qué significa para ti</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NodeShape</strong></td>
+<td>El esquema en sí — p. ej., &quot;qué debe contener un registro de Dataset&quot;.</td>
+</tr>
+<tr>
+<td><strong>Clase objetivo</strong> (<code>sh:targetClass</code>)</td>
+<td>El tipo RDF al que se aplica el esquema, p. ej., <code>dcat:Dataset</code>. Los registros de este tipo se validan frente a tu esquema.</td>
+</tr>
+<tr>
+<td><strong>Propiedad</strong> (<code>sh:property</code>)</td>
+<td>Un único campo — título, editor, fecha de emisión… Cada propiedad tiene una <em>ruta</em>, un <em>widget</em> y <em>restricciones</em>.</td>
+</tr>
+<tr>
+<td><strong>Ruta de propiedad</strong> (<code>sh:path</code>)</td>
+<td>El predicado RDF en el que escribe el campo, p. ej., <code>dct:title</code>. Es el término que realmente se almacena en los metadatos.</td>
+</tr>
+<tr>
+<td><strong>Widget</strong> (<code>dash:editor</code>)</td>
+<td>El control de formulario que se muestra a quien rellena los metadatos — una caja de texto, un selector de fecha, una lista desplegable, etc.</td>
+</tr>
+<tr>
+<td><strong>Grupo</strong> (<code>sh:PropertyGroup</code>)</td>
+<td>Una sección visual que agrupa campos relacionados, p. ej., &quot;Información general&quot;.</td>
+</tr>
+<tr>
+<td><strong>Prefijo</strong> (<code>@prefix</code>)</td>
+<td>Un alias corto para un espacio de nombres de vocabulario, p. ej., <code>dct:</code> → <code>http://purl.org/dc/terms/</code>.</td>
+</tr>
+</tbody></table>
+<p>Tú lo diseñas todo de forma visual; la herramienta escribe el SHACL por ti.</p>
+<hr>
+<h2 id="2-la-interfaz-de-un-vistazo">2. La interfaz de un vistazo</h2>
+<p><img src="images/interface-overview.png" alt="Contour con el esquema de ejemplo Dataset cargado"></p>
+<p>La ventana tiene tres pestañas:</p>
+<p><img src="images/tabs.png" alt="Las tres pestañas: Código SHACL, Editor visual, Vista previa del formulario"></p>
+<ul>
+<li><strong>Código SHACL</strong> — el esquema serializado. Turtle por defecto, con
+autocompletado; las ediciones se sincronizan de vuelta con el lienzo visual.
+Un selector de <strong>sintaxis</strong> ofrece además N-Triples, TriG, Notation3 y una
+exportación a <strong>JSON-LD</strong>. Es también donde se muestran los archivos que
+abres.</li>
+<li><strong>Editor visual</strong> — el banco de trabajo de arrastrar y soltar (mostrado
+arriba). Es donde transcurre la mayor parte del trabajo.</li>
+<li><strong>Vista previa del formulario</strong> — una representación realista del formulario
+de entrada de datos que produce tu esquema, para que pruebes la experiencia
+antes de publicar.</li>
+</ul>
+<p>El <strong>Editor visual</strong> se divide en tres columnas:</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Widgets</strong> (izquierda)</td>
+<td>La paleta de controles de formulario. <strong>Arrastra</strong> uno hasta el lienzo, o simplemente <strong>haz clic</strong> en él (con teclado: foco + Enter) para añadirlo.</td>
+</tr>
+<tr>
+<td><strong>Lienzo del formulario</strong> (centro)</td>
+<td>Tu esquema: el banner del objetivo, los grupos, las propiedades y las formas anidadas.</td>
+</tr>
+<tr>
+<td><strong>Inspector</strong> (derecha)</td>
+<td>Los ajustes de lo que esté seleccionado en cada momento — el esquema, un grupo o una propiedad.</td>
+</tr>
+</tbody></table>
+<p>Bajo el banco de trabajo hay una <strong>barra de acciones</strong> con un contador de
+propiedades/grupos, un indicador de <strong>Problemas</strong> (una comprobación en vivo de
+tu esquema — véase la <a href="#5-comprobar-tu-trabajo-el-panel-de-problemas">§5</a>) y
+botones de Guardar / Copiar. Para ver el esquema serializado, cambia a la
+pestaña <strong>Código SHACL</strong>; para ver el formulario representado, cambia a <strong>Vista
+previa del formulario</strong>.</p>
+<p>La cabecera concentra las acciones de archivo — <strong>Deshacer / Rehacer</strong>,
+<strong>Nuevo</strong>, <strong>Recientes</strong>, <strong>Ejemplos</strong>, <strong>Abrir</strong>, <strong>Guardar</strong>, <strong>Guardar
+como</strong> — además del conmutador de idioma y un enlace a la <strong>Guía</strong>:</p>
+<p><img src="images/file-toolbar.png" alt="Botones Deshacer/Rehacer, Nuevo, Recientes, Ejemplos, Abrir, Guardar y Guardar como en la cabecera"></p>
+<blockquote>
+<p><strong>Tu trabajo se guarda sobre la marcha.</strong> Contour mantiene un borrador
+autoguardado en tu navegador, de modo que recargar la página o cerrar la
+pestaña por accidente no lo pierde — al volver verás un aviso de <em>&quot;Se ha
+restaurado tu borrador no guardado&quot;</em>. <strong>Deshacer/Rehacer</strong> (o Ctrl/Cmd+Z y
+Ctrl/Cmd+Mayús+Z) recorren tus ediciones, y el menú <strong>Recientes</strong> vuelve a
+abrir esquemas que hayas guardado.</p>
+</blockquote>
+<h3 id="idioma-de-la-interfaz">Idioma de la interfaz</h3>
+<p>La interfaz de Contour está disponible en <strong>inglés</strong> (por defecto), <strong>portugués
+de Brasil</strong>, <strong>neerlandés</strong>, <strong>alemán</strong>, <strong>español</strong> y <strong>francés</strong>. Cámbiala con
+el selector de idioma (<strong>EN / PT / NL / DE / ES / FR</strong>) de la cabecera — tu
+elección se recuerda entre sesiones. Si el idioma preferido de tu navegador es
+uno de estos, Contour se abre en él automáticamente; de lo contrario, recurre al
+inglés. Solo se traduce la interfaz; el contenido de tu esquema (nombres,
+descripciones, rutas de propiedad) y el SHACL generado no se alteran nunca, por
+lo que el Turtle exportado es idéntico en cualquier idioma.</p>
+<hr>
+<h2 id="3-tutorial-crear-un-esquema-dataset-desde-cero">3. Tutorial: crear un esquema <em>Dataset</em> desde cero</h2>
+<p>Vamos a crear un esquema de metadatos de <strong>Dataset</strong> al estilo
+<a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT</a>. Cada paso introduce una función de
+la herramienta y, al terminar, habrás tocado todas las capacidades principales.</p>
+<p>Contour <strong>empieza en blanco</strong> para que crees tu propio esquema desde cero — el
+título de la página muestra <em>Nuevo esquema de metadatos</em> hasta que le pongas
+nombre. Si prefieres explorar un esquema ya terminado, el menú <strong>Ejemplos</strong> de la
+cabecera carga plantillas listas para usar (Dataset, Agente, Concepto); el
+ejemplo <em>Dataset</em> coincide con el que construimos a continuación:</p>
+<p><img src="images/examples-menu.png" alt="El menú Ejemplos con las plantillas Dataset, Agente y Concepto"></p>
+<blockquote>
+<p>A lo largo del tutorial, cambia a la pestaña <strong>Editor visual</strong> para trabajar.
+Para empezar un esquema nuevo en cualquier momento, usa el botón <strong>Nuevo</strong>.</p>
+</blockquote>
+<h3 id="paso-1--definir-la-identidad-del-esquema">Paso 1 — Definir la identidad del esquema</h3>
+<p>Haz clic en el <strong>banner del esquema</strong> situado en la parte superior del lienzo
+(muestra <em>Esquema sin título</em> hasta que le pongas nombre), o en el botón
+<strong>Ajustes del esquema</strong>. El Inspector pasa a mostrar los ajustes a nivel de
+esquema:</p>
+<p><img src="images/schema-settings.png" alt="Ajustes del esquema en el Inspector: nombre, descripción, IRI de la forma, clase objetivo y prefijos"></p>
+<p>Rellena:</p>
+<ul>
+<li><strong>Nombre del esquema</strong> — una etiqueta legible, p. ej., <code>Dataset</code>. (Una vez
+definido, el título de la página cambia de <em>Nuevo esquema de metadatos</em> a
+<em>Editar Dataset</em>; nómbralo para cualquier dominio —una clase de ontología, un
+catálogo— y el título lo acompaña.)</li>
+<li><strong>Descripción</strong> — una frase que describa la finalidad del esquema.</li>
+<li><strong>IRI de la forma</strong> — el identificador de la forma, p. ej., <code>:DatasetShape</code>. El
+<code>:</code> inicial usa tu espacio de nombres por defecto; puedes mantener el valor
+sugerido.</li>
+<li><strong>Clase objetivo</strong> (<code>sh:targetClass</code>) — la clase RDF que este esquema valida,
+p. ej., <code>dcat:Dataset</code>. <strong>Es obligatoria</strong> para que el esquema resulte útil —
+es lo que le dice a una plataforma &quot;aplica estas reglas a los registros de
+Dataset&quot;.</li>
+</ul>
+<h3 id="paso-2--gestionar-vocabularios-prefijos">Paso 2 — Gestionar vocabularios (prefijos)</h3>
+<p>Sin salir de los ajustes del esquema, desplázate hasta <strong>Vocabularios</strong>. Los
+prefijos te permiten escribir términos cortos como <code>dct:title</code> en lugar de URL
+completas.</p>
+<p>El editor ya viene con los más comunes declarados — <code>sh</code>, <code>dash</code>, <code>rdf</code>, <code>rdfs</code>,
+<code>xsd</code>, <code>dcat</code>, <code>dct</code>, <code>foaf</code> y el prefijo vacío por defecto <code>:</code>. Para añadir el
+tuyo (por ejemplo, un vocabulario de dominio):</p>
+<ol>
+<li>En la fila vacía al final de la tabla de prefijos, escribe el <strong>alias</strong> (p.
+ej., <code>vcard</code>) en la primera caja.</li>
+<li>Escribe la <strong>URL del espacio de nombres</strong> (p. ej.,
+<code>http://www.w3.org/2006/vcard/ns#</code>) en la segunda caja.</li>
+<li>Pulsa <strong>Enter</strong> o haz clic en el botón <strong>+</strong>.</li>
+</ol>
+<p>Elimina un prefijo con la <strong>×</strong> que tiene al lado. Todo prefijo que uses en una
+ruta de propiedad o en una clase debe declararse aquí para que el Turtle
+exportado sea válido.</p>
+<h3 id="paso-3--organizar-el-formulario-en-grupos">Paso 3 — Organizar el formulario en grupos</h3>
+<p>Los grupos (<code>sh:PropertyGroup</code>) son las secciones de tu formulario. En un lienzo
+en blanco, basta con que <strong>arrastres tu primer widget al lienzo</strong> y Contour crea
+el primer grupo por ti — o haz clic en <strong>Añadir grupo</strong> (esquina superior derecha
+del lienzo) para crear una sección vacía donde soltar widgets:</p>
+<p><img src="images/blank-start.png" alt="El lienzo en blanco, listo para tu primer widget"></p>
+<ul>
+<li><strong>Renombra</strong> un grupo haciendo clic en su título y escribiendo — p. ej.,
+<code>Información general</code>.</li>
+<li><strong>Reordena</strong> con los botones <strong>↑ / ↓</strong> de la cabecera del grupo (esto
+renumera los grupos por ti).</li>
+<li><strong>Elimina</strong> con el icono de papelera de la cabecera del grupo.</li>
+</ul>
+<p>Para este tutorial, crea dos grupos: <strong>General information</strong> y <strong>Provenance</strong>.</p>
+<h3 id="paso-4--añadir-tu-primera-propiedad-un-campo-de-texto">Paso 4 — Añadir tu primera propiedad (un campo de texto)</h3>
+<p>Desde la paleta de <strong>Widgets</strong> de la izquierda, añade un <strong>Campo de texto</strong> al
+grupo <em>General information</em> — <strong>arrástralo</strong> hasta el grupo o, simplemente, <strong>haz
+clic</strong> en él (se añade al grupo seleccionado, o al último). Quien use teclado
+puede dar foco a un widget y pulsar <strong>Enter</strong>. Los widgets están organizados por
+categoría (Texto, Referencias, Elección, Fecha y número) y se pueden buscar con
+la caja de la parte superior.</p>
+<p><img src="images/widget-palette.png" alt="La paleta de widgets agrupada por categoría"></p>
+<p>Al añadir un widget, este se convierte en una tarjeta de propiedad en el lienzo y
+queda seleccionado automáticamente. Una tarjeta de propiedad muestra su etiqueta,
+su ruta, su tipo y unas insignias de estado (un punto rojo para obligatorio, una
+insignia &quot;múltiple&quot; para repetible):</p>
+<p><img src="images/field-card.png" alt="Una tarjeta de propiedad en el lienzo"></p>
+<p>Cada tarjeta tiene tiradores para <strong>reordenar arrastrando</strong> (el asa de la
+izquierda), <strong>duplicar</strong> y <strong>eliminar</strong> (los iconos de la derecha, al pasar el
+ratón).</p>
+<p>Con el nuevo campo seleccionado, el Inspector muestra sus <strong>Ajustes de
+propiedad</strong>. Establece:</p>
+<ul>
+<li><strong>Etiqueta (<code>sh:name</code>)</strong> → <code>Title</code> — la etiqueta del campo que se muestra a los
+usuarios.</li>
+<li><strong>Descripción</strong> → texto de ayuda opcional (aparece como una sugerencia ⓘ en el
+formulario).</li>
+<li><strong>Ruta de propiedad (<code>sh:path</code>)</strong> → <code>dct:title</code> — <strong>el término RDF en el que
+escribe este campo</strong>. Defínelo siempre; la ruta de marcador de posición por
+defecto no tiene sentido. A medida que escribes, Contour sugiere predicados
+comunes (y los prefijos que hayas declarado); elige uno o sigue escribiendo el
+tuyo.</li>
+</ul>
+<p><img src="images/field-inspector.png" alt="El Inspector de propiedad con las secciones Básico, Restricciones y Valores predeterminados"></p>
+<h3 id="paso-5--establecer-la-cardinalidad-y-las-restricciones-de-validación">Paso 5 — Establecer la cardinalidad y las restricciones de validación</h3>
+<p>La sección <strong>Restricciones</strong> del Inspector controla la validación. Para <em>Title</em>:</p>
+<ul>
+<li><strong>Recuento mín.</strong> = <code>1</code>, <strong>Recuento máx.</strong> = <code>1</code> → se exige exactamente un
+título. (Un recuento mín. ≥ 1 hace que el campo sea obligatorio — fíjate en el
+punto rojo de la tarjeta y en el asterisco rojo de la vista previa del
+formulario.)</li>
+<li><strong>Tipo de nodo</strong> = <code>sh:Literal</code> (un valor simple en lugar de un enlace).</li>
+<li><strong>Tipo de dato</strong> = <code>xsd:string</code>.</li>
+<li>Opcionalmente, <strong>Longitud mín./máx.</strong> y un <strong>Patrón</strong> (una expresión regular,
+p. ej., <code>^[A-Z].*</code> para exigir una mayúscula inicial).</li>
+</ul>
+<blockquote>
+<p><strong>Chuleta de cardinalidad:</strong> <em>Mín 1 / Máx 1</em> = obligatorio, valor único.
+<em>Mín 0 / Máx 1</em> = opcional, valor único. <em>Mín 1 / Máx ∞</em> (deja Máx vacío) =
+obligatorio, repetible. <em>Mín 0 / Máx ∞</em> = opcional, repetible.</p>
+</blockquote>
+<p><strong>Rango de valores</strong> (números y fechas). Los campos de Número, Fecha y Fecha y
+hora muestran una sección <strong>Rango de valores</strong> — establece <strong>Mín (≥)</strong> / <strong>Máx
+(≤)</strong> (inclusivos) o los límites exclusivos <strong>(&gt;)</strong> / <strong>(&lt;)</strong>. Los números se
+escriben tal cual (<code>sh:minInclusive 1900</code>), y las fechas como literales tipados
+(<code>&quot;2020-01-01&quot;^^xsd:date</code>).</p>
+<p><strong>Mensaje de validación personalizado</strong> (opcional). La sección <strong>Mensaje de
+validación</strong> permite definir el texto que muestra una plataforma cuando este
+campo falla (<code>sh:message</code>) y su <strong>Gravedad</strong> — <em>Violation</em> (por defecto),
+<em>Warning</em> o <em>Info</em> (<code>sh:severity</code>).</p>
+<h3 id="paso-6--añadir-una-descripción-de-varias-líneas">Paso 6 — Añadir una descripción de varias líneas</h3>
+<p>Arrastra un <strong>Área de texto</strong> a <em>General information</em>. Establece:</p>
+<ul>
+<li><strong>Etiqueta</strong> → <code>Description</code>, <strong>Ruta</strong> → <code>dct:description</code>.</li>
+<li><strong>Recuento mín.</strong> = <code>1</code>, deja <strong>Recuento máx.</strong> vacío (∞) para que se puedan
+aportar varias variantes de idioma. La tarjeta muestra ahora una insignia
+<strong>múltiple</strong>, y la vista previa del formulario gana un botón <strong>+ Añadir</strong>.</li>
+</ul>
+<h3 id="paso-7--añadir-una-propiedad-de-fecha">Paso 7 — Añadir una propiedad de fecha</h3>
+<p>Arrastra un <strong>Selector de fecha</strong> a <em>General information</em>. Establece:</p>
+<ul>
+<li><strong>Etiqueta</strong> → <code>Issued</code>, <strong>Ruta</strong> → <code>dct:issued</code>.</li>
+<li><strong>Recuento mín.</strong> = <code>0</code>, <strong>Recuento máx.</strong> = <code>1</code> (opcional, único).</li>
+<li>El tipo de dato adopta por defecto <code>xsd:date</code>, lo correcto para una fecha de
+calendario. (Usa <strong>Fecha y hora</strong> en su lugar si necesitas una marca de tiempo
+— <code>xsd:dateTime</code>.)</li>
+</ul>
+<h3 id="paso-8--añadir-un-vocabulario-controlado-enumeración">Paso 8 — Añadir un vocabulario controlado (enumeración)</h3>
+<p>Cambia al grupo <em>Provenance</em> y arrastra un widget de <strong>Enumeración</strong>. Crea una
+lista desplegable restringida a un conjunto fijo de valores (<code>sh:in</code>).</p>
+<p>En el Inspector aparece un editor de <strong>Valores permitidos</strong>:</p>
+<p><img src="images/enum-inspector.png" alt="El Inspector de la propiedad de Enumeración con el editor de Valores permitidos (sh:in)"></p>
+<ul>
+<li><strong>Etiqueta</strong> → <code>Access rights</code>, <strong>Ruta</strong> → <code>dct:accessRights</code>.</li>
+<li>En <strong>Valores permitidos</strong>, escribe cada opción y pulsa <strong>Enter</strong>: <code>public</code>,
+<code>restricted</code>, <code>private</code>. Elimina una con su <strong>×</strong>.</li>
+<li>Recuento mín./máx. <code>1</code>/<code>1</code> para exigir exactamente una elección.</li>
+</ul>
+<p>Los valores se exportan como <code>sh:in ( &quot;public&quot; &quot;restricted&quot; &quot;private&quot; )</code>.</p>
+<blockquote>
+<p><strong>Valores literales vs. IRI.</strong> Cada valor permitido lleva un conmutador
+<strong>literal / IRI</strong> (la pequeña etiqueta a su izquierda). Mantenlo en <strong>literal</strong>
+para texto simple como <code>public</code>; cámbialo a <strong>IRI</strong> cuando las opciones sean
+términos de un vocabulario controlado (p. ej., <code>ex:Public</code>, un <code>skos:Concept</code>)
+para que se exporten como IRI y no como cadenas.</p>
+</blockquote>
+<h3 id="paso-9--referenciar-otra-entidad-iri--clase">Paso 9 — Referenciar otra entidad (IRI + clase)</h3>
+<p>Algunas propiedades apuntan a <em>otro recurso</em> en lugar de contener un valor
+simple — por ejemplo, el <strong>editor</strong> del conjunto de datos es una organización, no
+una cadena. Arrastra un widget de <strong>Autocompletar</strong> a <em>Provenance</em>. Representa
+una caja de búsqueda que localiza instancias existentes.</p>
+<p><img src="images/iri-class-inspector.png" alt="El Inspector de una propiedad con valor IRI y una restricción de Clase (sh:class)"></p>
+<ul>
+<li><strong>Etiqueta</strong> → <code>Publisher</code>, <strong>Ruta</strong> → <code>dct:publisher</code>.</li>
+<li><strong>Tipo de nodo</strong> = <code>sh:IRI</code> (el valor es un enlace/identificador).</li>
+<li><strong>Clase (<code>sh:class</code>)</strong> → <code>foaf:Agent</code> — restringe el selector a instancias de
+esa clase. (La caja <strong>Clase</strong> solo aparece cuando el tipo de nodo está basado
+en IRI.)</li>
+<li>Recuento mín./máx. <code>1</code>/<code>1</code>.</li>
+</ul>
+<blockquote>
+<p>Otros widgets de referencia: <strong>URI</strong> (enlace libre), <strong>Selección de
+instancias</strong> (lista desplegable de instancias). Usa el que mejor se ajuste a
+cómo se elige el valor. La caja <strong>Clase</strong> sugiere clases comunes a medida que
+escribes.</p>
+</blockquote>
+<blockquote>
+<p><strong>Avanzado:</strong> una propiedad también puede aceptar <em>o bien</em> un literal <em>o bien</em>
+un IRI (y reglas similares de &quot;uno de estos tipos&quot;) mediante <strong>Tipos de valor
+alternativos (<code>sh:or</code>)</strong>, o seguir una relación hacia atrás con una ruta
+<strong>Inversa (<code>^</code>)</strong> — véase la
+<a href="#6-funciones-avanzadas-modelado-avanzado">§6 Funciones avanzadas</a>.</p>
+</blockquote>
+<h3 id="paso-10--modelar-un-subobjeto-con-una-forma-anidada">Paso 10 — Modelar un subobjeto con una forma anidada</h3>
+<p>A veces un campo es, en sí mismo, un pequeño objeto estructurado. Un <strong>punto de
+contacto</strong>, por ejemplo, tiene su propio <em>nombre</em> y <em>correo electrónico</em>. Modela
+esto con una <strong>forma anidada</strong> y el widget <strong>Detalles (anidado)</strong>.</p>
+<ol>
+<li>En la parte inferior del lienzo, haz clic en <strong>Añadir forma anidada</strong>. Aparece
+una nueva forma bajo el divisor <em>Formas anidadas</em> y queda seleccionada. En el
+Inspector, establece su <strong>IRI de la forma</strong> (p. ej., <code>:ContactShape</code>) y,
+opcionalmente, una <strong>Clase objetivo</strong> (p. ej., <code>vcard:Kind</code>). <em>Renombrar la
+IRI actualiza automáticamente todas las propiedades que la referencian.</em></li>
+<li><strong>Arrastra widgets a la forma anidada</strong> igual que a un grupo — p. ej., un
+<strong>Campo de texto</strong> <code>Full name</code> (<code>vcard:fn</code>) y una <strong>URI</strong> <code>Email</code>
+(<code>vcard:hasEmail</code>).</li>
+<li>De vuelta en un grupo, añade un widget <strong>Detalles (anidado)</strong>. En su
+Inspector, establece <strong>Forma anidada (<code>sh:node</code>)</strong> como <code>:ContactShape</code> (la
+caja ofrece tus formas anidadas como sugerencias).</li>
+</ol>
+<blockquote>
+<p><strong>Atajo.</strong> En una propiedad <strong>Detalles</strong> puedes hacer clic en <strong>Crear y
+vincular forma anidada</strong> para acuñar una nueva forma y conectarle <code>sh:node</code> en
+un solo paso — luego solo tienes que añadir sus campos. La tarjeta de la
+propiedad muestra el enlace al que apunta (p. ej., <code>→ :ContactShape</code>), y el
+<a href="#5-comprobar-tu-trabajo-el-panel-de-problemas">panel de Problemas</a> señala una
+propiedad Detalles cuyo objetivo falta.</p>
+</blockquote>
+<p><img src="images/nested-canvas.png" alt="Un esquema con una propiedad Detalles y una ContactShape anidada y rellena"></p>
+<p>El Inspector de la propiedad Detalles la vincula a la forma anidada mediante
+<code>sh:node</code>:</p>
+<p><img src="images/details-inspector.png" alt="El Inspector de la propiedad Detalles mostrando el ajuste Forma anidada (sh:node)"></p>
+<p>La tarjeta de la forma anidada en el lienzo contiene sus propias propiedades:</p>
+<p><img src="images/nested-shape-card.png" alt="La tarjeta de la forma anidada con sus propiedades Full name y Email"></p>
+<h3 id="paso-11--previsualizar-el-formulario-de-entrada-de-datos">Paso 11 — Previsualizar el formulario de entrada de datos</h3>
+<p>En cualquier momento, abre la pestaña <strong>Vista previa del formulario</strong> para
+comprobar qué verá quien introduzca los metadatos. La vista previa refleja tus
+restricciones: los campos obligatorios muestran un asterisco rojo, una pequeña
+ficha de <strong>cardinalidad</strong> indica el recuento permitido (p. ej., <code>1–3</code>), las
+descripciones se convierten en sugerencias ⓘ, los campos repetibles obtienen
+botones <strong>+ Añadir</strong>, los patrones / longitudes / rangos se aplican a las
+entradas, el texto con etiqueta de idioma obtiene una pequeña caja de idioma,
+cualquier <strong>mensaje de validación</strong> aparece bajo el campo, y las propiedades
+<strong>Detalles</strong> representan los campos de su forma anidada en línea — anidando a
+cualquier profundidad:</p>
+<p><img src="images/form-preview-tab.png" alt="La vista previa del formulario representado, incluido un formulario de Contacto anidado en línea"></p>
+<p>Esta vista previa es de solo lectura — está para validar el diseño, no para
+capturar datos reales.</p>
+<h3 id="paso-12--revisar-el-shacl-generado">Paso 12 — Revisar el SHACL generado</h3>
+<p>La pestaña <strong>Código SHACL</strong> muestra el Turtle generado a partir de tu diseño (y
+permite editarlo directamente):</p>
+<p><img src="images/shacl-code-tab.png" alt="La pestaña Código SHACL mostrando el Turtle generado"></p>
+<p>Todo lo que configuraste de forma visual está aquí — las declaraciones
+<code>@prefix</code>, los <code>PropertyGroup</code>, la <code>NodeShape</code> con sus bloques <code>sh:property</code> y
+cualquier forma anidada. El botón <strong>Copiar SHACL</strong> de la barra de acciones del
+Editor visual coloca la serialización en tu portapapeles. Usa el selector de
+<strong>sintaxis</strong> para ver o exportar otros formatos, incluido JSON-LD (véase la
+<a href="#4-trabajar-directamente-con-el-c%C3%B3digo-la-pesta%C3%B1a-c%C3%B3digo-shacl">§4</a>).</p>
+<h3 id="paso-13--guardar-y-exportar">Paso 13 — Guardar y exportar</h3>
+<p>Guarda tu esquema (un archivo <code>.ttl</code> por defecto):</p>
+<ul>
+<li><strong>Guardar como…</strong> — elige un nuevo nombre y ubicación de archivo. La extensión
+sigue la sintaxis seleccionada (<code>.ttl</code>, <code>.nt</code>, <code>.trig</code>, <code>.n3</code> o <code>.jsonld</code>).</li>
+<li><strong>Guardar</strong> — escribe en el archivo que abriste o guardaste por última vez
+(Ctrl/Cmd+S). El botón muestra brevemente <strong>¡Guardado!</strong> para confirmarlo.</li>
+<li><strong>Copiar SHACL</strong> — copia la serialización actual sin guardar ningún archivo.</li>
+<li><strong>Recientes</strong> (cabecera) — vuelve a abrir un esquema que guardaras antes en
+esta sesión.</li>
+</ul>
+<blockquote>
+<p>En Chrome/Edge el archivo se escribe directamente en el disco. En
+Firefox/Safari el editor recurre a una descarga normal. El nombre de archivo
+sugerido se deriva del nombre del esquema (p. ej., <code>dataset.ttl</code>). En cualquier
+caso, se mantiene un borrador autoguardado en tu navegador entre sesiones.</p>
+</blockquote>
+<p>Sube el <code>.ttl</code> resultante a tu FAIR Data Point (u otra plataforma SHACL) como un
+esquema de metadatos, y los registros de la clase objetivo se validarán —y los
+formularios se representarán— conforme a tu diseño.</p>
+<hr>
+<h2 id="4-trabajar-directamente-con-el-código-la-pestaña-código-shacl">4. Trabajar directamente con el código (la pestaña Código SHACL)</h2>
+<p>¿Prefieres escribir o pegar SHACL a mano, o necesitas partir de una forma
+existente? Usa la pestaña <strong>Código SHACL</strong>.</p>
+<p><img src="images/shacl-code-tab.png" alt="La pestaña Código SHACL con el editor de SHACL Turtle en bruto"></p>
+<ul>
+<li><strong>Sincronización bidireccional.</strong> Las ediciones en el Turtle se analizan y se
+envían de vuelta al Editor visual automáticamente (en cuanto dejas de
+escribir). A la inversa, todo lo que construyas visualmente aparece aquí.</li>
+<li><strong>Autocompletado sensible al contexto</strong> (Turtle). A medida que escribes, el
+editor sugiere predicados SHACL, tipos de nodo, tipos de dato XSD, editores
+DASH, grupos de propiedad declarados y líneas <code>@prefix</code>. Usa <strong>↑/↓</strong> para
+desplazarte, <strong>Tab</strong>/<strong>Enter</strong> para aceptar y <strong>Esc</strong> para descartar.</li>
+</ul>
+<p><img src="images/turtle-autocomplete.png" alt="Autocompletado de Turtle sugiriendo sh:datatype"></p>
+<ul>
+<li><strong>Abrir un archivo existente.</strong> <strong>Abrir…</strong> en la cabecera carga un archivo
+<code>.ttl</code>/<code>.nt</code>/<code>.trig</code>/<code>.n3</code> en esta pestaña, detecta su sintaxis y lo analiza en
+el Editor visual — una forma rápida de adaptar un esquema existente. Si un
+archivo no se puede analizar, un mensaje en línea apunta a la línea
+problemática; aun así, puedes editar el texto en bruto.</li>
+<li><strong>Nombre y Descripción</strong> del esquema también tienen campos sencillos en la
+parte superior de esta pestaña.</li>
+</ul>
+<p>Haz clic en <strong>Abrir en el Editor visual</strong> para volver a la vista de arrastrar y
+soltar.</p>
+<h3 id="elegir-una-sintaxis-y-exportar-json-ld">Elegir una sintaxis (y exportar JSON-LD)</h3>
+<p>Un selector de <strong>sintaxis</strong> en esta pestaña cambia la serialización entre
+<strong>Turtle</strong> (por defecto), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> y <strong>JSON-LD
+(exportación)</strong>. Las cuatro primeras son totalmente editables — las ediciones se
+sincronizan de vuelta. El <strong>JSON-LD es solo de exportación</strong> (no hay analizador
+de JSON-LD): el editor lo muestra en solo lectura para que puedas <strong>Copiarlo</strong> o
+hacer <strong>Guardar como</strong> un archivo <code>.jsonld</code>, y luego volver a Turtle para seguir
+editando.</p>
+<p><img src="images/syntax-jsonld.png" alt="El selector de sintaxis y la exportación a JSON-LD en la pestaña Código SHACL"></p>
+<p>Los esquemas nuevos siempre empiezan en Turtle, y <strong>Guardar como</strong> usa la
+extensión que corresponde a la sintaxis seleccionada.</p>
+<h3 id="editar-un-esquema-existente-es-sin-pérdidas">Editar un esquema existente es sin pérdidas</h3>
+<p>Contour analiza los archivos con un motor RDF de verdad, así que abrir, editar y
+guardar un esquema <strong>nunca descarta de forma silenciosa las partes que no modela
+visualmente</strong>. Las construcciones para las que el editor no tiene un control —
+digamos <code>sh:and</code>, formas de valor cualificadas o anotaciones adicionales— se
+<strong>conservan literalmente</strong> y se vuelven a emitir en un bloque <em>&quot;Preserved&quot;</em>
+claramente comentado al final de la salida. Cuando un archivo cargado contiene
+estas construcciones verás un breve aviso en esta pestaña; tus ediciones a las
+partes que Contour <em>sí</em> modela se aplican con normalidad, y el resto hace el viaje
+de ida y vuelta intacto.</p>
+<h3 id="visualizar-el-grafo">Visualizar el grafo</h3>
+<p>Haz clic en <strong>Grafo</strong> en esta pestaña para abrir una visualización de nodos y
+enlaces del RDF del esquema en una superposición — formas, nodos de propiedad,
+clases y literales, unidos por sus predicados. Desplázate para hacer zoom,
+arrastra el fondo para desplazarte y arrastra un nodo para reubicarlo. Dos
+conmutadores reducen el detalle (ambos activados por defecto): <strong>Plegar listas</strong>
+contrae una lista <code>sh:in</code>/<code>sh:or</code> en una sola ficha, y <strong>Ocultar anotaciones</strong>
+elimina las etiquetas y sugerencias de formulario (<code>sh:name</code>, <code>dash:editor</code>,
+<code>sh:order</code>…) para que la estructura resalte. Es una forma rápida de ver el grafo
+de formas (y cualquier forma anidada o construcción conservada) de un vistazo.</p>
+<p><img src="images/schema-graph.png" alt="El esquema representado como un grafo RDF de nodos y enlaces"></p>
+<hr>
+<h2 id="5-comprobar-tu-trabajo-el-panel-de-problemas">5. Comprobar tu trabajo (el panel de Problemas)</h2>
+<p>A medida que construyes, Contour comprueba el esquema de forma continua y resume
+los problemas en el indicador de <strong>Problemas</strong> de la barra de acciones del Editor
+visual. Haz clic en él para desplegar la lista; haz clic en cualquier elemento
+para ir directamente al elemento problemático.</p>
+<p><img src="images/issues-panel.png" alt="El panel de Problemas enumerando los problemas del esquema"></p>
+<p>Señala cosas como:</p>
+<ul>
+<li>una propiedad <strong>sin ruta</strong>, o <strong>rutas duplicadas</strong> en el mismo grupo;</li>
+<li>una propiedad <strong>Detalles</strong> cuya forma anidada <strong>falta</strong>;</li>
+<li>una ruta, clase, tipo de dato o clase objetivo que usa un <strong>prefijo que no has
+declarado</strong>;</li>
+<li>una <strong>clase objetivo</strong> o un <strong>nombre</strong> de esquema que falta;</li>
+<li>formas anidadas con una IRI ausente o duplicada.</li>
+</ul>
+<p>Los problemas son <strong>no bloqueantes</strong> — son orientación, no barreras — pero
+resolverlos significa que el SHACL exportado está bien formado y solo referencia
+vocabularios declarados.</p>
+<hr>
+<h2 id="6-funciones-avanzadas-modelado-avanzado">6. Funciones avanzadas (modelado avanzado)</h2>
+<p>Más allá de los widgets y restricciones básicos, el Inspector expone algunos
+controles avanzados para esquemas más ricos. Cada uno es opcional — recurre a
+ellos cuando tu modelo los necesite.</p>
+<h3 id="etiquetas-en-varios-idiomas">Etiquetas en varios idiomas</h3>
+<p><code>sh:name</code> y <code>sh:description</code> pueden llevar una <strong>etiqueta de idioma</strong>, y puedes
+añadir <strong>traducciones</strong> para que un campo quede etiquetado en varios idiomas. En
+la sección <strong>Básico</strong>, escribe una etiqueta (p. ej., <code>en</code>) en la caja pequeña
+que hay junto a la etiqueta; un editor de <strong>traducciones</strong> te permite entonces
+añadir más (<code>pt</code> → &quot;Título&quot;…). Cada una se convierte en su propia sentencia con
+etiqueta de idioma (<code>sh:name &quot;Title&quot;@en, &quot;Título&quot;@pt</code>), y la vista previa del
+formulario muestra una caja de idioma en el campo.</p>
+<p><img src="images/label-languages.png" alt="Estableciendo una etiqueta de idioma y traducciones en una etiqueta"></p>
+<h3 id="rangos-numéricos-y-de-fecha">Rangos numéricos y de fecha</h3>
+<p>Los campos de Número, Fecha y Fecha y hora muestran un bloque <strong>Rango de
+valores</strong> en <strong>Restricciones</strong>. Establece <strong>Mín (≥)</strong> / <strong>Máx (≤)</strong> inclusivos o
+los límites exclusivos <strong>(&gt;)</strong> / <strong>(&lt;)</strong> — p. ej., un año de publicación ≥ 1900.
+Los números se exportan tal cual (<code>sh:minInclusive 1900</code>); las fechas, como
+literales tipados (<code>&quot;2000-01-01&quot;^^xsd:date</code>).</p>
+<p><img src="images/value-range.png" alt="Los controles de Rango de valores en la sección Restricciones"></p>
+<h3 id="mensajes-de-validación-personalizados">Mensajes de validación personalizados</h3>
+<p>La sección <strong>Mensaje de validación</strong> establece el texto que muestra una
+plataforma cuando un valor incumple la regla (<code>sh:message</code>) y su <strong>Gravedad</strong> —
+<em>Violation</em> (por defecto), <em>Warning</em> o <em>Info</em> (<code>sh:severity</code>). Úsala para
+convertir un fallo escueto en orientación amable para el data steward.</p>
+<p><img src="images/validation-message.png" alt="Redactando un mensaje de validación y su gravedad"></p>
+<h3 id="tipos-de-valor-alternativos-literal-o-iri">Tipos de valor alternativos (literal <em>o</em> IRI)</h3>
+<p>Algunas propiedades aceptan legítimamente más de un tipo de valor — un tema que
+puede ser texto libre <em>o</em> un IRI de vocabulario controlado, por ejemplo. Haz clic
+en <strong>Permitir tipos de valor alternativos (<code>sh:or</code>)</strong> y enumera las ramas (cada
+una un tipo de nodo, un tipo de dato o una clase). Se exporta como <code>sh:or ( [ … ] [ … ] )</code>. Las formas lógicas más ricas que Contour no modela se conservan igual
+en el viaje de ida y vuelta (véase la
+<a href="#4-trabajar-directamente-con-el-c%C3%B3digo-la-pesta%C3%B1a-c%C3%B3digo-shacl">§4</a>).</p>
+<p><img src="images/alt-types.png" alt="Definiendo tipos de valor alternativos con sh:or"></p>
+<h3 id="rutas-inversas">Rutas inversas</h3>
+<p>Marca <strong>Inversa (<code>^</code>)</strong> junto a la ruta de propiedad para emparejar una relación
+<em>hacia atrás</em> — &quot;los recursos que apuntan a este&quot; en lugar de al revés. Se
+exporta como <code>sh:path [ sh:inversePath … ]</code>, y la tarjeta de la propiedad muestra
+la ruta con un <code>^</code> por delante.</p>
+<p><img src="images/inverse-path.png" alt="La casilla de ruta Inversa en una propiedad"></p>
+<hr>
+<h2 id="7-referencia">7. Referencia</h2>
+<h3 id="catálogo-de-widgets">Catálogo de widgets</h3>
+<p>Cada widget se asigna a un editor DASH y a un tipo de nodo / tipo de dato por
+defecto sensatos.</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Editor DASH</th>
+<th>Uso típico</th>
+<th>Valores predeterminados</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Campo de texto</strong></td>
+<td><code>dash:TextFieldEditor</code></td>
+<td>Texto de una línea</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Área de texto</strong></td>
+<td><code>dash:TextAreaEditor</code></td>
+<td>Texto de varias líneas</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Texto enriquecido</strong></td>
+<td><code>dash:RichTextEditor</code></td>
+<td>Texto con formato y etiqueta de idioma</td>
+<td><code>sh:Literal</code>, <code>rdf:HTML</code></td>
+</tr>
+<tr>
+<td><strong>URI</strong></td>
+<td><code>dash:URIEditor</code></td>
+<td>Enlace / IRI libre</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Autocompletar</strong></td>
+<td><code>dash:AutoCompleteEditor</code></td>
+<td>Buscar una instancia por su etiqueta</td>
+<td><code>sh:IRI</code>, <code>sh:class foaf:Agent</code></td>
+</tr>
+<tr>
+<td><strong>Selección de instancias</strong></td>
+<td><code>dash:InstancesSelectEditor</code></td>
+<td>Lista desplegable de instancias</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Detalles (anidado)</strong></td>
+<td><code>dash:DetailsEditor</code></td>
+<td>Subformulario incrustado mediante una forma anidada</td>
+<td><code>sh:BlankNodeOrIRI</code></td>
+</tr>
+<tr>
+<td><strong>Enumeración</strong></td>
+<td><code>dash:EnumSelectEditor</code></td>
+<td>Elección de una lista fija <code>sh:in</code></td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Booleano</strong></td>
+<td><code>dash:BooleanSelectEditor</code></td>
+<td>verdadero / falso</td>
+<td><code>sh:Literal</code>, <code>xsd:boolean</code></td>
+</tr>
+<tr>
+<td><strong>Selector de fecha</strong></td>
+<td><code>dash:DatePickerEditor</code></td>
+<td>Fecha de calendario</td>
+<td><code>sh:Literal</code>, <code>xsd:date</code></td>
+</tr>
+<tr>
+<td><strong>Fecha y hora</strong></td>
+<td><code>dash:DateTimePickerEditor</code></td>
+<td>Marca de tiempo</td>
+<td><code>sh:Literal</code>, <code>xsd:dateTime</code></td>
+</tr>
+<tr>
+<td><strong>Número</strong></td>
+<td><code>dash:NumberFieldEditor</code></td>
+<td>Valor numérico</td>
+<td><code>sh:Literal</code>, <code>xsd:integer</code></td>
+</tr>
+</tbody></table>
+<p>Los valores predeterminados son puntos de partida — sobrescribe el tipo de nodo,
+el tipo de dato o la clase en el Inspector siempre que tu modelo necesite algo
+distinto.</p>
+<h3 id="referencia-de-los-ajustes-de-propiedad">Referencia de los ajustes de propiedad</h3>
+<p>Lo que cada control del Inspector escribe en el SHACL:</p>
+<table>
+<thead>
+<tr>
+<th>Campo del Inspector</th>
+<th>Salida SHACL</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Etiqueta</td>
+<td><code>sh:name</code></td>
+<td>La etiqueta del formulario. Una <strong>etiqueta de idioma</strong> opcional + <strong>traducciones</strong> adicionales emiten un <code>sh:name</code> por idioma.</td>
+</tr>
+<tr>
+<td>Descripción</td>
+<td><code>sh:description</code></td>
+<td>Texto de ayuda / sugerencia ⓘ. También admite etiqueta de idioma, con traducciones.</td>
+</tr>
+<tr>
+<td>Ruta de propiedad</td>
+<td><code>sh:path</code></td>
+<td><strong>Obligatorio.</strong> El predicado RDF. <strong>Inversa (<code>^</code>)</strong> emite <code>[ sh:inversePath … ]</code>.</td>
+</tr>
+<tr>
+<td>Recuento mín.</td>
+<td><code>sh:minCount</code></td>
+<td>≥ 1 hace que el campo sea obligatorio.</td>
+</tr>
+<tr>
+<td>Recuento máx.</td>
+<td><code>sh:maxCount</code></td>
+<td>Vacío = ilimitado (repetible).</td>
+</tr>
+<tr>
+<td>Tipo de nodo</td>
+<td><code>sh:nodeKind</code></td>
+<td><code>sh:Literal</code>, <code>sh:IRI</code>, <code>sh:BlankNode</code> o combinaciones.</td>
+</tr>
+<tr>
+<td>Tipo de dato</td>
+<td><code>sh:datatype</code></td>
+<td>Se muestra para los tipos de nodo literales.</td>
+</tr>
+<tr>
+<td>Clase</td>
+<td><code>sh:class</code></td>
+<td>Se muestra para los tipos de nodo IRI; restringe el tipo objetivo.</td>
+</tr>
+<tr>
+<td>Forma anidada</td>
+<td><code>sh:node</code></td>
+<td>Se muestra para <strong>Detalles</strong>; enlaza con una forma anidada.</td>
+</tr>
+<tr>
+<td>Longitud mín. / máx.</td>
+<td><code>sh:minLength</code> / <code>sh:maxLength</code></td>
+<td>Solo literales.</td>
+</tr>
+<tr>
+<td>Rango de valores</td>
+<td><code>sh:minInclusive</code> / <code>maxInclusive</code> / <code>minExclusive</code> / <code>maxExclusive</code></td>
+<td>Números y fechas.</td>
+</tr>
+<tr>
+<td>Patrón (regex)</td>
+<td><code>sh:pattern</code></td>
+<td>Solo literales.</td>
+</tr>
+<tr>
+<td>Valores permitidos</td>
+<td><code>sh:in ( … )</code></td>
+<td>Opciones de enumeración; cada valor literal o IRI.</td>
+</tr>
+<tr>
+<td>Tipos de valor alternativos</td>
+<td><code>sh:or ( … )</code></td>
+<td>&quot;Aceptar uno de estos tipos&quot; (p. ej., literal <strong>o</strong> IRI).</td>
+</tr>
+<tr>
+<td>Mensaje / Gravedad</td>
+<td><code>sh:message</code> / <code>sh:severity</code></td>
+<td>Texto de validación personalizado + Violation / Warning / Info.</td>
+</tr>
+<tr>
+<td>Valor predeterminado</td>
+<td><code>sh:defaultValue</code></td>
+<td>Valor precargado.</td>
+</tr>
+<tr>
+<td>Orden</td>
+<td><code>sh:order</code></td>
+<td>El orden del campo dentro de su grupo.</td>
+</tr>
+</tbody></table>
+<p>Controles a nivel de esquema y de grupo:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Salida SHACL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nombre del esquema</td>
+<td><code>rdfs:label</code> en la NodeShape</td>
+</tr>
+<tr>
+<td>IRI de la forma</td>
+<td>el sujeto de la NodeShape</td>
+</tr>
+<tr>
+<td>Clase objetivo</td>
+<td><code>sh:targetClass</code></td>
+</tr>
+<tr>
+<td>Prefijos</td>
+<td>declaraciones <code>@prefix</code></td>
+</tr>
+<tr>
+<td>Etiqueta del grupo</td>
+<td><code>rdfs:label</code> en el <code>sh:PropertyGroup</code></td>
+</tr>
+<tr>
+<td>Orden del grupo</td>
+<td><code>sh:order</code> en el grupo; el <code>sh:group</code> del campo lo enlaza</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-recetas--patrones-de-modelado-habituales">8. Recetas — patrones de modelado habituales</h2>
+<p>Patrones cortos y autocontenidos que puedes aplicar sobre el tutorial.</p>
+<p><strong>Hacer que un campo sea obligatorio.</strong> Establece <strong>Recuento mín.</strong> en <code>1</code>. La
+tarjeta muestra un punto rojo y el formulario lo marca con <code>*</code>.</p>
+<p><strong>Permitir varios valores.</strong> Deja <strong>Recuento máx.</strong> vacío (∞). La tarjeta muestra
+una insignia <strong>múltiple</strong> y el formulario gana <strong>+ Añadir</strong>.</p>
+<p><strong>Restringir a una lista fija.</strong> Usa el widget <strong>Enumeración</strong> y rellena
+<strong>Valores permitidos</strong>. Se exporta como <code>sh:in</code>.</p>
+<p><strong>Enlazar con una organización o persona.</strong> Usa <strong>Autocompletar</strong> (o <strong>Selección
+de instancias</strong>), el tipo de nodo <code>sh:IRI</code> y <strong>Clase</strong> = <code>foaf:Agent</code> (o la clase
+que elijas).</p>
+<p><strong>Capturar un subobjeto estructurado</strong> (dirección, punto de contacto,
+distribución). Crea una <strong>forma anidada</strong>, añade sus campos y luego apunta una
+propiedad <strong>Detalles (anidado)</strong> hacia ella mediante <code>sh:node</code>. Véase el
+<a href="#paso-10--modelar-un-subobjeto-con-una-forma-anidada">Paso 10</a>.</p>
+<p><strong>Imponer un formato.</strong> Para literales, establece un <strong>Patrón</strong> (regex) o una
+<strong>Longitud mín./máx.</strong> —p. ej., un patrón de ORCID, o una longitud máxima en un
+campo de código.</p>
+<p><strong>Acotar un número o una fecha.</strong> En un campo de Número / Fecha, usa la sección
+<strong>Rango de valores</strong> —p. ej., <em>Mín (≥)</em> <code>1900</code> para un año, o <em>Máx (≤)</em> una fecha
+límite.</p>
+<p><strong>Ofrecer una etiqueta en varios idiomas.</strong> Establece una <strong>etiqueta de idioma</strong>
+en la <strong>Etiqueta</strong> (p. ej., <code>en</code>) y añade <strong>traducciones</strong> (<code>pt</code> → &quot;Título&quot;…).
+Cada una se convierte en un <code>sh:name</code> con etiqueta de idioma, y la vista previa
+del formulario muestra una caja de idioma.</p>
+<p><strong>Aceptar un literal <em>o</em> un IRI</strong> (o &quot;uno de estos tipos&quot;). Usa <strong>Tipos de valor
+alternativos (<code>sh:or</code>)</strong> en la propiedad y enumera las ramas (p. ej.,
+<code>sh:nodeKind sh:Literal</code> y <code>sh:nodeKind sh:IRI</code>). Habitual en DCAT-AP para
+valores que pueden ser texto en línea o una referencia.</p>
+<p><strong>Seguir una relación hacia atrás.</strong> Marca <strong>Inversa (<code>^</code>)</strong> en la ruta para
+emparejar &quot;cosas que apuntan a este recurso&quot; (p. ej., los miembros de una
+colección) — se exporta como <code>[ sh:inversePath … ]</code>.</p>
+<p><strong>Explicar una regla de validación.</strong> Rellena el <strong>Mensaje de validación</strong> con
+texto amable para el data steward y elige una <strong>Gravedad</strong> para que una
+plataforma pueda mostrar un Warning útil en lugar de un fallo escueto.</p>
+<p><strong>Exportar a JSON-LD.</strong> En la pestaña Código SHACL, pon la <strong>sintaxis</strong> en
+<em>JSON-LD (exportación)</em> y haz <strong>Copiar</strong> o <strong>Guardar como</strong> <code>.jsonld</code> para
+herramientas que consumen JSON-LD.</p>
+<p><strong>Partir de un ejemplo.</strong> Usa el menú <strong>Ejemplos</strong> para cargar una plantilla de
+Dataset (DCAT), Agente (FOAF) o Concepto (SKOS), y luego adáptala a tus
+necesidades.</p>
+<p><strong>Reutilizar un esquema existente.</strong> <strong>Abre…</strong> el archivo existente, adáptalo en
+el Editor visual y luego haz <strong>Guardar como…</strong> un nuevo archivo — todo lo que
+Contour no modela se conserva (véase la
+<a href="#4-trabajar-directamente-con-el-c%C3%B3digo-la-pesta%C3%B1a-c%C3%B3digo-shacl">§4</a>).</p>
+<hr>
+<h2 id="9-consejos-y-resolución-de-problemas">9. Consejos y resolución de problemas</h2>
+<ul>
+<li><strong>Establece siempre la ruta de propiedad.</strong> Los widgets nuevos reciben una ruta
+de marcador de posición como <code>:textfield</code>; sustitúyela por el término RDF real
+(<code>dct:title</code>, <code>dcat:theme</code>…) o los metadatos exportados no usarán el término
+que pretendes.</li>
+<li><strong>Declara los prefijos que uses.</strong> Si una ruta o clase usa un alias (p. ej.,
+<code>vcard:</code>), añádelo en <strong>Vocabularios</strong> para que el Turtle sea válido.</li>
+<li><strong>Un campo ha ido al grupo equivocado.</strong> Arrastra la tarjeta de la propiedad
+hasta el grupo correcto; la caja <strong>Grupo</strong> del Inspector es de solo lectura y
+refleja el cambio.</li>
+<li><strong>Las ediciones en Código SHACL no se han sincronizado.</strong> La sincronización
+ocurre poco después de que dejas de escribir. Si se muestra un error de
+análisis (con número de línea), corrige el Turtle — el lienzo visual mantiene
+el último estado válido hasta que el texto se analiza.</li>
+<li><strong>El botón Guardar solo descarga.</strong> Es el comportamiento esperado en
+Firefox/Safari. Para guardados in situ, usa un navegador basado en Chromium
+(Chrome/Edge).</li>
+<li><strong>¿Te has equivocado?</strong> <strong>Deshacer</strong> (Ctrl/Cmd+Z) / <strong>Rehacer</strong>
+(Ctrl/Cmd+Mayús+Z) cubren cada edición, y tu trabajo se autoguarda — una
+recarga lo restaura.</li>
+<li><strong>Revisa el panel de Problemas.</strong> Antes de exportar, despliega <strong>Problemas</strong> en
+la barra de acciones y resuelve cualquier error (rutas vacías, prefijos no
+declarados, <code>sh:node</code> roto).</li>
+<li><strong>¿Editando JSON-LD?</strong> No se puede — es solo de exportación. Cambia la
+<strong>sintaxis</strong> de vuelta a Turtle (o N-Triples / TriG / N3) para seguir editando.</li>
+<li><strong>Empezar de cero.</strong> Usa el botón <strong>Nuevo</strong> para un esquema en blanco, carga
+uno desde <strong>Ejemplos</strong> o <strong>Abre…</strong> un archivo existente.</li>
+</ul>
+<hr>
+<p><em>Creado con Contour para el ecosistema FAIR Data Point. La salida es SHACL + DASH
+estándar y funciona con cualquier herramienta compatible con SHACL.</em></p>
+
+  </main>
+</body>
+</html>

@@ -114,11 +114,14 @@ The header holds the file actions — **Undo / Redo**, **New**, **Recent**,
 
 ### Interface language
 
-Contour's interface is available in **English** (default) and **Brazilian
-Portuguese**. Switch with the **EN / PT** toggle in the header — your choice is
-remembered between sessions. Only the interface is translated; your schema
-content (names, descriptions, property paths) and the generated SHACL are never
-altered, so the exported Turtle is identical in either language.
+Contour's interface is available in **English** (default), **Brazilian
+Portuguese**, **Dutch**, **German**, **Spanish**, and **French**. Switch with
+the language toggle (**EN / PT / NL / DE / ES / FR**) in the header — your choice
+is remembered between sessions. If your browser's preferred language is one of
+these, Contour opens in it automatically; otherwise it falls back to English.
+Only the interface is translated; your schema content (names, descriptions,
+property paths) and the generated SHACL are never altered, so the exported
+Turtle is identical in every language.
 
 ![Contour interface in Brazilian Portuguese](images/interface-overview-ptbr.png)
 

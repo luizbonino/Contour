@@ -121,12 +121,14 @@ seletor de idioma e de um link para o **Guia**:
 
 ### Idioma da interface
 
-A interface do Contour está disponível em **Inglês** (padrão) e **Português do
-Brasil**. Alterne com o botão **EN / PT** no cabeçalho (visível na imagem da
-barra de ferramentas acima) — sua escolha é lembrada entre sessões. Apenas a
-interface é traduzida; o conteúdo do seu esquema (nomes, descrições, caminhos de
-propriedade) e o SHACL gerado nunca são alterados, portanto o Turtle exportado é
-idêntico em qualquer idioma.
+A interface do Contour está disponível em **Inglês** (padrão), **Português do
+Brasil**, **Neerlandês**, **Alemão**, **Espanhol** e **Francês**. Alterne com o
+seletor de idioma (**EN / PT / NL / DE / ES / FR**) no cabeçalho — sua escolha é
+lembrada entre sessões. Se o idioma preferido do seu navegador for um desses, o
+Contour abre nele automaticamente; caso contrário, usa o Inglês como padrão.
+Apenas a interface é traduzida; o conteúdo do seu esquema (nomes, descrições,
+caminhos de propriedade) e o SHACL gerado nunca são alterados, portanto o Turtle
+exportado é idêntico em qualquer idioma.
 
 ---
 

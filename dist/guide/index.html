@@ -32,6 +32,12 @@
   .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
     border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
   .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar .langs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar .langs a, .topbar .langs span { font-weight: 600; font-size: 13px; text-decoration: none;
+    border-radius: 999px; padding: 4px 10px; }
+  .topbar .langs a { color: var(--muted); border: 1px solid transparent; }
+  .topbar .langs a:hover { color: var(--accent-dark); border-color: var(--border); text-decoration: none; }
+  .topbar .langs span.current { color: var(--ink); background: var(--sand); border: 1px solid var(--border); }
   main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
   main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
   main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
@@ -79,7 +85,7 @@
 </svg>
     <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
     <div class="spacer"></div>
-    <a class="btn" href="pt-BR/">Português</a>
+    <nav class="langs"><span class="current">English</span><a href="pt-BR/">Português</a><a href="nl-NL/">Nederlands</a><a href="de-DE/">Deutsch</a><a href="es-ES/">Español</a><a href="fr-FR/">Français</a></nav>
     <a class="btn" href="../" target="_blank" rel="noopener">Open the editor ↗</a>
   </div>
   <main>
@@ -231,11 +237,14 @@ Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z) step through your edits, and the <strong>Recent
 menu reopens schemas you&#39;ve saved.</p>
 </blockquote>
 <h3 id="interface-language">Interface language</h3>
-<p>Contour&#39;s interface is available in <strong>English</strong> (default) and <strong>Brazilian
-Portuguese</strong>. Switch with the <strong>EN / PT</strong> toggle in the header — your choice is
-remembered between sessions. Only the interface is translated; your schema
-content (names, descriptions, property paths) and the generated SHACL are never
-altered, so the exported Turtle is identical in either language.</p>
+<p>Contour&#39;s interface is available in <strong>English</strong> (default), <strong>Brazilian
+Portuguese</strong>, <strong>Dutch</strong>, <strong>German</strong>, <strong>Spanish</strong>, and <strong>French</strong>. Switch with
+the language toggle (<strong>EN / PT / NL / DE / ES / FR</strong>) in the header — your choice
+is remembered between sessions. If your browser&#39;s preferred language is one of
+these, Contour opens in it automatically; otherwise it falls back to English.
+Only the interface is translated; your schema content (names, descriptions,
+property paths) and the generated SHACL are never altered, so the exported
+Turtle is identical in every language.</p>
 <p><img src="images/interface-overview-ptbr.png" alt="Contour interface in Brazilian Portuguese"></p>
 <hr>
 <h2 id="3-tutorial-build-a-dataset-schema-from-scratch">3. Tutorial: build a <em>Dataset</em> schema from scratch</h2>

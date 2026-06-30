@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="de-DE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contour — Leitfaden für Data Stewards</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJDb250b3VyIj4KICAKICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMUIyQTRBIj48L3JlY3Q+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjUuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0gNjYuMjEgNjcuNzAgQSAyNCAyNCAwIDEgMSA2Ni4yMSAzMi4zMCI+PC9wYXRoPgogICAgPHBhdGggZD0iTSA1OS40NiA2MC4zMiBBIDE0IDE0IDAgMSAxIDU5LjQ2IDM5LjY4Ij48L3BhdGg+CiAgPC9nPgogIDxwYXRoIGQ9Ik0gNzIuOTcgNzUuMDcgTCA0My44MSA4My40MyBMIDE5LjU3IDY1LjE3IEwgMTkuNTcgMzQuODMgTCA0My44MSAxNi41NyBMIDcyLjk3IDI0LjkzIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQkIzQUIiIHN0cm9rZS13aWR0aD0iMy40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjwvcGF0aD4KICA8ZyBmaWxsPSIjMkJCM0FCIj4KICAgIDxjaXJjbGUgY3g9IjcyLjk3IiBjeT0iNzUuMDciIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjgzLjQzIiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iMTkuNTciIGN5PSI2NS4xNyIgcj0iNC42Ij48L2NpcmNsZT4KICAgIDxjaXJjbGUgY3g9IjE5LjU3IiBjeT0iMzQuODMiIHI9IjQuNiI+PC9jaXJjbGU+CiAgICA8Y2lyY2xlIGN4PSI0My44MSIgY3k9IjE2LjU3IiByPSI0LjYiPjwvY2lyY2xlPgogICAgPGNpcmNsZSBjeD0iNzIuOTciIGN5PSIyNC45MyIgcj0iNC42Ij48L2NpcmNsZT4KICA8L2c+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1b2a4a; --accent: #0e7c7b; --accent-dark: #0a5f5e;
+    --sand: #eae7e0; --card: #fcfbf8; --border: #e4e0d6;
+    --text: #3a3d45; --muted: #8a8c94; --code-bg: #faf8f3;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--sand); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: var(--card);
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px; }
+  .topbar svg { height: 30px; width: 30px; display: block; }
+  .topbar .wm { font-family: var(--sans); font-weight: 600; font-size: 18px;
+    letter-spacing: -0.015em; color: var(--ink); }
+  .topbar .tag { font-family: var(--mono); font-weight: 500; font-size: 8.5px;
+    letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+  .topbar .spacer { flex: 1; }
+  .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
+  .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar .langs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar .langs a, .topbar .langs span { font-weight: 600; font-size: 13px; text-decoration: none;
+    border-radius: 999px; padding: 4px 10px; }
+  .topbar .langs a { color: var(--muted); border: 1px solid transparent; }
+  .topbar .langs a:hover { color: var(--accent-dark); border-color: var(--border); text-decoration: none; }
+  .topbar .langs span.current { color: var(--ink); background: var(--sand); border: 1px solid var(--border); }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
+  main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
+  main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
+    padding-top: 14px; border-top: 1px solid var(--border); }
+  main h3 { font-size: 18px; color: var(--ink); margin: 28px 0 8px; }
+  main h4 { font-size: 15px; color: var(--ink); margin: 22px 0 6px; }
+  a { color: var(--accent-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p, li { font-size: 16px; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--ink); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,32,60,.06); margin: 12px 0; }
+  blockquote { margin: 16px 0; padding: 10px 16px; background: var(--card);
+    border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; }
+  blockquote p { margin: 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-size: 14px; }
+  th { background: var(--code-bg); color: var(--ink); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+  :target { scroll-margin-top: 70px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" role="img" aria-label="Contour">
+  
+  <g stroke="#1B2A4A" stroke-width="5.5" stroke-linecap="round">
+    <path d="M 66.21 67.70 A 24 24 0 1 1 66.21 32.30"></path>
+    <path d="M 59.46 60.32 A 14 14 0 1 1 59.46 39.68"></path>
+  </g>
+  
+  <path d="M 72.97 75.07 L 43.81 83.43 L 19.57 65.17 L 19.57 34.83 L 43.81 16.57 L 72.97 24.93" stroke="#0E7C7B" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"></path>
+  <g fill="#0E7C7B">
+    <circle cx="72.97" cy="75.07" r="4.6"></circle>
+    <circle cx="43.81" cy="83.43" r="4.6"></circle>
+    <circle cx="19.57" cy="65.17" r="4.6"></circle>
+    <circle cx="19.57" cy="34.83" r="4.6"></circle>
+    <circle cx="43.81" cy="16.57" r="4.6"></circle>
+    <circle cx="72.97" cy="24.93" r="4.6"></circle>
+  </g>
+</svg>
+    <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
+    <div class="spacer"></div>
+    <nav class="langs"><a href="../">English</a><a href="../pt-BR/">Português</a><a href="../nl-NL/">Nederlands</a><span class="current">Deutsch</span><a href="../es-ES/">Español</a><a href="../fr-FR/">Français</a></nav>
+    <a class="btn" href="../../" target="_blank" rel="noopener">Editor öffnen ↗</a>
+  </div>
+  <main>
+<h1 id="metadatenschemata-erstellen--ein-leitfaden-für-data-stewards">Metadatenschemata erstellen — Ein Leitfaden für Data Stewards</h1>
+<p>Mit <strong>Contour</strong> entwirfst du eigene Metadatenschemata visuell —
+indem du Formular-Widgets auf eine Arbeitsfläche ziehst oder anklickst — und
+exportierst sie als standardkonforme
+<a href="https://www.w3.org/TR/shacl/">SHACL</a>-Shapes mit <a href="https://datashapes.org/forms.html">DASH</a>-Formularannotationen.
+Das Ergebnis lässt sich direkt in einen
+<a href="https://fairdatapoint.org/">FAIR Data Point</a> oder jede SHACL-fähige Plattform übernehmen.</p>
+<blockquote>
+<p><em>Der Slogan von Contour: <strong>Visual schemas. Clean SHACL.</strong></em></p>
+</blockquote>
+<p>Dieser Leitfaden richtet sich an <strong>Data Stewards</strong>, die festlegen möchten, welche
+Metadaten ihre Community für einen bestimmten Ressourcentyp bereitstellen muss
+(oder darf) — einen Datensatz, eine Studie, eine Probe, ein Softwarepaket —, ohne
+dafür Turtle von Hand zu schreiben.</p>
+<blockquote>
+<p><strong>Keine Installation, kein Server.</strong> Der Editor ist eine einzige, in sich
+geschlossene Webseite. Öffne sie in Chrome oder Edge (empfohlen, für das
+direkte Speichern von Dateien) — Firefox und Safari funktionieren ebenfalls,
+dann mit einem Speichern im Download-Stil.</p>
+</blockquote>
+<hr>
+<h2 id="inhaltsverzeichnis">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#1-was-du-erstellst-schl%C3%BCsselkonzepte">Was du erstellst (Schlüsselkonzepte)</a></li>
+<li><a href="#2-die-oberfl%C3%A4che-im-%C3%BCberblick">Die Oberfläche im Überblick</a></li>
+<li><a href="#3-tutorial-ein-datensatz-schema-von-grund-auf-erstellen">Tutorial: ein <em>Datensatz</em>-Schema von Grund auf erstellen</a><ul>
+<li><a href="#schritt-1--die-identit%C3%A4t-des-schemas-festlegen">Schritt 1 — Die Identität des Schemas festlegen</a></li>
+<li><a href="#schritt-2--vokabulare-verwalten-pr%C3%A4fixe">Schritt 2 — Vokabulare verwalten (Präfixe)</a></li>
+<li><a href="#schritt-3--das-formular-in-gruppen-gliedern">Schritt 3 — Das Formular in Gruppen gliedern</a></li>
+<li><a href="#schritt-4--deine-erste-eigenschaft-hinzuf%C3%BCgen-ein-textfeld">Schritt 4 — Deine erste Eigenschaft hinzufügen (ein Textfeld)</a></li>
+<li><a href="#schritt-5--kardinalit%C3%A4t-und-validierungseinschr%C3%A4nkungen-festlegen">Schritt 5 — Kardinalität und Validierungseinschränkungen festlegen</a></li>
+<li><a href="#schritt-6--eine-mehrzeilige-beschreibung-hinzuf%C3%BCgen">Schritt 6 — Eine mehrzeilige Beschreibung hinzufügen</a></li>
+<li><a href="#schritt-7--eine-datums-eigenschaft-hinzuf%C3%BCgen">Schritt 7 — Eine Datums-Eigenschaft hinzufügen</a></li>
+<li><a href="#schritt-8--ein-kontrolliertes-vokabular-hinzuf%C3%BCgen-enumeration">Schritt 8 — Ein kontrolliertes Vokabular hinzufügen (Enumeration)</a></li>
+<li><a href="#schritt-9--eine-andere-entit%C3%A4t-referenzieren-iri--klasse">Schritt 9 — Eine andere Entität referenzieren (IRI + Klasse)</a></li>
+<li><a href="#schritt-10--ein-unterobjekt-mit-einer-verschachtelten-shape-modellieren">Schritt 10 — Ein Unterobjekt mit einer verschachtelten Shape modellieren</a></li>
+<li><a href="#schritt-11--das-eingabeformular-in-der-vorschau-ansehen">Schritt 11 — Das Eingabeformular in der Vorschau ansehen</a></li>
+<li><a href="#schritt-12--den-generierten-shacl-code-pr%C3%BCfen">Schritt 12 — Den generierten SHACL-Code prüfen</a></li>
+<li><a href="#schritt-13--speichern-und-exportieren">Schritt 13 — Speichern und exportieren</a></li>
+</ul>
+</li>
+<li><a href="#4-direkt-mit-dem-code-arbeiten-der-tab-shacl-code">Direkt mit dem Code arbeiten (der Tab SHACL-Code)</a><ul>
+<li><a href="#eine-syntax-w%C3%A4hlen-und-json-ld-exportieren">Eine Syntax wählen (und JSON-LD exportieren)</a></li>
+<li><a href="#das-bearbeiten-eines-bestehenden-schemas-ist-verlustfrei">Das Bearbeiten eines bestehenden Schemas ist verlustfrei</a></li>
+<li><a href="#den-graph-visualisieren">Den Graph visualisieren</a></li>
+</ul>
+</li>
+<li><a href="#5-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">Deine Arbeit überprüfen (das Problem-Panel)</a></li>
+<li><a href="#6-power-funktionen-fortgeschrittene-modellierung">Power-Funktionen (fortgeschrittene Modellierung)</a></li>
+<li><a href="#7-referenz">Referenz</a><ul>
+<li><a href="#widget-katalog">Widget-Katalog</a></li>
+<li><a href="#referenz-der-eigenschaftseinstellungen">Referenz der Eigenschaftseinstellungen</a></li>
+</ul>
+</li>
+<li><a href="#8-rezepte--g%C3%A4ngige-modellierungsmuster">Rezepte — gängige Modellierungsmuster</a></li>
+<li><a href="#9-tipps-und-fehlerbehebung">Tipps und Fehlerbehebung</a></li>
+</ol>
+<hr>
+<h2 id="1-was-du-erstellst-schlüsselkonzepte">1. Was du erstellst (Schlüsselkonzepte)</h2>
+<p>Ein Metadatenschema in diesem Werkzeug ist eine <strong>SHACL-NodeShape</strong>: eine
+Beschreibung dessen, wie ein gültiger Datensatz eines bestimmten Typs aussieht.
+Ein paar Begriffe, die dir durchgehend begegnen werden:</p>
+<table>
+<thead>
+<tr>
+<th>Begriff</th>
+<th>Was er für dich bedeutet</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NodeShape</strong></td>
+<td>Das Schema selbst — z. B. „was ein Datensatz-Eintrag enthalten muss&quot;.</td>
+</tr>
+<tr>
+<td><strong>Zielklasse</strong> (<code>sh:targetClass</code>)</td>
+<td>Der RDF-Typ, für den das Schema gilt, z. B. <code>dcat:Dataset</code>. Einträge dieses Typs werden gegen dein Schema validiert.</td>
+</tr>
+<tr>
+<td><strong>Eigenschaft</strong> (<code>sh:property</code>)</td>
+<td>Ein einzelnes Feld — Titel, Herausgeber, Veröffentlichungsdatum … Jede Eigenschaft hat einen <em>Pfad</em>, ein <em>Widget</em> und <em>Einschränkungen</em>.</td>
+</tr>
+<tr>
+<td><strong>Eigenschaftspfad</strong> (<code>sh:path</code>)</td>
+<td>Das RDF-Prädikat, in das das Feld schreibt, z. B. <code>dct:title</code>. Das ist der tatsächlich in den Metadaten gespeicherte Term.</td>
+</tr>
+<tr>
+<td><strong>Widget</strong> (<code>dash:editor</code>)</td>
+<td>Das Formularelement, das der Person angezeigt wird, die die Metadaten ausfüllt — ein Textfeld, eine Datumsauswahl, ein Dropdown usw.</td>
+</tr>
+<tr>
+<td><strong>Gruppe</strong> (<code>sh:PropertyGroup</code>)</td>
+<td>Ein visueller Abschnitt, der zusammengehörige Felder bündelt, z. B. „Allgemeine Informationen&quot;.</td>
+</tr>
+<tr>
+<td><strong>Präfix</strong> (<code>@prefix</code>)</td>
+<td>Ein kurzes Kürzel für einen Vokabular-Namespace, z. B. <code>dct:</code> → <code>http://purl.org/dc/terms/</code>.</td>
+</tr>
+</tbody></table>
+<p>All das gestaltest du visuell; das Werkzeug schreibt den SHACL-Code für dich.</p>
+<hr>
+<h2 id="2-die-oberfläche-im-überblick">2. Die Oberfläche im Überblick</h2>
+<p><img src="images/interface-overview.png" alt="Contour mit dem geladenen Beispielschema „Datensatz&quot;"></p>
+<p>Das Fenster hat drei Tabs:</p>
+<p><img src="images/tabs.png" alt="Die drei Tabs: SHACL-Code, Visueller Editor, Formularvorschau"></p>
+<ul>
+<li><strong>SHACL-Code</strong> — das serialisierte Schema. Standardmäßig Turtle, mit
+Autovervollständigung; Änderungen werden mit der visuellen Arbeitsfläche
+synchronisiert. Eine <strong>Syntax</strong>-Auswahl bietet außerdem N-Triples, TriG,
+Notation3 und einen <strong>JSON-LD</strong>-Export. Hier werden auch die Dateien angezeigt,
+die du öffnest.</li>
+<li><strong>Visueller Editor</strong> — der Drag-and-drop-Arbeitsbereich (oben abgebildet). Hier
+findet der größte Teil deiner Arbeit statt.</li>
+<li><strong>Formularvorschau</strong> — eine realistische Darstellung des Eingabeformulars, das
+dein Schema erzeugt, damit du das Ergebnis vor der Veröffentlichung testen
+kannst.</li>
+</ul>
+<p>Der <strong>Visuelle Editor</strong> ist in drei Spalten aufgeteilt:</p>
+<table>
+<thead>
+<tr>
+<th>Spalte</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Widgets</strong> (links)</td>
+<td>Die Palette der Formularelemente. <strong>Ziehe</strong> eines auf die Arbeitsfläche oder <strong>klicke</strong> es einfach an (Tastatur: Fokus + Enter), um es hinzuzufügen.</td>
+</tr>
+<tr>
+<td><strong>Formular-Arbeitsfläche</strong> (Mitte)</td>
+<td>Dein Schema: das Zielklassen-Banner, die Gruppen, die Eigenschaften und die verschachtelten Shapes.</td>
+</tr>
+<tr>
+<td><strong>Inspektor</strong> (rechts)</td>
+<td>Einstellungen für das jeweils ausgewählte Element — das Schema, eine Gruppe oder eine Eigenschaft.</td>
+</tr>
+</tbody></table>
+<p>Unter dem Arbeitsbereich befindet sich eine <strong>Aktionsleiste</strong> mit einem Zähler
+für Eigenschaften/Gruppen, einer <strong>Problem</strong>-Anzeige (eine laufende Prüfung
+deines Schemas — siehe <a href="#5-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">§5</a>) sowie
+Schaltflächen zum Speichern und Kopieren. Um das serialisierte Schema zu sehen,
+wechsle zum Tab <strong>SHACL-Code</strong>; um das gerenderte Formular zu sehen, wechsle zur
+<strong>Formularvorschau</strong>.</p>
+<p>Die Kopfzeile enthält die Dateiaktionen — <strong>Rückgängig / Wiederholen</strong>, <strong>Neu</strong>,
+<strong>Zuletzt verwendet</strong>, <strong>Beispiele</strong>, <strong>Öffnen</strong>, <strong>Speichern</strong>, <strong>Speichern
+unter</strong> — sowie den Sprachumschalter und einen Link zum <strong>Leitfaden</strong>:</p>
+<p><img src="images/file-toolbar.png" alt="Schaltflächen Rückgängig/Wiederholen, Neu, Zuletzt verwendet, Beispiele, Öffnen, Speichern und Speichern unter in der Kopfzeile"></p>
+<blockquote>
+<p><strong>Deine Arbeit wird laufend gespeichert.</strong> Contour hält einen automatisch
+gespeicherten Entwurf in deinem Browser vor, sodass ein Neuladen oder ein
+versehentliches Schließen des Tabs nichts verloren gehen lässt — bei der
+Rückkehr siehst du den Hinweis <em>„Nicht gespeicherten Entwurf wiederhergestellt&quot;</em>.
+Mit <strong>Rückgängig/Wiederholen</strong> (oder Strg/Cmd+Z und Strg/Cmd+Umschalt+Z) gehst
+du deine Änderungen durch, und über das Menü <strong>Zuletzt verwendet</strong> öffnest du
+gespeicherte Schemata erneut.</p>
+</blockquote>
+<h3 id="sprache-der-oberfläche">Sprache der Oberfläche</h3>
+<p>Die Oberfläche von Contour ist auf <strong>Englisch</strong> (Standard), <strong>brasilianischem
+Portugiesisch</strong>, <strong>Niederländisch</strong>, <strong>Deutsch</strong>, <strong>Spanisch</strong> und
+<strong>Französisch</strong> verfügbar. Wechsle mit dem Sprachumschalter
+(<strong>EN / PT / NL / DE / ES / FR</strong>) in der Kopfzeile — deine Auswahl wird zwischen
+den Sitzungen gemerkt. Ist die bevorzugte Sprache deines Browsers eine davon,
+öffnet Contour automatisch in dieser Sprache; andernfalls wird auf Englisch
+zurückgegriffen. Nur die Oberfläche wird übersetzt; der Inhalt deines Schemas
+(Namen, Beschreibungen, Eigenschaftspfade) und der generierte SHACL-Code werden
+niemals verändert, sodass das exportierte Turtle in jeder Sprache identisch ist.</p>
+<hr>
+<h2 id="3-tutorial-ein-datensatz-schema-von-grund-auf-erstellen">3. Tutorial: ein <em>Datensatz</em>-Schema von Grund auf erstellen</h2>
+<p>Wir erstellen ein Metadatenschema <strong>Datensatz</strong> im
+<a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT</a>-Stil. Jeder Schritt führt eine
+Funktion des Werkzeugs ein, und am Ende hast du jede wichtige Fähigkeit einmal
+genutzt.</p>
+<p>Contour <strong>startet leer</strong>, damit du dein eigenes Schema von Grund auf aufbauen
+kannst — der Seitentitel lautet <em>Neues Metadatenschema</em>, bis du es benennst.
+Wenn du lieber ein fertiges Schema erkunden möchtest, lädt das Menü <strong>Beispiele</strong>
+in der Kopfzeile vorgefertigte Vorlagen (Datensatz, Agent, Konzept); das Beispiel
+<em>Datensatz</em> entspricht dem, was wir unten aufbauen:</p>
+<p><img src="images/examples-menu.png" alt="Das Menü Beispiele mit den Vorlagen Datensatz, Agent und Konzept"></p>
+<blockquote>
+<p>Wechsle durchgehend zum Tab <strong>Visueller Editor</strong>, um die Arbeit zu erledigen.
+Um jederzeit mit einem frischen Schema zu beginnen, verwende die Schaltfläche
+<strong>Neu</strong>.</p>
+</blockquote>
+<h3 id="schritt-1--die-identität-des-schemas-festlegen">Schritt 1 — Die Identität des Schemas festlegen</h3>
+<p>Klicke auf das <strong>Schema-Banner</strong> oben auf der Arbeitsfläche (es lautet <em>Unbenanntes
+Schema</em>, bis du es benennst) oder auf die Schaltfläche <strong>Schema-Einstellungen</strong>.
+Der Inspektor wechselt zu den Einstellungen auf Schema-Ebene:</p>
+<p><img src="images/schema-settings.png" alt="Schema-Einstellungen im Inspektor: Name, Beschreibung, Shape-IRI, Zielklasse und Präfixe"></p>
+<p>Fülle Folgendes aus:</p>
+<ul>
+<li><strong>Schema-Name</strong> — eine menschenlesbare Bezeichnung, z. B. <code>Dataset</code>. (Sobald er
+gesetzt ist, ändert sich der Seitentitel von <em>Neues Metadatenschema</em> zu
+<em>Datensatz bearbeiten</em>; benenne es für jede beliebige Domäne — eine
+Ontologieklasse, einen Katalog —, und der Titel folgt.)</li>
+<li><strong>Beschreibung</strong> — ein Satz, der den Zweck des Schemas beschreibt.</li>
+<li><strong>Shape-IRI</strong> — der Bezeichner der Shape, z. B. <code>:DatasetShape</code>. Das führende
+<code>:</code> verwendet deinen Standard-Namespace; du kannst den vorgeschlagenen Wert
+belassen.</li>
+<li><strong>Zielklasse</strong> (<code>sh:targetClass</code>) — die RDF-Klasse, die dieses Schema validiert,
+z. B. <code>dcat:Dataset</code>. <strong>Sie ist erforderlich</strong>, damit das Schema nützlich ist —
+sie sagt einer Plattform: „Wende diese Regeln auf Datensatz-Einträge an&quot;.</li>
+</ul>
+<h3 id="schritt-2--vokabulare-verwalten-präfixe">Schritt 2 — Vokabulare verwalten (Präfixe)</h3>
+<p>Scrolle in den Schema-Einstellungen weiter zu <strong>Vokabulare</strong>. Präfixe erlauben es
+dir, kurze Terme wie <code>dct:title</code> statt vollständiger URLs zu schreiben.</p>
+<p>Der Editor bringt die gängigen bereits deklariert mit — <code>sh</code>, <code>dash</code>, <code>rdf</code>,
+<code>rdfs</code>, <code>xsd</code>, <code>dcat</code>, <code>dct</code>, <code>foaf</code> und das leere Standardpräfix <code>:</code>. Um eigene
+hinzuzufügen (zum Beispiel ein Domänenvokabular):</p>
+<ol>
+<li>Gib in der leeren Zeile am Ende der Präfix-Tabelle das <strong>Kürzel</strong> (z. B.
+<code>vcard</code>) in das erste Feld ein.</li>
+<li>Gib die <strong>Namespace-URL</strong> (z. B. <code>http://www.w3.org/2006/vcard/ns#</code>) in das
+zweite Feld ein.</li>
+<li>Drücke <strong>Enter</strong> oder klicke auf die Schaltfläche <strong>+</strong>.</li>
+</ol>
+<p>Entferne ein Präfix mit dem <strong>×</strong> daneben. Jedes Präfix, das du in einem
+Eigenschaftspfad oder einer Klasse verwendest, sollte hier deklariert sein, damit
+das exportierte Turtle gültig ist.</p>
+<h3 id="schritt-3--das-formular-in-gruppen-gliedern">Schritt 3 — Das Formular in Gruppen gliedern</h3>
+<p>Gruppen (<code>sh:PropertyGroup</code>) sind die Abschnitte deines Formulars. Auf einer
+leeren Arbeitsfläche kannst du einfach <strong>dein erstes Widget auf die Arbeitsfläche
+ziehen</strong>, und Contour erstellt die erste Gruppe für dich — oder klicke auf
+<strong>Gruppe hinzufügen</strong> (oben rechts auf der Arbeitsfläche), um einen leeren
+Abschnitt zum Ablegen zu erzeugen:</p>
+<p><img src="images/blank-start.png" alt="Die leere Arbeitsfläche, bereit für dein erstes Widget"></p>
+<ul>
+<li><strong>Benenne</strong> eine Gruppe um, indem du auf ihren Titel klickst und tippst — z. B.
+<code>Allgemeine Informationen</code>.</li>
+<li><strong>Ordne</strong> sie mit den Schaltflächen <strong>↑ / ↓</strong> in der Gruppenkopfzeile neu an
+(dies nummeriert die Gruppen für dich neu).</li>
+<li><strong>Lösche</strong> sie mit dem Papierkorbsymbol in der Gruppenkopfzeile.</li>
+</ul>
+<p>Erstelle für dieses Tutorial zwei Gruppen: <strong>Allgemeine Informationen</strong> und
+<strong>Provenienz</strong>.</p>
+<h3 id="schritt-4--deine-erste-eigenschaft-hinzufügen-ein-textfeld">Schritt 4 — Deine erste Eigenschaft hinzufügen (ein Textfeld)</h3>
+<p>Füge aus der <strong>Widgets</strong>-Palette auf der linken Seite ein <strong>Textfeld</strong> zur Gruppe
+<em>Allgemeine Informationen</em> hinzu — entweder <strong>ziehe</strong> es auf die Gruppe oder
+<strong>klicke</strong> es einfach an (es wird der ausgewählten oder der zuletzt verwendeten
+Gruppe hinzugefügt). Tastaturnutzer können ein Widget fokussieren und <strong>Enter</strong>
+drücken. Die Widgets sind nach Kategorie geordnet (Text, Referenzen, Auswahl,
+Datum und Zahl) und über das Feld oben durchsuchbar.</p>
+<p><img src="images/widget-palette.png" alt="Die nach Kategorie gruppierte Widget-Palette"></p>
+<p>Wenn du ein Widget hinzufügst, wird es zu einer Eigenschaftskarte auf der
+Arbeitsfläche und automatisch ausgewählt. Eine Eigenschaftskarte zeigt ihre
+Bezeichnung, ihren Pfad, ihren Typ und Status-Badges (einen roten Punkt für
+erforderlich, ein „multi&quot;-Badge für wiederholbar):</p>
+<p><img src="images/field-card.png" alt="Eine Eigenschaftskarte auf der Arbeitsfläche"></p>
+<p>Jede Karte hat Griffe zum <strong>Neuanordnen per Drag-and-drop</strong> (der Griff links),
+zum <strong>Duplizieren</strong> und zum <strong>Löschen</strong> (die Symbole rechts, beim Überfahren mit
+der Maus).</p>
+<p>Wenn das neue Feld ausgewählt ist, zeigt der Inspektor seine
+<strong>Eigenschaftseinstellungen</strong>. Lege fest:</p>
+<ul>
+<li><strong>Bezeichnung (<code>sh:name</code>)</strong> → <code>Titel</code> — die den Nutzern angezeigte
+Feldbezeichnung.</li>
+<li><strong>Beschreibung</strong> → optionaler Hilfetext (erscheint als ⓘ-Tooltip im Formular).</li>
+<li><strong>Eigenschaftspfad (<code>sh:path</code>)</strong> → <code>dct:title</code> — <strong>der RDF-Term, in den dieses
+Feld schreibt</strong>. Setze ihn immer; der voreingestellte Platzhalterpfad ist nicht
+aussagekräftig. Während du tippst, schlägt Contour gängige Prädikate vor (und
+deine deklarierten Präfixe); wähle eines aus oder tippe dein eigenes weiter.</li>
+</ul>
+<p><img src="images/field-inspector.png" alt="Der Eigenschafts-Inspektor mit den Abschnitten Basis, Einschränkungen und Standardwerte"></p>
+<h3 id="schritt-5--kardinalität-und-validierungseinschränkungen-festlegen">Schritt 5 — Kardinalität und Validierungseinschränkungen festlegen</h3>
+<p>Der Abschnitt <strong>Einschränkungen</strong> des Inspektors steuert die Validierung. Für
+<em>Titel</em>:</p>
+<ul>
+<li><strong>Min count</strong> = <code>1</code>, <strong>Max count</strong> = <code>1</code> → genau ein Titel ist erforderlich.
+(Min count ≥ 1 macht das Feld erforderlich — beachte den roten Punkt auf der
+Karte und das rote Sternchen in der Formularvorschau.)</li>
+<li><strong>Node kind</strong> = <code>sh:Literal</code> (ein einfacher Wert statt eines Links).</li>
+<li><strong>Datatype</strong> = <code>xsd:string</code>.</li>
+<li>Optional <strong>Min/Max length</strong> und ein <strong>Pattern</strong> (ein regulärer Ausdruck, z. B.
+<code>^[A-Z].*</code>, um einen Großbuchstaben am Anfang zu erzwingen).</li>
+</ul>
+<blockquote>
+<p><strong>Kardinalitäts-Spickzettel:</strong> <em>Min 1 / Max 1</em> = erforderlich, einzelner Wert.
+<em>Min 0 / Max 1</em> = optional, einzelner Wert. <em>Min 1 / Max ∞</em> (Max leer lassen) =
+erforderlich, wiederholbar. <em>Min 0 / Max ∞</em> = optional, wiederholbar.</p>
+</blockquote>
+<p><strong>Wertebereich</strong> (Zahlen und Daten). Felder vom Typ Zahl, Datum sowie Datum und
+Uhrzeit zeigen einen Abschnitt <strong>Wertebereich</strong> — lege <strong>Min (≥)</strong> / <strong>Max (≤)</strong>
+(einschließlich) oder die exklusiven Grenzen <strong>(&gt;)</strong> / <strong>(&lt;)</strong> fest. Zahlen werden
+unverziert geschrieben (<code>sh:minInclusive 1900</code>), Daten als typisierte Literale
+(<code>&quot;2020-01-01&quot;^^xsd:date</code>).</p>
+<p><strong>Benutzerdefinierte Validierungsmeldung</strong> (optional). Im Abschnitt
+<strong>Validierungsmeldung</strong> kannst du den Text festlegen, den eine Plattform anzeigt,
+wenn dieses Feld fehlschlägt (<code>sh:message</code>), sowie dessen <strong>Schweregrad</strong> —
+<em>Violation</em> (Standard), <em>Warning</em> oder <em>Info</em> (<code>sh:severity</code>).</p>
+<h3 id="schritt-6--eine-mehrzeilige-beschreibung-hinzufügen">Schritt 6 — Eine mehrzeilige Beschreibung hinzufügen</h3>
+<p>Ziehe einen <strong>Textbereich</strong> in <em>Allgemeine Informationen</em>. Lege fest:</p>
+<ul>
+<li><strong>Bezeichnung</strong> → <code>Beschreibung</code>, <strong>Pfad</strong> → <code>dct:description</code>.</li>
+<li><strong>Min count</strong> = <code>1</code>, <strong>Max count</strong> leer lassen (∞), damit mehrere
+Sprachvarianten bereitgestellt werden können. Die Karte zeigt nun ein
+<strong>multi</strong>-Badge, und die Formularvorschau erhält eine Schaltfläche <strong>+
+Hinzufügen</strong>.</li>
+</ul>
+<h3 id="schritt-7--eine-datums-eigenschaft-hinzufügen">Schritt 7 — Eine Datums-Eigenschaft hinzufügen</h3>
+<p>Ziehe eine <strong>Datumsauswahl</strong> in <em>Allgemeine Informationen</em>. Lege fest:</p>
+<ul>
+<li><strong>Bezeichnung</strong> → <code>Veröffentlicht</code>, <strong>Pfad</strong> → <code>dct:issued</code>.</li>
+<li><strong>Min count</strong> = <code>0</code>, <strong>Max count</strong> = <code>1</code> (optional, einzeln).</li>
+<li>Der Datentyp ist standardmäßig <code>xsd:date</code>, was für ein Kalenderdatum korrekt
+ist. (Verwende stattdessen <strong>Datum und Uhrzeit</strong>, wenn du einen Zeitstempel
+benötigst — <code>xsd:dateTime</code>.)</li>
+</ul>
+<h3 id="schritt-8--ein-kontrolliertes-vokabular-hinzufügen-enumeration">Schritt 8 — Ein kontrolliertes Vokabular hinzufügen (Enumeration)</h3>
+<p>Wechsle zur Gruppe <em>Provenienz</em> und ziehe ein <strong>Enumeration</strong>-Widget hinein. Das
+erzeugt ein Dropdown, das auf eine feste Liste von Werten beschränkt ist
+(<code>sh:in</code>).</p>
+<p>Im Inspektor erscheint ein Editor für <strong>Zulässige Werte</strong>:</p>
+<p><img src="images/enum-inspector.png" alt="Der Inspektor der Enumeration-Eigenschaft mit dem Editor für zulässige Werte (sh:in)"></p>
+<ul>
+<li><strong>Bezeichnung</strong> → <code>Zugriffsrechte</code>, <strong>Pfad</strong> → <code>dct:accessRights</code>.</li>
+<li>Tippe unter <strong>Zulässige Werte</strong> jede Option ein und drücke <strong>Enter</strong>: <code>public</code>,
+<code>restricted</code>, <code>private</code>. Entferne eine mit ihrem <strong>×</strong>.</li>
+<li>Min/Max count <code>1</code>/<code>1</code>, um genau eine Auswahl zu verlangen.</li>
+</ul>
+<p>Die Werte werden als <code>sh:in ( &quot;public&quot; &quot;restricted&quot; &quot;private&quot; )</code> exportiert.</p>
+<blockquote>
+<p><strong>Literal- vs. IRI-Werte.</strong> Jeder zulässige Wert trägt einen <strong>Literal /
+IRI</strong>-Umschalter (das kleine Tag links davon). Belasse ihn auf <strong>Literal</strong> für
+einfachen Text wie <code>public</code>; stelle ihn auf <strong>IRI</strong>, wenn die Auswahlmöglichkeiten
+Terme aus einem kontrollierten Vokabular sind (z. B. <code>ex:Public</code>, ein
+<code>skos:Concept</code>), damit sie als IRIs und nicht als Strings exportiert werden.</p>
+</blockquote>
+<h3 id="schritt-9--eine-andere-entität-referenzieren-iri--klasse">Schritt 9 — Eine andere Entität referenzieren (IRI + Klasse)</h3>
+<p>Manche Eigenschaften verweisen auf <em>eine andere Ressource</em>, statt einen einfachen
+Wert zu enthalten — der <strong>Herausgeber</strong> eines Datensatzes ist beispielsweise eine
+Organisation, kein String. Ziehe ein <strong>Auto-complete</strong>-Widget in <em>Provenienz</em>.
+Das rendert ein Suchfeld, das bestehende Instanzen nachschlägt.</p>
+<p><img src="images/iri-class-inspector.png" alt="Der Inspektor für eine IRI-wertige Eigenschaft mit einer Klassen-Einschränkung (sh:class)"></p>
+<ul>
+<li><strong>Bezeichnung</strong> → <code>Herausgeber</code>, <strong>Pfad</strong> → <code>dct:publisher</code>.</li>
+<li><strong>Node kind</strong> = <code>sh:IRI</code> (der Wert ist ein Link/Bezeichner).</li>
+<li><strong>Class (<code>sh:class</code>)</strong> → <code>foaf:Agent</code> — beschränkt die Auswahl auf Instanzen
+dieser Klasse. (Das Feld <strong>Class</strong> erscheint nur, wenn das Node kind IRI-basiert
+ist.)</li>
+<li>Min/Max count <code>1</code>/<code>1</code>.</li>
+</ul>
+<blockquote>
+<p>Weitere Referenz-Widgets: <strong>URI</strong> (freier Link), <strong>Instances select</strong> (ein
+Dropdown von Instanzen). Verwende, was am besten dazu passt, wie der Wert
+ausgewählt wird. Das Feld <strong>Class</strong> schlägt während des Tippens gängige Klassen
+vor.</p>
+</blockquote>
+<blockquote>
+<p><strong>Fortgeschritten:</strong> Eine Eigenschaft kann über <strong>Alternative Werttypen
+(<code>sh:or</code>)</strong> auch <em>entweder</em> ein Literal <em>oder</em> eine IRI akzeptieren (und ähnliche
+„einer dieser Typen&quot;-Regeln) oder einer Beziehung rückwärts über einen
+<strong>Inverse (<code>^</code>)</strong>-Pfad folgen — siehe
+<a href="#6-power-funktionen-fortgeschrittene-modellierung">§6 Power-Funktionen</a>.</p>
+</blockquote>
+<h3 id="schritt-10--ein-unterobjekt-mit-einer-verschachtelten-shape-modellieren">Schritt 10 — Ein Unterobjekt mit einer verschachtelten Shape modellieren</h3>
+<p>Manchmal ist ein Feld selbst ein kleines strukturiertes Objekt. Ein
+<strong>Kontaktpunkt</strong> etwa hat seinen eigenen <em>Namen</em> und seine eigene <em>E-Mail</em>.
+Modelliere das mit einer <strong>verschachtelten Shape</strong> und dem Widget <strong>Details
+(verschachtelt)</strong>.</p>
+<ol>
+<li>Klicke unten auf der Arbeitsfläche auf <strong>Verschachtelte Shape hinzufügen</strong>.
+Eine neue Shape erscheint unter dem Trenner <em>Verschachtelte Shapes</em> und ist
+ausgewählt. Lege im Inspektor ihre <strong>Shape-IRI</strong> (z. B. <code>:ContactShape</code>) und
+optional eine <strong>Zielklasse</strong> (z. B. <code>vcard:Kind</code>) fest. <em>Das Umbenennen der IRI
+aktualisiert automatisch jede Eigenschaft, die sie referenziert.</em></li>
+<li><strong>Ziehe Widgets auf die verschachtelte Shape</strong> genau wie auf eine Gruppe —
+z. B. ein <strong>Textfeld</strong> <code>Vollständiger Name</code> (<code>vcard:fn</code>) und eine <strong>URI</strong>
+<code>E-Mail</code> (<code>vcard:hasEmail</code>).</li>
+<li>Füge zurück in einer Gruppe ein <strong>Details (verschachtelt)</strong>-Widget hinzu. Lege
+in dessen Inspektor <strong>Verschachtelte Shape (<code>sh:node</code>)</strong> auf <code>:ContactShape</code>
+fest (das Feld bietet deine verschachtelten Shapes als Vorschläge an).</li>
+</ol>
+<blockquote>
+<p><strong>Abkürzung.</strong> Bei einer <strong>Details</strong>-Eigenschaft kannst du auf <strong>Verschachtelte
+Shape erstellen und verknüpfen</strong> klicken, um in einem Schritt eine neue Shape
+anzulegen und <code>sh:node</code> damit zu verdrahten — füge dann einfach ihre Felder
+hinzu. Die Eigenschaftskarte zeigt den Link, auf den sie verweist (z. B.
+<code>→ :ContactShape</code>), und das
+<a href="#5-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">Problem-Panel</a> markiert eine
+Details-Eigenschaft, deren Ziel fehlt.</p>
+</blockquote>
+<p><img src="images/nested-canvas.png" alt="Ein Schema mit einer Details-Eigenschaft und einer befüllten verschachtelten ContactShape"></p>
+<p>Der Inspektor der Details-Eigenschaft verknüpft sie über <code>sh:node</code> mit der
+verschachtelten Shape:</p>
+<p><img src="images/details-inspector.png" alt="Der Inspektor der Details-Eigenschaft mit der Einstellung Verschachtelte Shape (sh:node)"></p>
+<p>Die Karte der verschachtelten Shape auf der Arbeitsfläche enthält ihre eigenen
+Eigenschaften:</p>
+<p><img src="images/nested-shape-card.png" alt="Die Karte der verschachtelten Shape mit ihren Eigenschaften Vollständiger Name und E-Mail"></p>
+<h3 id="schritt-11--das-eingabeformular-in-der-vorschau-ansehen">Schritt 11 — Das Eingabeformular in der Vorschau ansehen</h3>
+<p>Öffne jederzeit den Tab <strong>Formularvorschau</strong>, um zu prüfen, was die Person sieht,
+die die Metadaten eingibt. Die Vorschau spiegelt deine Einschränkungen wider:
+Erforderliche Felder zeigen ein rotes Sternchen, ein kleiner
+<strong>Kardinalitäts</strong>-Chip zeigt die zulässige Anzahl (z. B. <code>1–3</code>), Beschreibungen
+werden zu ⓘ-Tooltips, wiederholbare Felder erhalten Schaltflächen <strong>+
+Hinzufügen</strong>, Muster/Längen/Bereiche werden auf die Eingaben angewendet,
+sprachmarkierter Text erhält ein kleines Sprachfeld, jede
+<strong>Validierungsmeldung</strong> erscheint unter dem Feld, und <strong>Details</strong>-Eigenschaften
+rendern die Felder ihrer verschachtelten Shape inline — in beliebiger
+Schachtelungstiefe:</p>
+<p><img src="images/form-preview-tab.png" alt="Die gerenderte Formularvorschau, einschließlich eines inline eingebetteten verschachtelten Kontaktformulars"></p>
+<p>Diese Vorschau ist schreibgeschützt — sie dient dazu, das Design zu validieren,
+nicht dazu, echte Daten zu erfassen.</p>
+<h3 id="schritt-12--den-generierten-shacl-code-prüfen">Schritt 12 — Den generierten SHACL-Code prüfen</h3>
+<p>Der Tab <strong>SHACL-Code</strong> zeigt das aus deinem Design generierte Turtle (und lässt
+dich es direkt bearbeiten):</p>
+<p><img src="images/shacl-code-tab.png" alt="Der Tab SHACL-Code mit dem generierten Turtle"></p>
+<p>Alles, was du visuell konfiguriert hast, ist hier — die <code>@prefix</code>-Deklarationen,
+die <code>PropertyGroup</code>s, die <code>NodeShape</code> mit ihren <code>sh:property</code>-Blöcken und alle
+verschachtelten Shapes. Die Schaltfläche <strong>SHACL kopieren</strong> in der Aktionsleiste
+des Visuellen Editors legt die Serialisierung in deine Zwischenablage. Verwende
+die <strong>Syntax</strong>-Auswahl, um andere Formate anzuzeigen oder zu exportieren,
+einschließlich JSON-LD (siehe
+<a href="#4-direkt-mit-dem-code-arbeiten-der-tab-shacl-code">§4</a>).</p>
+<h3 id="schritt-13--speichern-und-exportieren">Schritt 13 — Speichern und exportieren</h3>
+<p>Speichere dein Schema (standardmäßig eine <code>.ttl</code>-Datei):</p>
+<ul>
+<li><strong>Speichern unter …</strong> — wähle einen neuen Dateinamen und Speicherort. Die
+Endung richtet sich nach der gewählten Syntax (<code>.ttl</code>, <code>.nt</code>, <code>.trig</code>, <code>.n3</code>
+oder <code>.jsonld</code>).</li>
+<li><strong>Speichern</strong> — zurück in die zuletzt geöffnete/gespeicherte Datei schreiben
+(Strg/Cmd+S). Die Schaltfläche zeigt kurz <strong>Gespeichert!</strong> zur Bestätigung.</li>
+<li><strong>SHACL kopieren</strong> — die aktuelle Serialisierung kopieren, ohne eine Datei zu
+speichern.</li>
+<li><strong>Zuletzt verwendet</strong> (Kopfzeile) — ein Schema erneut öffnen, das du früher in
+dieser Sitzung gespeichert hast.</li>
+</ul>
+<blockquote>
+<p>In Chrome/Edge wird die Datei direkt auf die Festplatte geschrieben. In
+Firefox/Safari greift der Editor auf einen normalen Download zurück. Der
+vorgeschlagene Dateiname wird aus dem Schema-Namen abgeleitet (z. B.
+<code>dataset.ttl</code>). In beiden Fällen wird zwischen den Sitzungen ein automatisch
+gespeicherter Entwurf in deinem Browser vorgehalten.</p>
+</blockquote>
+<p>Lade die resultierende <code>.ttl</code>-Datei als Metadatenschema in deinen FAIR Data Point
+(oder eine andere SHACL-Plattform) hoch, und Einträge der Zielklasse werden
+gemäß deinem Design validiert — und Formulare entsprechend gerendert.</p>
+<hr>
+<h2 id="4-direkt-mit-dem-code-arbeiten-der-tab-shacl-code">4. Direkt mit dem Code arbeiten (der Tab SHACL-Code)</h2>
+<p>Du schreibst oder fügst SHACL lieber von Hand ein oder musst von einer
+bestehenden Shape ausgehen? Verwende den Tab <strong>SHACL-Code</strong>.</p>
+<p><img src="images/shacl-code-tab.png" alt="Der Tab SHACL-Code mit dem rohen SHACL-Turtle-Editor"></p>
+<ul>
+<li><strong>Zwei-Wege-Synchronisation.</strong> Änderungen am Turtle werden geparst und
+automatisch zum Visuellen Editor zurückgespielt (sobald du eine Tipppause
+machst). Umgekehrt erscheint hier alles, was du visuell aufbaust.</li>
+<li><strong>Kontextbezogene Autovervollständigung</strong> (Turtle). Während du tippst, schlägt
+der Editor SHACL-Prädikate, Node Kinds, XSD-Datentypen, DASH-Editoren,
+deklarierte Eigenschaftsgruppen und <code>@prefix</code>-Zeilen vor. Verwende <strong>↑/↓</strong> zum
+Bewegen, <strong>Tab</strong>/<strong>Enter</strong> zum Übernehmen, <strong>Esc</strong> zum Verwerfen.</li>
+</ul>
+<p><img src="images/turtle-autocomplete.png" alt="Turtle-Autovervollständigung, die sh:datatype vorschlägt"></p>
+<ul>
+<li><strong>Eine bestehende Datei öffnen.</strong> <strong>Öffnen …</strong> in der Kopfzeile lädt eine
+<code>.ttl</code>-/<code>.nt</code>-/<code>.trig</code>-/<code>.n3</code>-Datei in diesen Tab, erkennt ihre Syntax und parst
+sie in den Visuellen Editor — ein schneller Weg, ein bestehendes Schema
+anzupassen. Wenn eine Datei nicht geparst werden kann, verweist eine Inline-
+Meldung auf die fehlerhafte Zeile; den Rohtext kannst du trotzdem bearbeiten.</li>
+<li><strong>Name und Beschreibung</strong> des Schemas haben oben in diesem Tab ebenfalls
+einfache Eingabefelder.</li>
+</ul>
+<p>Klicke auf <strong>Im Visuellen Editor öffnen</strong>, um zur Drag-and-drop-Ansicht
+zurückzuspringen.</p>
+<h3 id="eine-syntax-wählen-und-json-ld-exportieren">Eine Syntax wählen (und JSON-LD exportieren)</h3>
+<p>Eine <strong>Syntax</strong>-Auswahl in diesem Tab wechselt die Serialisierung zwischen
+<strong>Turtle</strong> (Standard), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> und <strong>JSON-LD
+(Export)</strong>. Die ersten vier sind voll editierbar — Änderungen werden
+zurücksynchronisiert. <strong>JSON-LD ist nur für den Export</strong> (es gibt keinen
+JSON-LD-Parser): Der Editor zeigt es schreibgeschützt an, damit du es
+<strong>Kopieren</strong> oder als <code>.jsonld</code>-Datei <strong>Speichern unter</strong> kannst; wechsle dann
+zurück zu Turtle, um weiterzubearbeiten.</p>
+<p><img src="images/syntax-jsonld.png" alt="Die Syntax-Auswahl und der JSON-LD-Export im Tab SHACL-Code"></p>
+<p>Neue Schemata starten immer als Turtle, und <strong>Speichern unter</strong> verwendet die
+Endung, die zur gewählten Syntax passt.</p>
+<h3 id="das-bearbeiten-eines-bestehenden-schemas-ist-verlustfrei">Das Bearbeiten eines bestehenden Schemas ist verlustfrei</h3>
+<p>Contour parst Dateien mit einer echten RDF-Engine, sodass das Öffnen, Bearbeiten
+und Speichern eines Schemas <strong>niemals stillschweigend die Teile verwirft, die es
+nicht visuell modelliert</strong>. Konstrukte, für die der Editor kein Bedienelement hat
+— etwa <code>sh:and</code>, qualifizierte Wert-Shapes oder zusätzliche Annotationen —, werden
+<strong>wortgetreu erhalten</strong> und in einem klar kommentierten <em>„Preserved&quot;</em>-Block am
+Ende der Ausgabe erneut ausgegeben. Wenn eine geladene Datei solche Konstrukte
+enthält, siehst du in diesem Tab einen kurzen Hinweis; deine Änderungen an den
+Teilen, die Contour <em>tatsächlich</em> modelliert, werden wie gewohnt angewendet, und
+der Rest übersteht den Round-Trip unversehrt.</p>
+<h3 id="den-graph-visualisieren">Den Graph visualisieren</h3>
+<p>Klicke in diesem Tab auf <strong>Graph</strong>, um eine Knoten-Kanten-Visualisierung des
+RDF-Graphen des Schemas in einer Überlagerung zu öffnen — Shapes,
+Eigenschaftsknoten, Klassen und Literale, verbunden durch ihre Prädikate. Scrolle
+zum Zoomen, ziehe den Hintergrund zum Verschieben und ziehe einen Knoten, um ihn
+neu zu positionieren. Zwei Schalter bändigen die Detailfülle (beide standardmäßig
+aktiviert): <strong>Listen einklappen</strong> faltet eine <code>sh:in</code>-/<code>sh:or</code>-Liste zu einem
+einzigen Chip zusammen, und <strong>Annotationen ausblenden</strong> lässt Bezeichnungen und
+Formularhinweise (<code>sh:name</code>, <code>dash:editor</code>, <code>sh:order</code>, …) weg, damit die Struktur
+hervortritt. Eine schnelle Möglichkeit, den Shape-Graphen (und alle
+verschachtelten Shapes oder erhaltenen Konstrukte) auf einen Blick zu sehen.</p>
+<p><img src="images/schema-graph.png" alt="Das als RDF-Knoten-Kanten-Graph gerenderte Schema"></p>
+<hr>
+<h2 id="5-deine-arbeit-überprüfen-das-problem-panel">5. Deine Arbeit überprüfen (das Problem-Panel)</h2>
+<p>Während du baust, prüft Contour das Schema fortlaufend und fasst Probleme in der
+<strong>Problem</strong>-Anzeige in der Aktionsleiste des Visuellen Editors zusammen. Klicke
+darauf, um die Liste aufzuklappen; klicke auf einen beliebigen Eintrag, um direkt
+zum betreffenden Element zu springen.</p>
+<p><img src="images/issues-panel.png" alt="Das Problem-Panel mit einer Liste der Schemaprobleme"></p>
+<p>Es markiert Dinge wie:</p>
+<ul>
+<li>eine Eigenschaft <strong>ohne Pfad</strong> oder <strong>doppelte Pfade</strong> in derselben Gruppe;</li>
+<li>eine <strong>Details</strong>-Eigenschaft, deren verschachtelte Shape <strong>fehlt</strong>;</li>
+<li>einen Pfad, eine Klasse, einen Datentyp oder eine Zielklasse, die ein <strong>nicht
+deklariertes Präfix</strong> verwenden;</li>
+<li>eine fehlende <strong>Zielklasse</strong> oder einen fehlenden Schema-<strong>Namen</strong>;</li>
+<li>verschachtelte Shapes mit fehlender oder doppelter IRI.</li>
+</ul>
+<p>Probleme sind <strong>nicht blockierend</strong> — sie sind Orientierungshilfen, keine
+Sperren —, aber sie zu beheben bedeutet, dass das exportierte SHACL wohlgeformt
+ist und nur deklarierte Vokabulare referenziert.</p>
+<hr>
+<h2 id="6-power-funktionen-fortgeschrittene-modellierung">6. Power-Funktionen (fortgeschrittene Modellierung)</h2>
+<p>Über die zentralen Widgets und Einschränkungen hinaus stellt der Inspektor einige
+fortgeschrittene Bedienelemente für reichhaltigere Schemata bereit. Jedes ist
+optional — greife darauf zurück, wenn dein Modell sie benötigt.</p>
+<h3 id="bezeichnungen-in-mehreren-sprachen">Bezeichnungen in mehreren Sprachen</h3>
+<p><code>sh:name</code> und <code>sh:description</code> können eine <strong>Sprachmarkierung</strong> tragen, und du
+kannst <strong>Übersetzungen</strong> hinzufügen, sodass ein Feld in mehreren Sprachen
+benannt ist. Tippe im Abschnitt <strong>Basis</strong> eine Markierung (z. B. <code>en</code>) in das
+kleine Feld neben der Bezeichnung; ein <strong>Übersetzungseditor</strong> lässt dich dann
+weitere hinzufügen (<code>pt</code> → „Título&quot;, …). Jede wird zu einer eigenen
+sprachmarkierten Aussage (<code>sh:name &quot;Title&quot;@en, &quot;Título&quot;@pt</code>), und die
+Formularvorschau zeigt ein Sprachfeld am Feld.</p>
+<p><img src="images/label-languages.png" alt="Festlegen einer Sprachmarkierung und von Übersetzungen für eine Bezeichnung"></p>
+<h3 id="zahlen--und-datumsbereiche">Zahlen- und Datumsbereiche</h3>
+<p>Felder vom Typ Zahl, Datum sowie Datum und Uhrzeit zeigen einen Block
+<strong>Wertebereich</strong> unter <strong>Einschränkungen</strong>. Lege einschließende <strong>Min (≥)</strong> /
+<strong>Max (≤)</strong> oder ausschließende <strong>(&gt;)</strong> / <strong>(&lt;)</strong> Grenzen fest — z. B. ein
+Erscheinungsjahr ≥ 1900. Zahlen werden unverziert exportiert (<code>sh:minInclusive 1900</code>), Daten als typisierte Literale (<code>&quot;2000-01-01&quot;^^xsd:date</code>).</p>
+<p><img src="images/value-range.png" alt="Die Bedienelemente für den Wertebereich im Abschnitt Einschränkungen"></p>
+<h3 id="benutzerdefinierte-validierungsmeldungen">Benutzerdefinierte Validierungsmeldungen</h3>
+<p>Der Abschnitt <strong>Validierungsmeldung</strong> legt den Text fest, den eine Plattform
+anzeigt, wenn ein Wert die Regel nicht erfüllt (<code>sh:message</code>), sowie dessen
+<strong>Schweregrad</strong> — <em>Violation</em> (Standard), <em>Warning</em> oder <em>Info</em> (<code>sh:severity</code>).
+Verwende ihn, um aus einem bloßen Fehlschlag eine für Stewards verständliche
+Orientierungshilfe zu machen.</p>
+<p><img src="images/validation-message.png" alt="Verfassen einer Validierungsmeldung und eines Schweregrads"></p>
+<h3 id="alternative-werttypen-literal-oder-iri">Alternative Werttypen (Literal <em>oder</em> IRI)</h3>
+<p>Manche Eigenschaften akzeptieren legitimerweise mehr als eine Art von Wert — ein
+Thema, das freier Text <em>oder</em> eine IRI aus einem kontrollierten Vokabular sein
+kann, etwa. Klicke auf <strong>Alternative Werttypen zulassen (<code>sh:or</code>)</strong> und liste die
+Zweige auf (jeder ein Node kind, ein Datentyp oder eine Klasse). Es wird als
+<code>sh:or ( [ … ] [ … ] )</code> exportiert. Reichhaltigere logische Shapes, die Contour
+nicht modelliert, werden beim Round-Trip dennoch erhalten (siehe
+<a href="#4-direkt-mit-dem-code-arbeiten-der-tab-shacl-code">§4</a>).</p>
+<p><img src="images/alt-types.png" alt="Definieren alternativer Werttypen mit sh:or"></p>
+<h3 id="inverse-pfade">Inverse Pfade</h3>
+<p>Aktiviere <strong>Inverse (<code>^</code>)</strong> neben dem Eigenschaftspfad, um eine Beziehung
+<em>rückwärts</em> abzugleichen — „Ressourcen, die auf diese verweisen&quot; statt umgekehrt.
+Es wird als <code>sh:path [ sh:inversePath … ]</code> exportiert, und die Eigenschaftskarte
+zeigt den Pfad mit einem führenden <code>^</code>.</p>
+<p><img src="images/inverse-path.png" alt="Das Kontrollkästchen Inverse Pfad an einer Eigenschaft"></p>
+<hr>
+<h2 id="7-referenz">7. Referenz</h2>
+<h3 id="widget-katalog">Widget-Katalog</h3>
+<p>Jedes Widget wird auf einen DASH-Editor sowie ein sinnvolles Standard-Node-Kind /
+einen Standard-Datentyp abgebildet.</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>DASH-Editor</th>
+<th>Typische Verwendung</th>
+<th>Standardwerte</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Text field</strong></td>
+<td><code>dash:TextFieldEditor</code></td>
+<td>Einzeiliger Text</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Text area</strong></td>
+<td><code>dash:TextAreaEditor</code></td>
+<td>Mehrzeiliger Text</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Rich text</strong></td>
+<td><code>dash:RichTextEditor</code></td>
+<td>Formatierter Text mit Sprachmarkierung</td>
+<td><code>sh:Literal</code>, <code>rdf:HTML</code></td>
+</tr>
+<tr>
+<td><strong>URI</strong></td>
+<td><code>dash:URIEditor</code></td>
+<td>Freier Link / IRI</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Auto-complete</strong></td>
+<td><code>dash:AutoCompleteEditor</code></td>
+<td>Eine Instanz anhand der Bezeichnung nachschlagen</td>
+<td><code>sh:IRI</code>, <code>sh:class foaf:Agent</code></td>
+</tr>
+<tr>
+<td><strong>Instances select</strong></td>
+<td><code>dash:InstancesSelectEditor</code></td>
+<td>Dropdown von Instanzen</td>
+<td><code>sh:IRI</code></td>
+</tr>
+<tr>
+<td><strong>Details (nested)</strong></td>
+<td><code>dash:DetailsEditor</code></td>
+<td>Eingebettetes Unterformular über eine verschachtelte Shape</td>
+<td><code>sh:BlankNodeOrIRI</code></td>
+</tr>
+<tr>
+<td><strong>Enumeration</strong></td>
+<td><code>dash:EnumSelectEditor</code></td>
+<td>Auswahl aus einer festen <code>sh:in</code>-Liste</td>
+<td><code>sh:Literal</code>, <code>xsd:string</code></td>
+</tr>
+<tr>
+<td><strong>Boolean</strong></td>
+<td><code>dash:BooleanSelectEditor</code></td>
+<td>true / false</td>
+<td><code>sh:Literal</code>, <code>xsd:boolean</code></td>
+</tr>
+<tr>
+<td><strong>Date picker</strong></td>
+<td><code>dash:DatePickerEditor</code></td>
+<td>Kalenderdatum</td>
+<td><code>sh:Literal</code>, <code>xsd:date</code></td>
+</tr>
+<tr>
+<td><strong>Date &amp; time</strong></td>
+<td><code>dash:DateTimePickerEditor</code></td>
+<td>Zeitstempel</td>
+<td><code>sh:Literal</code>, <code>xsd:dateTime</code></td>
+</tr>
+<tr>
+<td><strong>Number</strong></td>
+<td><code>dash:NumberFieldEditor</code></td>
+<td>Numerischer Wert</td>
+<td><code>sh:Literal</code>, <code>xsd:integer</code></td>
+</tr>
+</tbody></table>
+<p>Standardwerte sind Ausgangspunkte — überschreibe das Node kind, den Datentyp oder
+die Klasse im Inspektor, wann immer dein Modell etwas anderes benötigt.</p>
+<h3 id="referenz-der-eigenschaftseinstellungen">Referenz der Eigenschaftseinstellungen</h3>
+<p>Was jedes Inspektor-Bedienelement in SHACL schreibt:</p>
+<table>
+<thead>
+<tr>
+<th>Inspektor-Feld</th>
+<th>SHACL-Ausgabe</th>
+<th>Hinweise</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bezeichnung</td>
+<td><code>sh:name</code></td>
+<td>Die Formularbezeichnung. Eine optionale <strong>Sprachmarkierung</strong> + zusätzliche <strong>Übersetzungen</strong> geben ein <code>sh:name</code> pro Sprache aus.</td>
+</tr>
+<tr>
+<td>Beschreibung</td>
+<td><code>sh:description</code></td>
+<td>Hilfetext / ⓘ-Tooltip. Ebenfalls sprachmarkierbar, mit Übersetzungen.</td>
+</tr>
+<tr>
+<td>Eigenschaftspfad</td>
+<td><code>sh:path</code></td>
+<td><strong>Erforderlich.</strong> Das RDF-Prädikat. <strong>Inverse (<code>^</code>)</strong> gibt <code>[ sh:inversePath … ]</code> aus.</td>
+</tr>
+<tr>
+<td>Min count</td>
+<td><code>sh:minCount</code></td>
+<td>≥ 1 macht das Feld erforderlich.</td>
+</tr>
+<tr>
+<td>Max count</td>
+<td><code>sh:maxCount</code></td>
+<td>Leer = unbegrenzt (wiederholbar).</td>
+</tr>
+<tr>
+<td>Node kind</td>
+<td><code>sh:nodeKind</code></td>
+<td><code>sh:Literal</code>, <code>sh:IRI</code>, <code>sh:BlankNode</code> oder Kombinationen.</td>
+</tr>
+<tr>
+<td>Datatype</td>
+<td><code>sh:datatype</code></td>
+<td>Wird für Literal-Node-Kinds angezeigt.</td>
+</tr>
+<tr>
+<td>Class</td>
+<td><code>sh:class</code></td>
+<td>Wird für IRI-Node-Kinds angezeigt; beschränkt den Zieltyp.</td>
+</tr>
+<tr>
+<td>Verschachtelte Shape</td>
+<td><code>sh:node</code></td>
+<td>Wird für <strong>Details</strong> angezeigt; verknüpft mit einer verschachtelten Shape.</td>
+</tr>
+<tr>
+<td>Min / Max length</td>
+<td><code>sh:minLength</code> / <code>sh:maxLength</code></td>
+<td>Nur Literale.</td>
+</tr>
+<tr>
+<td>Wertebereich</td>
+<td><code>sh:minInclusive</code> / <code>maxInclusive</code> / <code>minExclusive</code> / <code>maxExclusive</code></td>
+<td>Zahlen und Daten.</td>
+</tr>
+<tr>
+<td>Pattern (regex)</td>
+<td><code>sh:pattern</code></td>
+<td>Nur Literale.</td>
+</tr>
+<tr>
+<td>Zulässige Werte</td>
+<td><code>sh:in ( … )</code></td>
+<td>Enumeration-Auswahlmöglichkeiten; jeder Wert Literal oder IRI.</td>
+</tr>
+<tr>
+<td>Alternative Werttypen</td>
+<td><code>sh:or ( … )</code></td>
+<td>„Einen dieser Typen akzeptieren&quot; (z. B. Literal <strong>oder</strong> IRI).</td>
+</tr>
+<tr>
+<td>Meldung / Schweregrad</td>
+<td><code>sh:message</code> / <code>sh:severity</code></td>
+<td>Benutzerdefinierter Validierungstext + Violation / Warning / Info.</td>
+</tr>
+<tr>
+<td>Standardwert</td>
+<td><code>sh:defaultValue</code></td>
+<td>Vorbelegter Wert.</td>
+</tr>
+<tr>
+<td>Reihenfolge</td>
+<td><code>sh:order</code></td>
+<td>Feldreihenfolge innerhalb der Gruppe.</td>
+</tr>
+</tbody></table>
+<p>Bedienelemente auf Schema- und Gruppenebene:</p>
+<table>
+<thead>
+<tr>
+<th>Bedienelement</th>
+<th>SHACL-Ausgabe</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Schema-Name</td>
+<td><code>rdfs:label</code> an der NodeShape</td>
+</tr>
+<tr>
+<td>Shape-IRI</td>
+<td>das Subjekt der NodeShape</td>
+</tr>
+<tr>
+<td>Zielklasse</td>
+<td><code>sh:targetClass</code></td>
+</tr>
+<tr>
+<td>Präfixe</td>
+<td><code>@prefix</code>-Deklarationen</td>
+</tr>
+<tr>
+<td>Gruppenbezeichnung</td>
+<td><code>rdfs:label</code> an der <code>sh:PropertyGroup</code></td>
+</tr>
+<tr>
+<td>Gruppenreihenfolge</td>
+<td><code>sh:order</code> an der Gruppe; das <code>sh:group</code> des Felds verknüpft es</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-rezepte--gängige-modellierungsmuster">8. Rezepte — gängige Modellierungsmuster</h2>
+<p>Kurze, in sich geschlossene Muster, die du zusätzlich zum Tutorial anwenden
+kannst.</p>
+<p><strong>Ein Feld erforderlich machen.</strong> Setze <strong>Min count</strong> auf <code>1</code>. Die Karte zeigt
+einen roten Punkt, und das Formular markiert es mit <code>*</code>.</p>
+<p><strong>Mehrere Werte zulassen.</strong> Lasse <strong>Max count</strong> leer (∞). Die Karte zeigt ein
+<strong>multi</strong>-Badge, und das Formular erhält <strong>+ Hinzufügen</strong>.</p>
+<p><strong>Auf eine feste Liste beschränken.</strong> Verwende das <strong>Enumeration</strong>-Widget und
+fülle die <strong>Zulässigen Werte</strong> aus. Exportiert als <code>sh:in</code>.</p>
+<p><strong>Auf eine Organisation oder Person verlinken.</strong> Verwende <strong>Auto-complete</strong> (oder
+<strong>Instances select</strong>), Node kind <code>sh:IRI</code> und <strong>Class</strong> = <code>foaf:Agent</code> (oder
+deine gewählte Klasse).</p>
+<p><strong>Ein strukturiertes Unterobjekt erfassen</strong> (Adresse, Kontaktpunkt,
+Distribution). Erstelle eine <strong>verschachtelte Shape</strong>, füge ihre Felder hinzu und
+richte dann eine <strong>Details (verschachtelt)</strong>-Eigenschaft über <code>sh:node</code> darauf
+aus. Siehe <a href="#schritt-10--ein-unterobjekt-mit-einer-verschachtelten-shape-modellieren">Schritt 10</a>.</p>
+<p><strong>Ein Format erzwingen.</strong> Setze für Literale ein <strong>Pattern</strong> (regex) und/oder
+<strong>Min/Max length</strong> — z. B. ein ORCID-Muster oder eine maximale Länge für ein
+Code-Feld.</p>
+<p><strong>Eine Zahl oder ein Datum eingrenzen.</strong> Verwende bei einem Zahlen-/Datumsfeld den
+Abschnitt <strong>Wertebereich</strong> — z. B. <em>Min (≥)</em> <code>1900</code> für ein Jahr oder <em>Max (≤)</em>
+ein Stichtagsdatum.</p>
+<p><strong>Eine Bezeichnung in mehreren Sprachen anbieten.</strong> Setze eine
+<strong>Sprachmarkierung</strong> an der <strong>Bezeichnung</strong> (z. B. <code>en</code>) und füge <strong>Übersetzungen</strong>
+hinzu (<code>pt</code> → „Título&quot;, …). Jede wird zu einem sprachmarkierten <code>sh:name</code>, und die
+Formularvorschau zeigt ein Sprachfeld.</p>
+<p><strong>Ein Literal <em>oder</em> eine IRI akzeptieren</strong> (oder „einen dieser Typen&quot;). Verwende
+<strong>Alternative Werttypen (<code>sh:or</code>)</strong> an der Eigenschaft und liste die Zweige auf
+(z. B. <code>sh:nodeKind sh:Literal</code> und <code>sh:nodeKind sh:IRI</code>). Häufig in DCAT-AP für
+Werte, die Inline-Text oder eine Referenz sein können.</p>
+<p><strong>Einer Beziehung rückwärts folgen.</strong> Aktiviere <strong>Inverse (<code>^</code>)</strong> am Pfad, um
+„Dinge, die auf diese Ressource verweisen&quot; abzugleichen (z. B. Mitglieder einer
+Sammlung) — exportiert als <code>[ sh:inversePath … ]</code>.</p>
+<p><strong>Eine Validierungsregel erklären.</strong> Fülle die <strong>Validierungsmeldung</strong> mit einem
+für Stewards verständlichen Text und wähle einen <strong>Schweregrad</strong>, damit eine
+Plattform eine hilfreiche Warnung statt eines bloßen Fehlschlags anzeigen kann.</p>
+<p><strong>Nach JSON-LD exportieren.</strong> Stelle im Tab SHACL-Code <strong>Syntax</strong> → <em>JSON-LD
+(Export)</em> und <strong>Kopiere</strong> oder <strong>Speichere unter</strong> <code>.jsonld</code> für Werkzeuge, die
+JSON-LD verarbeiten.</p>
+<p><strong>Von einem Beispiel ausgehen.</strong> Verwende das Menü <strong>Beispiele</strong>, um eine Vorlage
+für Datensatz (DCAT), Agent (FOAF) oder Konzept (SKOS) zu laden, und passe sie
+dann an deine Bedürfnisse an.</p>
+<p><strong>Ein bestehendes Schema wiederverwenden.</strong> <strong>Öffne …</strong> die bestehende Datei,
+passe sie im Visuellen Editor an und <strong>Speichere</strong> sie dann als neue Datei
+<strong>unter …</strong> — alles, was Contour nicht modelliert, bleibt erhalten (siehe
+<a href="#4-direkt-mit-dem-code-arbeiten-der-tab-shacl-code">§4</a>).</p>
+<hr>
+<h2 id="9-tipps-und-fehlerbehebung">9. Tipps und Fehlerbehebung</h2>
+<ul>
+<li><strong>Setze immer den Eigenschaftspfad.</strong> Neue Widgets erhalten einen Platzhalterpfad
+wie <code>:textfield</code>; ersetze ihn durch den echten RDF-Term (<code>dct:title</code>,
+<code>dcat:theme</code>, …), sonst verwenden die exportierten Metadaten nicht den Term,
+den du beabsichtigst.</li>
+<li><strong>Deklariere die Präfixe, die du verwendest.</strong> Wenn ein Pfad oder eine Klasse
+ein Kürzel verwendet (z. B. <code>vcard:</code>), füge es unter <strong>Vokabulare</strong> hinzu, damit
+das Turtle gültig ist.</li>
+<li><strong>Ein Feld ist in der falschen Gruppe gelandet.</strong> Ziehe die Eigenschaftskarte in
+die richtige Gruppe; das Feld <strong>Gruppe</strong> im Inspektor ist schreibgeschützt und
+spiegelt das Verschieben wider.</li>
+<li><strong>Änderungen am SHACL-Code wurden nicht synchronisiert.</strong> Die Synchronisation
+erfolgt kurz, nachdem du das Tippen beendest. Wenn ein Parse-Fehler angezeigt
+wird (mit einer Zeilennummer), korrigiere das Turtle — die visuelle
+Arbeitsfläche behält den letzten gültigen Stand, bis der Text geparst werden
+kann.</li>
+<li><strong>Die Schaltfläche Speichern lädt nur herunter.</strong> Das ist das erwartete
+Verhalten als Rückfalllösung in Firefox/Safari. Für Speichern an Ort und Stelle
+verwende einen Chromium-basierten Browser (Chrome/Edge).</li>
+<li><strong>Einen Fehler gemacht?</strong> <strong>Rückgängig</strong> (Strg/Cmd+Z) / <strong>Wiederholen</strong>
+(Strg/Cmd+Umschalt+Z) decken jede Änderung ab, und deine Arbeit wird automatisch
+gespeichert — ein Neuladen stellt sie wieder her.</li>
+<li><strong>Sieh ins Problem-Panel.</strong> Klappe vor dem Exportieren <strong>Probleme</strong> in der
+Aktionsleiste auf und behebe alle Fehler (leere Pfade, nicht deklarierte
+Präfixe, defekte <code>sh:node</code>).</li>
+<li><strong>JSON-LD bearbeiten?</strong> Geht nicht — es ist nur für den Export. Stelle <strong>Syntax</strong>
+zurück auf Turtle (oder N-Triples / TriG / N3), um weiterzubearbeiten.</li>
+<li><strong>Von vorn beginnen.</strong> Verwende die Schaltfläche <strong>Neu</strong> für ein leeres Schema,
+lade eines aus <strong>Beispiele</strong> oder <strong>Öffne …</strong> eine bestehende Datei.</li>
+</ul>
+<hr>
+<p><em>Erstellt mit Contour für das FAIR-Data-Point-Ökosystem. Die Ausgabe ist
+standardkonformes SHACL + DASH und funktioniert mit jedem SHACL-fähigen Werkzeug.</em></p>
+
+  </main>
+</body>
+</html>

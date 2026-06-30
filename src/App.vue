@@ -23,7 +23,8 @@ const { schema, mutate, undo, redo, canUndo, canRedo } = useSchemaStore();
 const { t, plural, locale, setLocale } = useI18n();
 
 // The guide is published per-locale; point at the matching build.
-const guideHref = computed(() => (locale.value === 'pt-BR' ? './guide/pt-BR/' : './guide/'));
+// English lives at the root; every other locale gets its own subfolder.
+const guideHref = computed(() => (locale.value === 'en' ? './guide/' : `./guide/${locale.value}/`));
 
 // "Edit <name>" once the schema is named, otherwise "New metadata schema".
 const pageTitle = computed(() =>

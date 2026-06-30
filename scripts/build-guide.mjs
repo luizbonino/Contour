@@ -1,7 +1,9 @@
 // Build standalone, self-contained HTML versions of the data-steward guide
-// (English + Brazilian Portuguese) into dist/guide/ and dist/guide/pt-BR/, so
-// they can be opened from the app in a separate window. The Markdown files stay
-// the single source of truth; guide images are copied next to each page.
+// (English + every translated locale) into dist/guide/ (English) and
+// dist/guide/<locale>/ (e.g. dist/guide/de-DE/), so they can be opened from the
+// app in a separate window. The Markdown files stay the single source of truth;
+// guide images are copied next to each page. Locales without their own
+// screenshots reuse the English images/ directory.
 import { readFileSync, writeFileSync, mkdirSync, cpSync } from 'node:fs';
 import path from 'node:path';
 import { marked } from 'marked';
@@ -38,6 +40,12 @@ const STYLE = `<style>
   .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
     border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
   .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar .langs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar .langs a, .topbar .langs span { font-weight: 600; font-size: 13px; text-decoration: none;
+    border-radius: 999px; padding: 4px 10px; }
+  .topbar .langs a { color: var(--muted); border: 1px solid transparent; }
+  .topbar .langs a:hover { color: var(--accent-dark); border-color: var(--border); text-decoration: none; }
+  .topbar .langs span.current { color: var(--ink); background: var(--sand); border: 1px solid var(--border); }
   main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
   main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
   main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
@@ -64,12 +72,63 @@ const STYLE = `<style>
   :target { scroll-margin-top: 70px; }
 </style>`;
 
-function buildGuide(opts) {
-  const { mdPath, imgDir, outDir, htmlLang, title, openHref, openLabel, switchHref, switchLabel } = opts;
+// One entry per published guide. `dir` is the output sub-folder under dist/guide/
+// ('' = English at the root). Locales without their own screenshots reuse
+// docs/images. `name` is the language's endonym, shown in the language switcher.
+const GUIDES = [
+  {
+    dir: '', htmlLang: 'en', name: 'English',
+    mdPath: 'docs/data-steward-guide.md', imgDir: 'docs/images',
+    title: 'Contour — Data steward guide', openLabel: 'Open the editor ↗',
+  },
+  {
+    dir: 'pt-BR', htmlLang: 'pt-BR', name: 'Português',
+    mdPath: 'docs/data-steward-guide.pt-BR.md', imgDir: 'docs/images-pt',
+    title: 'Contour — Guia do data steward', openLabel: 'Abrir o editor ↗',
+  },
+  {
+    dir: 'nl-NL', htmlLang: 'nl-NL', name: 'Nederlands',
+    mdPath: 'docs/data-steward-guide.nl-NL.md', imgDir: 'docs/images-nl',
+    title: 'Contour — Handleiding voor data stewards', openLabel: 'Editor openen ↗',
+  },
+  {
+    dir: 'de-DE', htmlLang: 'de-DE', name: 'Deutsch',
+    mdPath: 'docs/data-steward-guide.de-DE.md', imgDir: 'docs/images-de',
+    title: 'Contour — Leitfaden für Data Stewards', openLabel: 'Editor öffnen ↗',
+  },
+  {
+    dir: 'es-ES', htmlLang: 'es-ES', name: 'Español',
+    mdPath: 'docs/data-steward-guide.es-ES.md', imgDir: 'docs/images-es',
+    title: 'Contour — Guía para data stewards', openLabel: 'Abrir el editor ↗',
+  },
+  {
+    dir: 'fr-FR', htmlLang: 'fr-FR', name: 'Français',
+    mdPath: 'docs/data-steward-guide.fr-FR.md', imgDir: 'docs/images-fr',
+    title: 'Contour — Guide du data steward', openLabel: 'Ouvrir l’éditeur ↗',
+  },
+];
+
+// Relative href from guide `from` to guide `to` (both rooted at dist/guide/).
+function relHref(from, to) {
+  const up = from.dir === '' ? '' : '../';
+  const target = to.dir === '' ? '' : `${to.dir}/`;
+  return up + target || './';
+}
+
+function buildGuide(guide) {
+  const { dir, htmlLang, title, openLabel, mdPath, imgDir } = guide;
   const body = marked.parse(readFileSync(path.join(ROOT, mdPath), 'utf8'));
-  const out = path.join(ROOT, outDir);
+  const out = path.join(ROOT, 'dist/guide', dir);
   mkdirSync(out, { recursive: true });
   cpSync(path.join(ROOT, imgDir), path.join(out, 'images'), { recursive: true });
+
+  // Editor lives at the site root: ../ from English, ../../ from a locale folder.
+  const openHref = dir === '' ? '../' : '../../';
+  const langs = GUIDES.map((g) =>
+    g.dir === dir
+      ? `<span class="current">${g.name}</span>`
+      : `<a href="${relHref(guide, g)}">${g.name}</a>`,
+  ).join('');
 
   const html = `<!DOCTYPE html>
 <html lang="${htmlLang}">
@@ -88,7 +147,7 @@ ${STYLE}
     ${mark}
     <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
     <div class="spacer"></div>
-    <a class="btn" href="${switchHref}">${switchLabel}</a>
+    <nav class="langs">${langs}</nav>
     <a class="btn" href="${openHref}" target="_blank" rel="noopener">${openLabel}</a>
   </div>
   <main>
@@ -102,15 +161,4 @@ ${body}
   console.log(`guide → ${path.relative(ROOT, file)} (${(html.length / 1024).toFixed(0)} KB)`);
 }
 
-buildGuide({
-  mdPath: 'docs/data-steward-guide.md', imgDir: 'docs/images', outDir: 'dist/guide',
-  htmlLang: 'en', title: 'Contour — Data steward guide',
-  openHref: '../', openLabel: 'Open the editor ↗',
-  switchHref: 'pt-BR/', switchLabel: 'Português',
-});
-buildGuide({
-  mdPath: 'docs/data-steward-guide.pt-BR.md', imgDir: 'docs/images-pt', outDir: 'dist/guide/pt-BR',
-  htmlLang: 'pt-BR', title: 'Contour — Guia do data steward',
-  openHref: '../../', openLabel: 'Abrir o editor ↗',
-  switchHref: '../', switchLabel: 'English',
-});
+for (const guide of GUIDES) buildGuide(guide);

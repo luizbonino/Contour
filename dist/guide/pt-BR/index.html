@@ -32,6 +32,12 @@
   .topbar a.btn { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
     border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; background: #fff; }
   .topbar a.btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .topbar .langs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar .langs a, .topbar .langs span { font-weight: 600; font-size: 13px; text-decoration: none;
+    border-radius: 999px; padding: 4px 10px; }
+  .topbar .langs a { color: var(--muted); border: 1px solid transparent; }
+  .topbar .langs a:hover { color: var(--accent-dark); border-color: var(--border); text-decoration: none; }
+  .topbar .langs span.current { color: var(--ink); background: var(--sand); border: 1px solid var(--border); }
   main { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
   main h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 8px; }
   main h2 { font-size: 24px; letter-spacing: -0.01em; color: var(--ink); margin: 44px 0 12px;
@@ -79,7 +85,7 @@
 </svg>
     <div><div class="wm">Contour</div><div class="tag">Visual schemas. Clean SHACL.</div></div>
     <div class="spacer"></div>
-    <a class="btn" href="../">English</a>
+    <nav class="langs"><a href="../">English</a><span class="current">Português</span><a href="../nl-NL/">Nederlands</a><a href="../de-DE/">Deutsch</a><a href="../es-ES/">Español</a><a href="../fr-FR/">Français</a></nav>
     <a class="btn" href="../../" target="_blank" rel="noopener">Abrir o editor ↗</a>
   </div>
   <main>
@@ -238,12 +244,14 @@ Ctrl/Cmd+Shift+Z) percorrem suas edições, e o menu <strong>Recentes</strong> r
 que você salvou.</p>
 </blockquote>
 <h3 id="idioma-da-interface">Idioma da interface</h3>
-<p>A interface do Contour está disponível em <strong>Inglês</strong> (padrão) e <strong>Português do
-Brasil</strong>. Alterne com o botão <strong>EN / PT</strong> no cabeçalho (visível na imagem da
-barra de ferramentas acima) — sua escolha é lembrada entre sessões. Apenas a
-interface é traduzida; o conteúdo do seu esquema (nomes, descrições, caminhos de
-propriedade) e o SHACL gerado nunca são alterados, portanto o Turtle exportado é
-idêntico em qualquer idioma.</p>
+<p>A interface do Contour está disponível em <strong>Inglês</strong> (padrão), <strong>Português do
+Brasil</strong>, <strong>Neerlandês</strong>, <strong>Alemão</strong>, <strong>Espanhol</strong> e <strong>Francês</strong>. Alterne com o
+seletor de idioma (<strong>EN / PT / NL / DE / ES / FR</strong>) no cabeçalho — sua escolha é
+lembrada entre sessões. Se o idioma preferido do seu navegador for um desses, o
+Contour abre nele automaticamente; caso contrário, usa o Inglês como padrão.
+Apenas a interface é traduzida; o conteúdo do seu esquema (nomes, descrições,
+caminhos de propriedade) e o SHACL gerado nunca são alterados, portanto o Turtle
+exportado é idêntico em qualquer idioma.</p>
 <hr>
 <h2 id="tutorial-criar-um-esquema-dataset-do-zero">Tutorial: criar um esquema <em>Dataset</em> do zero</h2>
 <p>Vamos criar um esquema de metadados de <strong>Dataset</strong> no estilo

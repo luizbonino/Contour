@@ -1,23 +1,43 @@
-// Regenerate the data-steward guide screenshots from the built app, for either
-// locale:  node scripts/shoot.mjs            → English  → docs/images/
-//          node scripts/shoot.mjs pt-BR      → Português → docs/images-pt/
+// Regenerate the data-steward guide screenshots from the built app, per locale:
+//   node scripts/shoot.mjs            → English   → docs/images/
+//   node scripts/shoot.mjs pt-BR      → Português → docs/images-pt/
+//   node scripts/shoot.mjs nl-NL      → Nederlands → docs/images-nl/
+//   node scripts/shoot.mjs de-DE      → Deutsch    → docs/images-de/
+//   node scripts/shoot.mjs es-ES      → Español    → docs/images-es/
+//   node scripts/shoot.mjs fr-FR      → Français   → docs/images-fr/
 //
 // One-time setup (Playwright is NOT a project dependency, to keep `npm ci` lean):
 //   npm i -D playwright && npx playwright install chromium
-// Then:  npm run build  &&  node scripts/shoot.mjs [pt-BR]
+// Then:  npm run build  &&  node scripts/shoot.mjs [locale]
 //
 // Selectors are locale-independent (indices / CSS classes / literal
-// placeholders) so the same script drives the UI in any language.
+// placeholders) so the same script drives the UI in any language. The only
+// per-locale knobs are the LOCALES table below: the language-switch button
+// index, the localized "New"/"Graph" button names, the Examples menu label for
+// the Dataset template, and the output image directory.
 import { chromium } from 'playwright';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+// Order MUST match LOCALES in src/i18n/index.ts — `idx` is the position of the
+// language button in the header switch (0-based).
+const LOCALES = {
+  en: { idx: 0, img: 'docs/images', newName: 'New', graphName: 'Graph', dataset: 'Dataset' },
+  'pt-BR': { idx: 1, img: 'docs/images-pt', newName: 'Novo', graphName: 'Grafo', dataset: 'Dataset' },
+  'nl-NL': { idx: 2, img: 'docs/images-nl', newName: 'Nieuw', graphName: 'Graaf', dataset: 'Dataset' },
+  'de-DE': { idx: 3, img: 'docs/images-de', newName: 'Neu', graphName: 'Graph', dataset: 'Datensatz' },
+  'es-ES': { idx: 4, img: 'docs/images-es', newName: 'Nuevo', graphName: 'Grafo', dataset: 'Conjunto de datos' },
+  'fr-FR': { idx: 5, img: 'docs/images-fr', newName: 'Nouveau', graphName: 'Graphe', dataset: 'Jeu de données' },
+};
+
 const ROOT = process.cwd();
 const APP = pathToFileURL(path.join(ROOT, 'dist/index.html')).href;
 const LOCALE = process.argv[2] || 'en';
-const IMG = path.join(ROOT, LOCALE === 'en' ? 'docs/images' : 'docs/images-pt');
-const NEW_NAME = { en: 'New', 'pt-BR': 'Novo' }[LOCALE] || 'New';
-const GRAPH_NAME = { en: 'Graph', 'pt-BR': 'Grafo' }[LOCALE] || 'Graph';
+const CFG = LOCALES[LOCALE] || LOCALES.en;
+const IMG = path.join(ROOT, CFG.img);
+const NEW_NAME = CFG.newName;
+const GRAPH_NAME = CFG.graphName;
+const DATASET = CFG.dataset;
 const VIEWPORT = { width: 1680, height: 1020 };
 const EXPAND_CSS = `.workbench, .panel, .panel__body, .canvas__inner {
   height: auto !important; max-height: none !important; overflow: visible !important; }`;
@@ -53,7 +73,7 @@ async function run() {
   const openExamples = async () => { await page.locator('.ex-menu').nth(1).locator('button').first().click(); await wait(200); };
   const loadDataset = async () => {
     await openExamples();
-    await page.locator('.ex-menu__item').filter({ hasText: 'Dataset' }).first().click();
+    await page.locator('.ex-menu__item').filter({ hasText: DATASET }).first().click();
     await wait(400);
   };
   const pickField = async (label) => {
@@ -62,12 +82,12 @@ async function run() {
   };
   const insp = '.workbench > .panel >> nth=2';
 
-  if (LOCALE !== 'en') await setLocale(1); // switch UI to Portuguese
+  if (CFG.idx !== 0) await setLocale(CFG.idx); // switch UI to the target locale
 
   // ── Populated states (Dataset example) ────────────────────────────────────
   await openExamples();
   await shot('examples-menu', '.ex-menu__list');
-  await page.locator('.ex-menu__item').filter({ hasText: 'Dataset' }).first().click();
+  await page.locator('.ex-menu__item').filter({ hasText: DATASET }).first().click();
   await wait(400);
 
   await tab(1); // Visual Editor
@@ -103,7 +123,7 @@ async function run() {
   await tab(2); await shot('form-preview-tab', '.preview-pane');
   await tab(0); await wait(300); await shot('shacl-code-tab', 'page');
   // Graph overlay (deterministic layout: spiral seed + fixed warm-up)
-  await page.getByRole('button', { name: GRAPH_NAME }).first().click();
+  await page.getByRole('button', { name: GRAPH_NAME, exact: true }).first().click();
   await wait(1800);
   await shot('schema-graph', '.graph-modal');
   await page.keyboard.press('Escape'); await wait(200);
@@ -117,7 +137,8 @@ async function run() {
   await shot('turtle-autocomplete', 'page');
 
   // ── Blank start ────────────────────────────────────────────────────────────
-  await page.getByRole('button', { name: NEW_NAME }).first().click(); await wait(300);
+  // exact:true so e.g. Dutch "Opnieuw" (Redo) doesn't match "Nieuw" (New) as a substring.
+  await page.getByRole('button', { name: NEW_NAME, exact: true }).first().click(); await wait(300);
   await tab(1); await shot('blank-start', 'page');
 
   // ── §6 Power features: one field per feature, capture the section ──────────
