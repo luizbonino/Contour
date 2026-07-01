@@ -263,6 +263,45 @@ describe('parseShacl – sh:PropertyGroup', () => {
   });
 });
 
+// ── Field ordering within a shape ────────────────────────────────────────────
+
+describe('parseShacl – sh:order on fields drives array order', () => {
+  it('orders a group\'s fields by sh:order, not document order', () => {
+    // "Beta" appears first in the document but carries a higher sh:order, so it
+    // must sort after "Alpha". Regression for: editing sh:order in the code
+    // editor did not reorder the visual editor canvas.
+    const ttl = `${BASE_PREFIXES}
+:Shape a sh:NodeShape ;
+  sh:property [ sh:path :beta ; sh:name "Beta" ; sh:order 1 ; dash:editor dash:TextFieldEditor ] ;
+  sh:property [ sh:path :alpha ; sh:name "Alpha" ; sh:order 0 ; dash:editor dash:TextFieldEditor ] .`;
+    const { schema } = parseShacl(ttl);
+    const names = schema!.groups.flatMap((g) => g.fields).map((f) => f.name);
+    expect(names).toEqual(['Alpha', 'Beta']);
+  });
+
+  it('keeps document order when sh:order is absent (stable)', () => {
+    const ttl = `${BASE_PREFIXES}
+:Shape a sh:NodeShape ;
+  sh:property [ sh:path :first ; sh:name "First" ; dash:editor dash:TextFieldEditor ] ;
+  sh:property [ sh:path :second ; sh:name "Second" ; dash:editor dash:TextFieldEditor ] .`;
+    const { schema } = parseShacl(ttl);
+    const names = schema!.groups.flatMap((g) => g.fields).map((f) => f.name);
+    expect(names).toEqual(['First', 'Second']);
+  });
+
+  it('orders nested-shape fields by sh:order too', () => {
+    const ttl = `${BASE_PREFIXES}
+:Shape a sh:NodeShape ;
+  sh:property [ sh:path :addr ; sh:node :AddrShape ; dash:editor dash:DetailsEditor ] .
+:AddrShape a sh:NodeShape ;
+  sh:property [ sh:path :city ; sh:name "City" ; sh:order 1 ; dash:editor dash:TextFieldEditor ] ;
+  sh:property [ sh:path :street ; sh:name "Street" ; sh:order 0 ; dash:editor dash:TextFieldEditor ] .`;
+    const { schema } = parseShacl(ttl);
+    const names = (schema!.nestedShapes![0].fields).map((f) => f.name);
+    expect(names).toEqual(['Street', 'City']);
+  });
+});
+
 // ── Comment stripping ──────────────────────────────────────────────────────────
 
 describe('parseShacl – comment handling', () => {
