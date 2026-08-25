@@ -16,6 +16,14 @@ const favicon =
   'data:image/svg+xml;base64,' + readFileSync(path.join(ROOT, 'public/favicon.svg')).toString('base64');
 const mark = readFileSync(path.join(ROOT, 'src/assets/contour-icon.svg'), 'utf8');
 
+// Cookieless usage counter for the hosted guide pages, matching the app: only
+// injected when CONTOUR_GOATCOUNTER is set, which the GitHub Pages workflow
+// alone does. Locally built guides (and the committed dist/) stay tracker-free.
+const goatcounterCode = process.env.CONTOUR_GOATCOUNTER?.trim();
+const COUNTER = goatcounterCode
+  ? `<script data-goatcounter="https://${goatcounterCode}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n`
+  : '';
+
 const STYLE = `<style>
   :root {
     --ink: #1b2a4a; --accent: #0e7c7b; --accent-dark: #0a5f5e;
@@ -141,7 +149,7 @@ function buildGuide(guide) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 ${STYLE}
-</head>
+${COUNTER}</head>
 <body>
   <div class="topbar">
     ${mark}

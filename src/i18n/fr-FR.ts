@@ -291,6 +291,10 @@ const frFR = {
     Choice: 'Choix',
     'Date & number': 'Date et nombre',
   },
+  privacy: {
+    note: 'Cette version en ligne comptabilise les visites de façon anonyme, sans cookies. Vos schémas restent dans votre navigateur.',
+    link: 'Comment le comptage fonctionne',
+  },
 };
 
 export default frFR;

@@ -291,6 +291,10 @@ const nlNL = {
     Choice: 'Keuze',
     'Date & number': 'Datum en getal',
   },
+  privacy: {
+    note: 'Deze online versie telt bezoeken anoniem, zonder cookies. Je schema\'s blijven in je browser.',
+    link: 'Hoe dit geteld wordt',
+  },
 };
 
 export default nlNL;

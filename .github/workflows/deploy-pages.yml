@@ -27,6 +27,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Site code for the cookieless GoatCounter counter, set as a repository
+          # variable. Only this workflow passes it, so the committed dist/ build
+          # and the single-file release asset stay tracker-free. Unset = no
+          # counter injected anywhere.
+          CONTOUR_GOATCOUNTER: ${{ vars.CONTOUR_GOATCOUNTER }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

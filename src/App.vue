@@ -17,7 +17,8 @@ import Inspector from './components/Inspector.vue';
 import FormPreview from './components/FormPreview.vue';
 import contourIcon from './assets/contour-icon.svg';
 import { useI18n } from './composables/useI18n';
-import { LOCALES } from './i18n';
+import { LOCALES, type Locale } from './i18n';
+import { track, analyticsEnabled } from './analytics';
 
 const { schema, mutate, undo, redo, canUndo, canRedo } = useSchemaStore();
 const { t, plural, locale, setLocale } = useI18n();
@@ -38,6 +39,19 @@ watch(
 
 type Tab = 'definition' | 'visual' | 'preview';
 const tab = ref<Tab>('visual');
+
+// Tab clicks are counted (anonymously) so we can see which views get used;
+// programmatic switches — a file load, jumping to an issue — are not.
+function selectTab(next: Tab) {
+  tab.value = next;
+  track(`tab-${next}`);
+}
+
+// Anonymous language counting uses the locale code only.
+function chooseLocale(code: Locale) {
+  setLocale(code);
+  track(`lang-${code}`);
+}
 
 const selectedKind = ref<SelectedKind>('schema');
 const selectedId = ref<string | null>(null);
@@ -96,6 +110,7 @@ const showGraph = ref(false);
 const graphQuads = ref<Quad[]>([]);
 const graphPrefixes = ref<{ prefix: string; uri: string }[]>([]);
 function openGraph() {
+  track('graph-open');
   // Always parse the Turtle serialization (independent of the active syntax).
   const parsed = parseRdf(serializeSchema(schema, DEFAULT_SYNTAX), DEFAULT_SYNTAX);
   graphQuads.value = parsed.quads;
@@ -104,7 +119,11 @@ function openGraph() {
 }
 
 // Switching syntax re-serializes the current model in the chosen syntax.
-function onSyntaxChange() {
+// `next` comes straight from the <select>, so it is correct regardless of
+// whether v-model has already written it back to the ref.
+function onSyntaxChange(next: string) {
+  rdfSyntax.value = next;
+  track(`syntax-${next}`);
   userEditingShacl = false;
   shaclDraft.value = shacl.value;
   shaclParseError.value = null;
@@ -359,6 +378,7 @@ function clearSelection() {
 // Click/keyboard alternative to dragging: add a widget to the most sensible
 // target (the selected nested shape, the selected/last group, or a new one).
 function addWidget(widget: Widget) {
+  track(`widget-${widget.id}`);
   const kind = selectedKind.value;
   const selId = selectedId.value;
   const nsId = selectedNestedShapeId.value;
@@ -397,6 +417,7 @@ function addWidget(widget: Widget) {
 async function copyShacl() {
   try {
     await navigator.clipboard.writeText(shacl.value);
+    track('code-copy');
   } catch {
     /* clipboard may be unavailable in some contexts */
   }
@@ -413,6 +434,7 @@ let saveStatusTimer: ReturnType<typeof setTimeout> | null = null;
 const fileInputRef = ref<HTMLInputElement | null>(null);
 
 function setSaved() {
+  track('file-save');
   fileSaveStatus.value = 'saved';
   if (saveStatusTimer) clearTimeout(saveStatusTimer);
   saveStatusTimer = setTimeout(() => (fileSaveStatus.value = 'idle'), 2500);
@@ -436,6 +458,7 @@ function resetFileState() {
 
 function newSchema() {
   if (hasContent() && !window.confirm(t('header.newConfirm'))) return;
+  track('schema-new');
   mutate((d) => Object.assign(d, blankSchema()));
   clearDraft();
   resetFileState();
@@ -449,6 +472,7 @@ const exMenuRef = ref<HTMLElement | null>(null);
 function loadExample(ex: SchemaExample) {
   exMenuOpen.value = false;
   if (hasContent() && !window.confirm(t('examples.confirm'))) return;
+  track(`example-${ex.id}`);
   mutate((d) => Object.assign(d, JSON.parse(JSON.stringify(ex.schema)) as typeof ex.schema));
   resetFileState();
 }
@@ -577,6 +601,7 @@ function onFileInputChange(e: Event) {
 }
 
 function applyLoadedShacl(source: string): void {
+  track('file-open');
   shaclDraft.value = source;
   userEditingShacl = true;
   if (shaclEditTimeout) clearTimeout(shaclEditTimeout);
@@ -679,6 +704,7 @@ async function saveAsShacl() {
         target="_blank"
         rel="noopener"
         :title="t('header.guideTitle')"
+        @click="track('guide-open')"
       >{{ t('header.guide') }} ↗</a>
       <div class="app-header__spacer" />
       <div class="app-header__file-toolbar">
@@ -689,7 +715,7 @@ async function saveAsShacl() {
             class="lang-switch__btn"
             :class="{ 'is-active': locale === l.code }"
             :aria-pressed="locale === l.code"
-            @click="setLocale(l.code)"
+            @click="chooseLocale(l.code)"
           >{{ l.label }}</button>
         </div>
         <button
@@ -793,7 +819,7 @@ async function saveAsShacl() {
           <button
             class="nav-link"
             :class="{ active: tab === 'definition' }"
-            @click="tab = 'definition'"
+            @click="selectTab('definition')"
           >
             <Icon name="code" :size="14" /> {{ t('tabs.definition') }}
           </button>
@@ -802,7 +828,7 @@ async function saveAsShacl() {
           <button
             class="nav-link"
             :class="{ active: tab === 'visual' }"
-            @click="tab = 'visual'"
+            @click="selectTab('visual')"
           >
             <Icon name="wand" :size="14" /> {{ t('tabs.visualEditor') }}
           </button>
@@ -811,7 +837,7 @@ async function saveAsShacl() {
           <button
             class="nav-link"
             :class="{ active: tab === 'preview' }"
-            @click="tab = 'preview'"
+            @click="selectTab('preview')"
           >
             <Icon name="eye" :size="14" /> {{ t('tabs.formPreview') }}
           </button>
@@ -920,7 +946,10 @@ async function saveAsShacl() {
               <div style="display: flex; gap: 8px; align-items: center">
                 <label class="syntax-select">
                   {{ t('definition.syntax') }}
-                  <select v-model="rdfSyntax" @change="onSyntaxChange">
+                  <select
+                    v-model="rdfSyntax"
+                    @change="onSyntaxChange(($event.target as HTMLSelectElement).value)"
+                  >
                     <option v-for="s in SYNTAXES" :key="s.id" :value="s.id">{{ s.label }}</option>
                   </select>
                 </label>
@@ -991,6 +1020,14 @@ async function saveAsShacl() {
           </div>
         </div>
       </template>
+
+      <!-- Shown only on the hosted deployment, where visits are counted. -->
+      <footer v-if="analyticsEnabled" class="app-footer">
+        {{ t('privacy.note') }}
+        <a href="https://www.goatcounter.com/help/privacy" target="_blank" rel="noopener">
+          {{ t('privacy.link') }} ↗
+        </a>
+      </footer>
     </div>
 
     <Teleport to="body">

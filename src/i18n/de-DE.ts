@@ -291,6 +291,10 @@ const deDE = {
     Choice: 'Auswahl',
     'Date & number': 'Datum und Zahl',
   },
+  privacy: {
+    note: 'Diese Online-Version zählt Besuche anonym, ohne Cookies. Ihre Schemata bleiben in Ihrem Browser.',
+    link: 'Wie hier gezählt wird',
+  },
 };
 
 export default deDE;

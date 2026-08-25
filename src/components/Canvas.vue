@@ -4,6 +4,7 @@ import { newId } from '../data';
 import { fieldFromWidget } from '../composables/useSchema';
 import { useDrag } from '../composables/useDrag';
 import { useI18n } from '../composables/useI18n';
+import { track } from '../analytics';
 import type { Field, Group, Mutator, Schema, SelectedKind } from '../types';
 import Icon from './Icon.vue';
 import FieldCard from './FieldCard.vue';
@@ -107,8 +108,10 @@ function onDrop(e: DragEvent, targetGroupId: string) {
     newFieldId = movedField.id;
   });
 
-  if (dr.type === 'palette' && newFieldId) emit('selectField', newFieldId);
-  else if (dr.type === 'field') emit('selectField', dr.fieldId);
+  if (dr.type === 'palette' && newFieldId) {
+    track(`widget-${dr.widget.id}`);
+    emit('selectField', newFieldId);
+  } else if (dr.type === 'field') emit('selectField', dr.fieldId);
   endDrag();
 }
 
@@ -173,8 +176,10 @@ function onDropToNested(e: DragEvent, nsId: string) {
     newFieldId = movedField.id;
   });
 
-  if (dr.type === 'palette' && newFieldId) emit('selectNestedField', nsId, newFieldId);
-  else if (dr.type === 'field') emit('selectNestedField', nsId, dr.fieldId);
+  if (dr.type === 'palette' && newFieldId) {
+    track(`widget-${dr.widget.id}`);
+    emit('selectNestedField', nsId, newFieldId);
+  } else if (dr.type === 'field') emit('selectNestedField', nsId, dr.fieldId);
   endDrag();
 }
 

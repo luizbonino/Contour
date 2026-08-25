@@ -293,6 +293,10 @@ const en = {
     Choice: 'Choice',
     'Date & number': 'Date & number',
   },
+  privacy: {
+    note: 'This hosted version counts visits anonymously, without cookies. Your schemas stay in your browser.',
+    link: 'How this is counted',
+  },
 };
 
 export default en;

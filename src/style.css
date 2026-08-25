@@ -1843,3 +1843,16 @@ button {
   border: 1px solid var(--color-accent-soft);
   border-radius: var(--radius-md);
 }
+
+/* Privacy line under the workbench — hosted deployment only. */
+.app-footer {
+  margin-top: 36px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  font-size: 12px;
+  color: var(--color-text-lighter);
+}
+.app-footer a {
+  color: var(--color-text-lighter);
+  text-decoration: underline;
+}

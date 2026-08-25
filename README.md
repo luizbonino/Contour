@@ -90,6 +90,34 @@ This repository deploys to **GitHub Pages automatically**: the [`Deploy to GitHu
 
 To set this up on a fork: in **Settings → Pages**, set the source to **GitHub Actions**, then push to `main`.
 
+### Usage analytics (hosted deployment only)
+
+The hosted site can count visits with [GoatCounter](https://www.goatcounter.com/) — cookieless,
+no personal data, no cross-site identifiers, and therefore no consent banner. It is **opt-in per
+deployment** and off unless a site code is configured:
+
+1. Create a free (non-commercial) site at <https://www.goatcounter.com/> and note its code — the
+   `<code>` in `<code>.goatcounter.com`. Contour has its **own** site,
+   **<https://fdp-contour.goatcounter.com/>** (code `fdp-contour`), under the shared
+   `fairdatateam` account. One site per property is deliberate: GoatCounter records paths, not
+   hostnames, so pointing several deployments at one site would merge their `/` and their events
+   irreversibly.
+2. In **Settings → Secrets and variables → Actions → Variables**, add a repository variable
+   `CONTOUR_GOATCOUNTER` with that code (or `gh variable set CONTOUR_GOATCOUNTER --body fdp-contour`).
+3. Push to `main` (or re-run the Pages workflow), then confirm with **View source** on the live site
+   that `<script data-goatcounter="https://fdp-contour.goatcounter.com/count">` is in the `<head>`.
+
+Only [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) passes that variable, so the counter
+is injected **only into the GitHub Pages build**. The committed [`dist/`](dist/) build and the
+single-file release asset never contain it — a downloaded copy running from `file://` makes no
+network requests at all. Removing the variable removes the counter on the next deploy.
+
+Besides page visits, the app counts a fixed vocabulary of interaction events — `tab-*`, `widget-*`,
+`example-*`, `lang-*`, `syntax-*`, `file-open`, `file-save`, `graph-open`, `code-copy`,
+`schema-new`, `guide-open`. Event names are hard-coded in [`src/analytics.ts`](src/analytics.ts):
+schema content, IRIs and file names are never sent, and the schema you edit never leaves the
+browser. When counting is active, the app shows a short privacy line in the footer.
+
 ### Browser compatibility
 
 The editor targets evergreen browsers. The **File System Access API** (used for Save / Save As) is supported in Chrome and Edge 86+. Firefox and Safari fall back to a download-prompt automatically.

@@ -291,6 +291,10 @@ const esES = {
     Choice: 'Elección',
     'Date & number': 'Fecha y número',
   },
+  privacy: {
+    note: 'Esta versión en línea cuenta las visitas de forma anónima, sin cookies. Tus esquemas permanecen en tu navegador.',
+    link: 'Cómo se hace el recuento',
+  },
 };
 
 export default esES;

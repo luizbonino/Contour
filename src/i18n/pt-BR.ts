@@ -291,6 +291,10 @@ const ptBR = {
     Choice: 'Escolha',
     'Date & number': 'Data e número',
   },
+  privacy: {
+    note: 'Esta versão online conta as visitas de forma anônima, sem cookies. Seus esquemas permanecem no seu navegador.',
+    link: 'Como a contagem funciona',
+  },
 };
 
 export default ptBR;
