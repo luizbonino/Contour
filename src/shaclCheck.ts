@@ -8,18 +8,10 @@ import type { Quad } from './rdf';
 import { parseRdf } from './rdf';
 import { serializeSchema } from './shacl';
 import { expandTerm, fieldKey, localName, recordToQuads, type NodeLocations, type RecordIssueSeverity, type RecordNode } from './record';
-import type { Prefix, Schema } from './types';
+import type { Schema } from './types';
 
 const SH = 'http://www.w3.org/ns/shacl#';
 const RDFS_SUBCLASS = 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
-const STD_PREFIXES: Prefix[] = [
-  { prefix: 'sh', uri: SH },
-  { prefix: 'dash', uri: 'http://datashapes.org/dash#' },
-  { prefix: 'rdf', uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' },
-  { prefix: 'rdfs', uri: 'http://www.w3.org/2000/01/rdf-schema#' },
-  { prefix: 'xsd', uri: 'http://www.w3.org/2001/XMLSchema#' },
-  { prefix: 'dct', uri: 'http://purl.org/dc/terms/' },
-];
 
 export interface ShaclFinding {
   /** Form location (`key` or `parent/index/key`), or null when it can't be placed. */
@@ -71,10 +63,7 @@ export async function checkRecordShacl(
   values: RecordNode,
   extra: Quad[] = [],
 ): Promise<ShaclCheckResult> {
-  // The Turtle generator writes sh:/dash:/rdfs:/dct: terms even when the schema
-  // doesn't declare them; make sure they resolve.
-  const withStd = { ...schema, prefixes: [...schema.prefixes, ...STD_PREFIXES.filter((p) => !schema.prefixes.some((x) => x.prefix === p.prefix))] };
-  const shapes = parseRdf(serializeSchema(withStd, 'turtle'), 'turtle');
+  const shapes = parseRdf(serializeSchema(schema, 'turtle'), 'turtle');
   if (shapes.error) throw new Error(shapes.error);
   const nodes: NodeLocations = new Map();
   const data = [...recordToQuads(schema, subjectIri, values, nodes), ...extra];
