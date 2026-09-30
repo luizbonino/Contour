@@ -50,6 +50,7 @@ Turtle à mão.
    - [Verificando o registro](#verificando-o-registro)
    - [Obtendo o RDF](#obtendo-o-rdf)
    - [Vários registros e como buscá-los](#vários-registros-e-como-buscá-los)
+   - [Buscando em serviços externos](#buscando-em-serviços-externos)
    - [Importando um registro existente](#importando-um-registro-existente)
    - [Onde os registros ficam guardados](#onde-os-registros-ficam-guardados)
 6. [Verificando seu trabalho (o painel de Problemas)](#verificando-seu-trabalho-o-painel-de-problemas)
@@ -449,10 +450,11 @@ Use a aba **Código SHACL**.
 ![Autocompletar do Turtle sugerindo sh:datatype](images/turtle-autocomplete.png)
 
 - **Abrir um arquivo existente.** **Abrir…** no cabeçalho carrega um arquivo
-  `.ttl`/`.nt`/`.trig`/`.n3` nesta aba, detecta sua sintaxe e o interpreta no
-  Editor visual — um jeito rápido de adaptar um esquema existente. Se um arquivo
-  não puder ser interpretado, uma mensagem inline aponta a linha problemática;
-  você ainda pode editar o texto bruto.
+  Turtle, N-Triples, TriG, Notation3, JSON-LD (`.jsonld`) ou RDF/XML (`.rdf`,
+  `.owl`) nesta aba, detecta sua sintaxe e o interpreta no Editor visual — uma
+  forma rápida de adaptar um esquema existente. RDF/XML é lido, mas não gravado: o
+  esquema é exibido e salvo em Turtle. Se um arquivo não puder ser interpretado,
+  uma mensagem indica o problema; você ainda pode editar o texto bruto.
 - **Nome e Descrição** do esquema também têm campos simples no topo desta aba.
 
 Clique em **Abrir no editor visual** para voltar à visão de arrastar e soltar.
@@ -460,11 +462,11 @@ Clique em **Abrir no editor visual** para voltar à visão de arrastar e soltar.
 ### Escolhendo uma sintaxe (e exportando JSON-LD)
 
 Um seletor de **Sintaxe** nesta aba alterna a serialização entre **Turtle**
-(padrão), **N-Triples**, **TriG**, **Notation3** e **JSON-LD (exportação)**. As
-quatro primeiras são totalmente editáveis — as edições sincronizam de volta. O
-**JSON-LD é somente exportação** (não há interpretador de JSON-LD): o editor o
-mostra somente leitura para você **Copiar** ou **Salvar como** um arquivo
-`.jsonld` e depois voltar ao Turtle para continuar editando.
+(padrão), **N-Triples**, **TriG**, **Notation3** e **JSON-LD**. As quatro
+primeiras são totalmente editáveis aqui — as edições são sincronizadas de volta.
+**O JSON-LD aparece somente para leitura** nesta aba: **Copie** ou use **Salvar
+como** um arquivo `.jsonld` e depois volte ao Turtle para continuar editando. (Você
+ainda pode *abrir* um arquivo `.jsonld` — veja acima.)
 
 ![O seletor de sintaxe e a exportação em JSON-LD na aba Código SHACL](images/syntax-jsonld.png)
 
@@ -543,10 +545,19 @@ usando a **mensagem de validação** e a **severidade** do próprio campo quando
 definidas (veja o [§7](#recursos-avançados-modelagem-avançada)). Clique em um problema para ir até o campo. Valores
 obrigatórios ausentes aparecem como uma dica discreta até serem preenchidos.
 
-> O Contour verifica as restrições que ele modela. O que fica no bloco
-> “Preservado” do seu SHACL (por exemplo, shapes qualificadas ou caminhos
-> complexos) não é verificado — use um validador SHACL completo, ou o seu FAIR
-> Data Point, para isso.
+**Verificação SHACL completa.** Marque **Verificação SHACL completa (todo o
+esquema)** para também passar o registro por um motor SHACL Core real, contra o
+esquema completo — incluindo o que fica no bloco “Preservado” (shapes
+qualificadas, `sh:languageIn`, `sh:xone`, caminhos complexos, …). Os resultados
+aparecem no mesmo painel, com a restrição que falhou (ex.: `sh:MinCount`); clique
+em um para ir até o campo.
+
+> Para `sh:class`, o motor precisa saber o tipo de cada recurso vinculado. O
+> Contour fornece os tipos dos seus registros salvos, dos termos de vocabulário e
+> dos resultados de busca SPARQL, além de relações de subclasse conhecidas. Um IRI
+> vinculado cujo tipo o Contour não enxerga — um item do Wikidata, por exemplo — é
+> apontado como *não é uma instância conhecida* da classe. Isso é esperado; um FAIR
+> Data Point que conheça o recurso pode muito bem aceitá-lo.
 
 ### Obtendo o RDF
 
@@ -565,7 +576,7 @@ campos de busca. Um campo **Autocompletar** ou **Seleção de instâncias** busc
   *Agent* para a sua organização e escolha-o como *Publisher* de um registro
   *Dataset*;
 - **arquivos de vocabulário** adicionados em **Fontes de busca → Vocabulário…**
-  (Turtle, N-Triples, TriG ou N3), como um esquema de conceitos SKOS ou uma
+  (Turtle, N-Triples, TriG, N3, JSON-LD ou RDF/XML), como um esquema de conceitos SKOS ou uma
   lista de licenças;
 - os **valores permitidos** do campo, quando ele tem uma lista `sh:in`.
 
@@ -578,9 +589,36 @@ outro IRI.
 
 ![Escolhendo um registro Agent salvo como Publisher de um Dataset](images/record-lookup.png)
 
+### Buscando em serviços externos
+
+Um campo de busca também pode consultar um serviço online. Selecione o campo no
+**Editor visual** e escolha um serviço na seção **Fonte de busca** do Inspetor:
+
+![Escolhendo o Wikidata como fonte de busca do campo Publisher](images/lookup-source.png)
+
+| Serviço | Busca | Configurações |
+|---|---|---|
+| **Um endpoint SPARQL** | os rótulos das instâncias da `sh:class` do campo, em qualquer triple store | a URL do endpoint |
+| **EBI Ontology Lookup Service (OLS)** | termos de centenas de ontologias — útil para temas e palavras-chave | ontologias opcionais (ex.: `efo, chebi`); instância do OLS opcional |
+| **Wikidata** | itens do Wikidata — organizações, lugares, pessoas, … | filtro opcional “instância de” (ex.: `Q3918`, universidade) |
+
+Os registros e vocabulários locais continuam sendo buscados primeiro; os
+resultados remotos vêm em seguida, com a fonte indicada. A escolha fica salva no
+esquema como uma pequena anotação do Contour na propriedade —
+`contour:lookupService`, `contour:lookupEndpoint` e `contour:lookupFilter`, no
+namespace `https://contour.fairdatapoint.org/ns#` — e acompanha o arquivo SHACL.
+Outras ferramentas SHACL e o FAIR Data Point simplesmente a ignoram.
+
+> **Acesso pelo navegador (CORS).** O Contour roda inteiramente no seu navegador,
+> então só consegue consultar serviços que aceitam requisições de páginas web. O
+> EBI OLS e o Wikidata aceitam; muitos endpoints SPARQL não. O endpoint do
+> Serviço de Publicações da UE, por exemplo, responde, mas bloqueia requisições do
+> navegador — o Contour então avisa que não conseguiu acessar o serviço. Uma
+> página sem servidor não tem como contornar isso.
+
 ### Importando um registro existente
 
-**Importar…** lê um arquivo RDF (Turtle, N-Triples, TriG ou N3) e carrega como
+**Importar…** lê um arquivo RDF (Turtle, N-Triples, TriG, N3, JSON-LD ou RDF/XML) e carrega como
 registro cada recurso com o tipo da classe-alvo do esquema, pronto para corrigir
 ou completar. Um registro com o mesmo IRI é substituído (o Contour pergunta
 antes). Triplas sem campo correspondente no formulário são contadas e deixadas
@@ -788,7 +826,7 @@ texto amigável ao steward e escolha uma **Severidade** para que uma plataforma
 possa exibir um Warning útil em vez de uma falha seca.
 
 **Exportar para JSON-LD.** Na aba Código SHACL, defina **Sintaxe** → *JSON-LD
-(exportação)* e **Copie** ou **Salve como** `.jsonld` para ferramentas que
+(somente leitura)* e **Copie** ou **Salve como** `.jsonld` para ferramentas que
 consomem JSON-LD.
 
 **Começar de um exemplo.** Use o menu **Exemplos** para carregar um modelo
@@ -824,8 +862,9 @@ modela é preservado (veja
 - **Confira o painel de Problemas.** Antes de exportar, expanda **Problemas** na
   barra de ações e resolva quaisquer erros (caminhos vazios, prefixos não
   declarados, `sh:node` quebrado).
-- **Editando JSON-LD?** Não dá — é somente exportação. Mude a **Sintaxe** de volta
-  para Turtle (ou N-Triples / TriG / N3) para continuar editando.
+- **Editando JSON-LD?** Não na caixa de código — lá ele é somente leitura. Mude a
+  **Sintaxe** de volta para Turtle (ou N-Triples / TriG / N3) para continuar
+  editando, ou use **Abrir…** com um arquivo `.jsonld` para carregá-lo nos editores.
 - **Recomeçar.** Use o botão **Novo** para um esquema em branco, carregue um de
   **Exemplos** ou **Abra…** um arquivo existente.
 

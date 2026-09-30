@@ -17,7 +17,9 @@ Contour is a browser-based, drag-and-drop editor for building [SHACL](https://ww
 - **Bidirectional editing** — switch to the Definition tab to edit the raw Turtle directly; changes are parsed and synced back to the visual canvas automatically.
 - **Turtle autocomplete** — the Turtle editor offers context-aware completions for SHACL predicates, node kinds, XSD datatypes, DASH editors, and `@prefix` declarations.
 - **Form preview** — renders a realistic HTML form from the current schema so you can verify the user experience before deploying.
-- **File operations** — open, save, and save-as `.ttl` files using the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API) (with a fallback for browsers that don't support it).
+- **Metadata records ("light FDP")** — fill in the generated form and get the metadata record as RDF (Turtle, N-Triples, TriG, N3, JSON-LD), with live validation of the modelled constraints and an optional full SHACL Core check ([shacl-engine](https://github.com/rdf-ext/shacl-engine)) against the whole schema. Records are kept in the browser, can be imported back, and feed the lookup fields.
+- **Lookup fields** — Auto-complete / Instances-select fields search saved records, imported vocabularies and `sh:in` values by `sh:class`, and optionally a SPARQL endpoint, the EBI Ontology Lookup Service or Wikidata (configured per field and stored in the SHACL as a small `contour:` annotation that other tools ignore). Remote services must allow browser (CORS) access.
+- **File operations** — open Turtle, N-Triples, TriG, N3, JSON-LD and RDF/XML files; save and save-as in the chosen syntax using the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API) (with a fallback for browsers that don't support it).
 - **Groups and nested shapes** — supports `sh:PropertyGroup` for organising fields into sections and `sh:node` for embedding sub-forms.
 - **Prefix management** — add, remove, and rename `@prefix` declarations from the Inspector panel.
 - **Zero backend** — the editor is a fully client-side single-page application; no server required.

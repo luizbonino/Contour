@@ -37,7 +37,7 @@ engine that can **ingest and emit multiple RDF syntaxes**.
 | 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ✅ Done (common cases; complex stays residual) |
 | 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | 🟡 a11y/order/autocomplete/hygiene done; navigator + peer shapes pending |
 | 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | 🟡 JSON-LD export done |
-| 7 — Fill in & export metadata records | "light FDP": fill the form, get RDF, lookups | ✅ 7a–7f done; 7g (remote lookups, full SHACL) later |
+| 7 — Fill in & export metadata records | "light FDP": fill the form, get RDF, lookups | ✅ Done (7a–7g) |
 
 ## Priority map (from the review)
 
@@ -365,7 +365,7 @@ reshape concentrate.
 
 ---
 
-## Phase 7 — Fill in & export metadata records ("light FDP") 🟡
+## Phase 7 — Fill in & export metadata records ("light FDP") ✅
 
 > **Verified (7a–7f):** `npm test` **177/177** (22 new record + lookup tests);
 > type-check clean; `npm run build` single-file `dist/index.html`
@@ -444,16 +444,54 @@ Point's metadata editing.
       manager ([`useRecords.ts`](src/composables/useRecords.ts) persistence).
 - [x] **7f — i18n + guide**: all six locales; a "Filling in a record" section in
       the data-steward guide.
-- [ ] **7g — Later / opt-in**: remote lookup sources (SPARQL endpoints incl.
-      Wikidata / FDP, EBI OLS, LOV) configured per field by a small
-      `contour:lookup…` annotation (preserved by the residual graph, ignored by
-      the FDP); optional full SHACL validation via a lazy-loaded engine
-      (e.g. `rdf-validate-shacl`); JSON-LD / RDF-XML *import*.
+- [x] **7g — Remote lookups, full SHACL check, more import formats**:
+  - [x] **Remote lookup sources** per field, stored as a small annotation on
+        the property shape in Contour's own namespace
+        `contour: <https://contour.fairdatapoint.org/ns#>` —
+        `contour:lookupService` (`contour:SPARQL` / `contour:OLS` /
+        `contour:Wikidata`), `contour:lookupEndpoint` (SPARQL endpoint, or an
+        OLS instance), `contour:lookupFilter` (OLS ontologies, e.g. `efo,chebi`;
+        Wikidata "instance of" Q-id, e.g. `Q43229`). Parsed and generated as
+        first-class model (not residual); SHACL processors and the FDP ignore
+        it. Inspector "Lookup source" section. Local sources are still
+        searched first. Services verified to allow browser (CORS) access:
+        EBI OLS4, Wikidata API + SPARQL. LOV's search API is gone (404); the EU
+        Publications Office SPARQL endpoint sends no CORS header (unusable from
+        a browser) — documented as the example of that limit.
+  - [x] **Full SHACL (Core) check** of the record with
+        [`shacl-engine`](https://github.com/rdf-ext/shacl-engine) (MIT, ~18 KB
+        gzip, core validations only — its SPARQL plugin is not imported),
+        against the *whole* schema graph including the "Preserved" residual.
+        The types of linked records / vocabulary terms (and known subclass
+        links) are added to the data graph so `sh:class` can be checked.
+        Results are mapped back to fields. The built-in checks stay as the
+        live, translated guidance. (`rdf-validate-shacl` rejected: ~166 KB gzip.)
+  - [x] **JSON-LD and RDF/XML import** — small built-in parsers (no new
+        dependency) used everywhere RDF is read (Open schema, Import record,
+        Import vocabulary). JSON-LD: inline contexts (terms, prefixes,
+        `@vocab`, `@base`, `@language`, type coercion, `@list`), nested nodes,
+        `@graph`; remote contexts are rejected with a clear message. RDF/XML:
+        node/property elements, `rdf:about` / `rdf:ID` / `rdf:nodeID` /
+        `rdf:resource`, typed node elements, property attributes,
+        `xml:lang` / `rdf:datatype`, `xml:base`, `parseType`
+        `Resource` / `Literal` / `Collection`, `rdf:li`, internal entities.
+  - [x] i18n (6 locales), guide updates (§4 formats, §5 full check +
+        "Searching external services"), tests.
+
+  > **Verified (7g):** `npm test` **202/202** (+20: import formats, remote
+  > lookups + annotation round-trip, full SHACL check); `vue-tsc -b` clean;
+  > build **991 KB / 462 KB gzip** (+31 KB gzip: shacl-engine ≈16.5 KB, the
+  > rest parsers, remote lookups, UI and strings). Live services checked from
+  > Chrome: Wikidata (with "instance of" filter) and OLS return results; the EU
+  > Publications Office endpoint shows the CORS message. `npm audit` unchanged
+  > by the new dependency (all 8 findings are pre-existing dev tooling).
+  > Note: `shacl-engine` resolves `rdfs:subClassOf` from the *shapes* graph, so
+  > subclass links are passed in both graphs.
 
 > **Known limits (by design):** constraints kept in the residual graph
 > (qualified shapes, complex paths, `sh:xone`/`and`/`not`) are not checked by
-> the built-in validator; remote lookups (7g) will depend on the service
-> allowing browser (CORS) access.
+> the built-in validator (the full SHACL check covers them); remote lookups
+> depend on the service allowing browser (CORS) access.
 
 ---
 

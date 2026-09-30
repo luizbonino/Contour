@@ -169,6 +169,15 @@ async function run() {
   await page.getByRole('button', { name: /sh:or/ }).first().click(); await wait(200);
   await snapSection('alt-types', 1); // Constraints
 
+  // ── §5 Lookup source (Inspector) ───────────────────────────────────────────
+  await loadDataset(); await tab(1);
+  await pickField('Publisher');
+  const lookupSec = page.locator('.insp-section:has(option[value="wikidata"])').first();
+  await lookupSec.locator('select').selectOption('wikidata'); await wait(150);
+  await lookupSec.locator('input').first().fill('Q3918'); await wait(150);
+  try { await lookupSec.screenshot({ path: path.join(IMG, 'lookup-source.png') }); ok.push('lookup-source'); }
+  catch (e) { fail.push(`lookup-source: ${e.message.split('\n')[0]}`); }
+
   // ── §5 Metadata Record tab ─────────────────────────────────────────────────
   // An Agent record first, so the Dataset's Publisher lookup has something to offer.
   const rec = (loc) => page.locator(`.record-form [data-loc="${loc}"]`);

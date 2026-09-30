@@ -8,14 +8,15 @@ import type { Quad } from './rdf';
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
 const SUBCLASS_OF = 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
 
-export type LookupSourceKind = 'record' | 'vocab' | 'in';
+export type LookupSourceKind = 'record' | 'vocab' | 'in' | 'remote';
 
 export interface LookupItem {
   iri: string;
   label: string;
   types: string[];
-  source: string; // record's schema name, vocabulary file name, or 'sh:in'
+  source: string; // record's schema name, vocabulary file name, 'sh:in', or remote service
   sourceKind: LookupSourceKind;
+  description?: string; // remote services (e.g. Wikidata) describe their items
 }
 
 // Preferred label predicates, best first.
@@ -133,6 +134,7 @@ export function searchLookup(
   const isOfClass = (it: LookupItem) =>
     !q.classIri ||
     it.sourceKind === 'in' ||
+    it.sourceKind === 'remote' || // already filtered by the service
     it.types.some((t) => t === q.classIri || supers.get(t)?.has(q.classIri!));
 
   const scored: { it: LookupItem; score: number }[] = [];

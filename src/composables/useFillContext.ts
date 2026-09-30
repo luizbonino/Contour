@@ -9,6 +9,8 @@ import type { RecordIssue, RecordValue } from '../record';
 export interface FillContext {
   /** Lookup candidates for a reference field, filtered by its sh:class. */
   search(field: Field, text: string): LookupItem[];
+  /** Remote results for a field with a lookup source; null when it has none. */
+  remote(field: Field, text: string, signal: AbortSignal): Promise<LookupItem[]> | null;
   /** A known item (any source) for an entered IRI or CURIE, to show its label. */
   describe(field: Field, value: string): LookupItem | undefined;
   /** Issues at a field location (`key` or `parent/index/key`). */

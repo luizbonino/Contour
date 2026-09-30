@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSchemaStore, fieldFromWidget } from './composables/useSchema';
 import { serializeSchema, parseShacl } from './shacl';
-import { SYNTAXES, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf } from './rdf';
+import { OUTPUT_SYNTAXES, RDF_FILE_ACCEPT, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf } from './rdf';
 import type { Quad } from './rdf';
 import { validateSchema } from './validation';
 import GraphView from './components/GraphView.vue';
@@ -570,7 +570,7 @@ async function openShacl() {
       const [handle] = await (window as unknown as Window & {
         showOpenFilePicker(opts?: object): Promise<FileSystemFileHandle[]>;
       }).showOpenFilePicker({
-        types: [{ description: 'RDF / SHACL files', accept: { 'text/turtle': ['.ttl', '.n3', '.shacl', '.nt', '.trig'] } }],
+        types: [{ description: 'RDF / SHACL files', accept: { 'text/turtle': RDF_FILE_ACCEPT.split(',') } }],
         multiple: false,
       });
       fileHandle.value = handle;
@@ -622,11 +622,21 @@ function applyLoadedShacl(source: string): void {
     if (result.schema) Object.assign(d, result.schema);
   });
 
+  // Import-only syntaxes (RDF/XML) aren't written back: show and save as Turtle,
+  // and forget the file handle so Save can't overwrite the source with Turtle.
+  if (result.schema && SYNTAX_BY_ID[rdfSyntax.value]?.output === false) {
+    rdfSyntax.value = DEFAULT_SYNTAX;
+    fileHandle.value = null;
+    userEditingShacl = false;
+    shaclDraft.value = shacl.value;
+  }
+
   if (result.schema) {
     loadedFileParseError.value = null;
   } else {
     const line = result.errorLine ? ` (line ${result.errorLine})` : '';
-    loadedFileParseError.value = `${result.error}${line}`;
+    const error = result.error === 'remoteContext' ? t('record.remoteContext') : result.error;
+    loadedFileParseError.value = `${error}${line}`;
   }
 }
 
@@ -796,7 +806,7 @@ async function saveAsShacl() {
         <input
           ref="fileInputRef"
           type="file"
-          accept=".ttl,.n3,.shacl"
+          :accept="RDF_FILE_ACCEPT"
           style="display:none"
           @change="onFileInputChange"
         />
@@ -960,7 +970,7 @@ async function saveAsShacl() {
                     v-model="rdfSyntax"
                     @change="onSyntaxChange(($event.target as HTMLSelectElement).value)"
                   >
-                    <option v-for="s in SYNTAXES" :key="s.id" :value="s.id">{{ s.label }}</option>
+                    <option v-for="s in OUTPUT_SYNTAXES" :key="s.id" :value="s.id">{{ s.label }}{{ s.editable === false ? ` (${t('definition.exportTag')})` : '' }}</option>
                   </select>
                 </label>
                 <button class="btn btn-ghost btn-sm" :title="t('graph.openTitle')" @click="openGraph">

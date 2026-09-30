@@ -2130,3 +2130,41 @@ button {
   font-size: 12px;
   color: var(--color-success);
 }
+.lookup__desc {
+  font-size: 11px;
+  color: var(--color-text-default);
+}
+.lookup__status {
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--color-text-lighter);
+  font-style: italic;
+}
+.lookup__status.is-error {
+  color: var(--color-danger);
+  font-style: normal;
+}
+.record-shacl {
+  margin: 8px 4px 2px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--color-separator);
+}
+.record-shacl__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 6px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  cursor: pointer;
+}
+.record-shacl__comp {
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--color-text-lighter);
+}
+.record-shacl .issues-panel__item:disabled {
+  cursor: default;
+}

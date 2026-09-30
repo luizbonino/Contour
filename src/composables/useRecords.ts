@@ -101,10 +101,12 @@ export function useLookupIndex(excludeId: () => string | null, lang: () => strin
     for (const v of vocabularies.value) out.push(...indexQuads(vocabQuads(v), v.name, 'vocab', lang()));
     return out;
   });
-  const supers = computed(() =>
-    superclassMap([...BUILTIN_SUBCLASSES, ...vocabularies.value.flatMap((v) => subclassPairs(vocabQuads(v)))]),
-  );
-  return { items, supers };
+  const pairs = computed<[string, string][]>(() => [
+    ...BUILTIN_SUBCLASSES,
+    ...vocabularies.value.flatMap((v) => subclassPairs(vocabQuads(v))),
+  ]);
+  const supers = computed(() => superclassMap(pairs.value));
+  return { items, supers, pairs };
 }
 
 export function useRecords() {

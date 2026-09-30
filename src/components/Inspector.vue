@@ -2,7 +2,9 @@
 import { computed } from 'vue';
 import { DATATYPES, NODE_KINDS, VOCAB_TERMS, VOCAB_CLASSES, WIDGET_BY_ID, newId } from '../data';
 import { useI18n } from '../composables/useI18n';
-import type { Field, Group, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '../types';
+import type { Field, Group, LookupConfig, LookupService, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '../types';
+import { CONTOUR_NS } from '../shacl';
+import { OLS_DEFAULT } from '../remote';
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
 import InValuesEditor from './InValuesEditor.vue';
@@ -93,6 +95,13 @@ const showCloseBtn = computed(() =>
   props.selectedKind === 'nested-field',
 );
 
+// Remote lookup sources apply to the instance-lookup widgets only.
+const showLookup = computed(() => {
+  const id = fieldWidget.value?.id;
+  return id === 'AutoCompleteEditor' || id === 'InstancesSelectEditor';
+});
+const LOOKUP_SERVICES: LookupService[] = ['sparql', 'ols', 'wikidata'];
+
 // ── Mutations ──────────────────────────────────────────────────────────────
 
 function setField<K extends keyof Field>(key: K, value: Field[K]) {
@@ -116,6 +125,34 @@ function setField<K extends keyof Field>(key: K, value: Field[K]) {
       if (i >= 0) (ns.fields[i] as Field)[key] = value;
     }, `nf:${nsId}:${fId}:${String(key)}`);
   }
+}
+
+// Set (or clear) the field's remote lookup source; declares the contour:
+// prefix in the same undo step so the generated SHACL stays readable.
+function setLookup(patch: Partial<LookupConfig> | null) {
+  const f = activeField.value;
+  if (!f) return;
+  let next: LookupConfig | undefined;
+  if (patch && (patch.service ?? f.lookup?.service)) {
+    next = { ...(f.lookup || { service: patch.service! }), ...patch } as LookupConfig;
+    if (patch.service && patch.service !== f.lookup?.service) next = { service: patch.service }; // settings are per service
+    if (!next.endpoint) delete next.endpoint;
+    if (!next.filter) delete next.filter;
+  }
+  const kind = props.selectedKind;
+  const nsId = props.selectedNestedShapeId;
+  const fId = f.id;
+  props.mutate((draft) => {
+    const target =
+      kind === 'nested-field'
+        ? (draft.nestedShapes || []).find((x) => x.id === nsId)?.fields.find((x) => x.id === fId)
+        : draft.groups.flatMap((g) => g.fields).find((x) => x.id === fId);
+    if (!target) return;
+    target.lookup = next;
+    if (next && !draft.prefixes.some((p) => p.uri === CONTOUR_NS)) {
+      draft.prefixes.push({ prefix: draft.prefixes.some((p) => p.prefix === 'contour') ? 'ctr' : 'contour', uri: CONTOUR_NS });
+    }
+  }, `lookup:${fId}`);
 }
 
 function setGroup<K extends keyof Group>(key: K, value: Group[K]) {
@@ -543,6 +580,43 @@ function createAndLinkNestedShape() {
               <option v-for="s in SEVERITIES" :key="s" :value="s">{{ s }}</option>
             </select>
           </div>
+        </div>
+
+        <div v-if="showLookup" class="insp-section">
+          <div class="insp-section__title">{{ t('inspector.section.lookup') }}</div>
+          <div class="form-row">
+            <label>{{ t('inspector.label.lookupService') }}</label>
+            <select
+              :value="activeField.lookup?.service || ''"
+              @change="setLookup(($event.target as HTMLSelectElement).value ? { service: ($event.target as HTMLSelectElement).value as LookupService } : null)"
+            >
+              <option value="">{{ t('inspector.lookupService.none') }}</option>
+              <option v-for="svc in LOOKUP_SERVICES" :key="svc" :value="svc">{{ t(`inspector.lookupService.${svc}`) }}</option>
+            </select>
+          </div>
+          <template v-if="activeField.lookup">
+            <div v-if="activeField.lookup.service !== 'wikidata'" class="form-row">
+              <label>{{ activeField.lookup.service === 'ols' ? t('inspector.label.olsInstance') : t('inspector.label.sparqlEndpoint') }}</label>
+              <input
+                type="text"
+                class="mono"
+                :value="activeField.lookup.endpoint || ''"
+                :placeholder="activeField.lookup.service === 'ols' ? OLS_DEFAULT : 'https://…/sparql'"
+                @input="setLookup({ endpoint: ($event.target as HTMLInputElement).value.trim() })"
+              />
+            </div>
+            <div v-if="activeField.lookup.service !== 'sparql'" class="form-row">
+              <label>{{ activeField.lookup.service === 'ols' ? t('inspector.label.olsOntologies') : t('inspector.label.wikidataInstanceOf') }}</label>
+              <input
+                type="text"
+                class="mono"
+                :value="activeField.lookup.filter || ''"
+                :placeholder="activeField.lookup.service === 'ols' ? 'efo, chebi' : 'Q43229'"
+                @input="setLookup({ filter: ($event.target as HTMLInputElement).value.trim() })"
+              />
+            </div>
+          </template>
+          <div class="hint">{{ t(`inspector.hint.lookup${activeField.lookup ? '.' + activeField.lookup.service : '.none'}`) }}</div>
         </div>
 
         <div class="insp-section">
