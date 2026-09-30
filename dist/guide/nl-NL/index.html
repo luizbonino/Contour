@@ -136,15 +136,25 @@ downloadstijl.</p>
 <li><a href="#de-graaf-visualiseren">De graaf visualiseren</a></li>
 </ul>
 </li>
-<li><a href="#5-je-werk-controleren-het-paneel-problemen">Je werk controleren (het paneel Problemen)</a></li>
-<li><a href="#6-geavanceerde-functies-geavanceerd-modelleren">Geavanceerde functies (geavanceerd modelleren)</a></li>
-<li><a href="#7-referentie">Referentie</a><ul>
+<li><a href="#5-een-metadatarecord-invullen-het-tabblad-metadatarecord">Een metadatarecord invullen (het tabblad Metadatarecord)</a><ul>
+<li><a href="#het-formulier-invullen">Het formulier invullen</a></li>
+<li><a href="#de-record-iri">De record-IRI</a></li>
+<li><a href="#het-record-controleren">Het record controleren</a></li>
+<li><a href="#de-rdf-ophalen">De RDF ophalen</a></li>
+<li><a href="#meerdere-records-en-ze-opzoeken">Meerdere records en ze opzoeken</a></li>
+<li><a href="#een-bestaand-record-importeren">Een bestaand record importeren</a></li>
+<li><a href="#waar-records-worden-bewaard">Waar records worden bewaard</a></li>
+</ul>
+</li>
+<li><a href="#6-je-werk-controleren-het-paneel-problemen">Je werk controleren (het paneel Problemen)</a></li>
+<li><a href="#7-geavanceerde-functies-geavanceerd-modelleren">Geavanceerde functies (geavanceerd modelleren)</a></li>
+<li><a href="#8-referentie">Referentie</a><ul>
 <li><a href="#widgetcatalogus">Widgetcatalogus</a></li>
 <li><a href="#referentie-van-eigenschapsinstellingen">Referentie van eigenschapsinstellingen</a></li>
 </ul>
 </li>
-<li><a href="#8-recepten--veelvoorkomende-modelleerpatronen">Recepten — veelvoorkomende modelleerpatronen</a></li>
-<li><a href="#9-tips-en-probleemoplossing">Tips en probleemoplossing</a></li>
+<li><a href="#9-recepten--veelvoorkomende-modelleerpatronen">Recepten — veelvoorkomende modelleerpatronen</a></li>
+<li><a href="#10-tips-en-probleemoplossing">Tips en probleemoplossing</a></li>
 </ol>
 <hr>
 <h2 id="1-wat-je-bouwt-kernbegrippen">1. Wat je bouwt (kernbegrippen)</h2>
@@ -191,8 +201,8 @@ overal zult tegenkomen:</p>
 <hr>
 <h2 id="2-de-interface-in-een-oogopslag">2. De interface in een oogopslag</h2>
 <p><img src="images/interface-overview.png" alt="Contour met het voorbeeldschema Dataset geladen"></p>
-<p>Het venster heeft drie tabbladen:</p>
-<p><img src="images/tabs.png" alt="De drie tabbladen: SHACL-code, Visuele editor, Formuliervoorbeeld"></p>
+<p>Het venster heeft vier tabbladen:</p>
+<p><img src="images/tabs.png" alt="De vier tabbladen: SHACL-code, Visuele editor, Formuliervoorbeeld, Metadatarecord"></p>
 <ul>
 <li><strong>SHACL-code</strong> — het geserialiseerde schema. Standaard Turtle, met
 autoaanvullen; bewerkingen worden teruggesynchroniseerd naar het visuele canvas.
@@ -202,6 +212,8 @@ Een <strong>syntaxis</strong>-keuzemenu biedt daarnaast N-Triples, TriG, Notatio
 Hier vindt het meeste werk plaats.</li>
 <li><strong>Formuliervoorbeeld</strong> — een realistische weergave van het invoerformulier dat
 je schema oplevert, zodat je de ervaring kunt testen voordat je publiceert.</li>
+<li><strong>Metadatarecord</strong> — vul het gegenereerde formulier in en krijg het
+metadatarecord als RDF (zie <a href="#5-een-metadatarecord-invullen-het-tabblad-metadatarecord">§5</a>).</li>
 </ul>
 <p>De <strong>Visuele editor</strong> is verdeeld in drie kolommen:</p>
 <table>
@@ -226,7 +238,7 @@ je schema oplevert, zodat je de ervaring kunt testen voordat je publiceert.</li>
 </tbody></table>
 <p>Onder de werkbank staat een <strong>actiebalk</strong> met een teller voor
 eigenschappen/groepen, een <strong>Problemen</strong>-indicator (een live controle van je
-schema — zie <a href="#5-je-werk-controleren-het-paneel-problemen">§5</a>) en knoppen voor
+schema — zie <a href="#6-je-werk-controleren-het-paneel-problemen">§6</a>) en knoppen voor
 Opslaan / Kopiëren. Om het geserialiseerde schema te zien, ga je naar het tabblad
 <strong>SHACL-code</strong>; om het weergegeven formulier te zien, ga je naar
 <strong>Formuliervoorbeeld</strong>.</p>
@@ -428,7 +440,7 @@ typt.</p>
 <p><strong>Geavanceerd:</strong> een eigenschap kan ook <em>ofwel</em> een literal <em>of</em> een IRI
 accepteren (en vergelijkbare &quot;een van deze types&quot;-regels) via <strong>Alternatieve
 waardetypes (<code>sh:or</code>)</strong>, of een relatie achterstevoren volgen met een
-<strong>Inverse (<code>^</code>)</strong>-pad — zie <a href="#6-geavanceerde-functies-geavanceerd-modelleren">§6 Geavanceerde functies</a>.</p>
+<strong>Inverse (<code>^</code>)</strong>-pad — zie <a href="#7-geavanceerde-functies-geavanceerd-modelleren">§7 Geavanceerde functies</a>.</p>
 </blockquote>
 <h3 id="stap-10--modelleer-een-subobject-met-een-geneste-vorm">Stap 10 — Modelleer een subobject met een geneste vorm</h3>
 <p>Soms is een veld zelf een klein gestructureerd object. Een <strong>contactpunt</strong> heeft
@@ -452,7 +464,7 @@ vak biedt je geneste vormen als suggesties aan).</li>
 maken en koppelen</strong> om in één stap een nieuwe vorm te creëren en <code>sh:node</code> eraan
 te koppelen — voeg er vervolgens gewoon de velden aan toe. De eigenschapkaart
 toont de koppeling waarnaar hij verwijst (bijv. <code>→ :ContactShape</code>), en het
-<a href="#5-je-werk-controleren-het-paneel-problemen">paneel Problemen</a> markeert een
+<a href="#6-je-werk-controleren-het-paneel-problemen">paneel Problemen</a> markeert een
 Details-eigenschap waarvan het doel ontbreekt.</p>
 </blockquote>
 <p><img src="images/nested-canvas.png" alt="Een schema met een Details-eigenschap en een ingevulde geneste ContactShape"></p>
@@ -472,8 +484,9 @@ eventueel <strong>validatiebericht</strong> verschijnt onder het veld, en
 <strong>Details</strong>-eigenschappen geven de velden van hun geneste vorm inline weer — tot
 elke gewenste diepte genest:</p>
 <p><img src="images/form-preview-tab.png" alt="Het weergegeven formuliervoorbeeld, inclusief een inline genest Contact-formulier"></p>
-<p>Dit voorbeeld is alleen-lezen — het is er om het ontwerp te valideren, niet om
-echte gegevens vast te leggen.</p>
+<p>Dit voorbeeld is er om het ontwerp te controleren. Om een echt record in te
+vullen en de RDF ervan te krijgen, gebruik je het tabblad <strong>Metadatarecord</strong> (zie
+<a href="#5-een-metadatarecord-invullen-het-tabblad-metadatarecord">§5</a>).</p>
 <h3 id="stap-12--bekijk-de-gegenereerde-shacl">Stap 12 — Bekijk de gegenereerde SHACL</h3>
 <p>Het tabblad <strong>SHACL-code</strong> toont de Turtle die uit je ontwerp wordt gegenereerd (en
 laat je deze rechtstreeks bewerken):</p>
@@ -565,7 +578,90 @@ snelle manier om de vormgraaf (en eventuele geneste vormen of bewaarde construct
 in één oogopslag te zien.</p>
 <p><img src="images/schema-graph.png" alt="Het schema weergegeven als een RDF-knoop-link-graaf"></p>
 <hr>
-<h2 id="5-je-werk-controleren-het-paneel-problemen">5. Je werk controleren (het paneel Problemen)</h2>
+<h2 id="5-een-metadatarecord-invullen-het-tabblad-metadatarecord">5. Een metadatarecord invullen (het tabblad Metadatarecord)</h2>
+<p>Zodra je schema ontworpen is, maakt het tabblad <strong>Metadatarecord</strong> er een
+werkend invoerformulier van: vul het in en Contour levert het <strong>metadatarecord als
+RDF</strong>, klaar om in te leveren, te publiceren of in een triple store te laden. Zie
+het als een lichte vervanger voor het invoeren van metadata in een FAIR Data
+Point — zonder server.</p>
+<p><img src="images/record-tab.png" alt="Het tabblad Metadatarecord: het formulier links, validatie en de gegenereerde RDF rechts"></p>
+<h3 id="het-formulier-invullen">Het formulier invullen</h3>
+<p>Het formulier is hetzelfde als in het <strong>Formuliervoorbeeld</strong>, maar nu actief: elke
+waarde die je typt, verschijnt direct in de <strong>RDF-uitvoer</strong> rechts. Gebruik
+<strong>+ Toevoegen</strong> en <strong>×</strong> voor herhaalbare velden en het kleine taalvak voor tekst
+met een taaltag. <strong>Details</strong>-subformulieren vul je inline in; ze worden geneste
+resources, getypeerd met de doelklasse van de geneste shape. Lege velden worden
+weggelaten.</p>
+<p>Elke waarde wordt geschreven zoals het schema voorschrijft: datums als
+<code>xsd:date</code>, getallen met hun datatype, booleans als <code>xsd:boolean</code>, IRI-velden als
+IRI&#39;s (een volledige IRI, of een naam met prefix zoals <code>dct:Standard</code>, via de
+prefixen van het schema) en keuzes uit een enumeratie als literal of IRI, zoals
+gedeclareerd in <code>sh:in</code>.</p>
+<h3 id="de-record-iri">De record-IRI</h3>
+<p>Elk record heeft een identifier nodig: het subject van al zijn triples. Contour
+maakt er een uit de <strong>basis-IRI</strong>, de doelklasse en de titel — bijvoorbeeld
+<code>https://example.org/dataset/luchtkwaliteit-2025</code> — en houdt die gelijk met de
+titel terwijl je typt. Pas hem aan om zelf te kiezen; <strong>Opnieuw genereren</strong> gaat
+terug naar de gegenereerde IRI. Stel de <strong>Basis-IRI voor nieuwe records</strong> één keer
+in (bijvoorbeeld op de namespace van je organisatie of cursus) en die wordt
+voortaan gebruikt. Contour waarschuwt als de IRI geen geldige absolute IRI is of
+al door een ander record wordt gebruikt.</p>
+<h3 id="het-record-controleren">Het record controleren</h3>
+<p>Het paneel <strong>Validatie</strong> controleert het record tegen je schema terwijl je typt:
+minimum- en maximumaantallen, datatypes (een echte datum, een geheel getal, …),
+lengtes, patronen, waardebereiken, toegestane waarden (<code>sh:in</code>), IRI&#39;s en
+taaltags. Elk probleem verschijnt ook onder het veld zelf, met de eigen
+<strong>validatiemelding</strong> en <strong>ernst</strong> van het veld als je die hebt ingesteld (zie
+<a href="#7-geavanceerde-functies-geavanceerd-modelleren">§7</a>). Klik op een probleem om naar het veld te springen. Ontbrekende
+verplichte waarden zie je als een onopvallende hint tot je ze invult.</p>
+<blockquote>
+<p>Contour controleert de beperkingen die het modelleert. Wat in het blok
+“Behouden” van je SHACL staat (bijvoorbeeld qualified shapes of complexe
+paden), wordt niet gecontroleerd — gebruik daarvoor een volledige
+SHACL-validator of je FAIR Data Point.</p>
+</blockquote>
+<h3 id="de-rdf-ophalen">De RDF ophalen</h3>
+<p>Kies een <strong>Syntaxis</strong> — Turtle (standaard), N-Triples, TriG, Notation3 of JSON-LD
+— en <strong>Kopieer</strong> of <strong>Download</strong> het record. Alleen de prefixen die het record
+echt gebruikt worden gedeclareerd, en subformulieren staan inline als <code>[ … ]</code>.
+Heb je meerdere records voor hetzelfde schema, dan bewaart <strong>Alle downloaden</strong> ze
+samen in één bestand.</p>
+<h3 id="meerdere-records-en-ze-opzoeken">Meerdere records en ze opzoeken</h3>
+<p>Het menu <strong>Record</strong> toont alle records die je voor dit schema hebt gemaakt; met
+<strong>Nieuw</strong>, <strong>Dupliceren</strong> en <strong>Verwijderen</strong> beheer je ze. Opgeslagen records
+worden ook aangeboden in opzoekvelden. Een veld <strong>Automatisch aanvullen</strong> of
+<strong>Instantiekeuze</strong> zoekt in:</p>
+<ul>
+<li><strong>records</strong> die in Contour zijn opgeslagen, van elk schema — vul een
+<em>Agent</em>-record in voor je organisatie en kies het als <em>Publisher</em> van een
+<em>Dataset</em>-record;</li>
+<li><strong>vocabulairebestanden</strong> die je toevoegt via <strong>Opzoekbronnen → Vocabulaire…</strong>
+(Turtle, N-Triples, TriG of N3), zoals een SKOS-conceptschema of een lijst met
+licenties;</li>
+<li>de <strong>toegestane waarden</strong> van het veld, als het een <code>sh:in</code>-lijst heeft.</li>
+</ul>
+<p>Kandidaten worden gefilterd op de <strong>Klasse</strong> van het veld (<code>sh:class</code>). Een veld
+dat beperkt is tot <code>foaf:Agent</code> biedt ook <code>foaf:Person</code>- en
+<code>foaf:Organization</code>-resources aan, plus subklassen die in je vocabulaires staan
+(<code>rdfs:subClassOf</code>). Typ om op label te filteren, kies met de muis of met de
+pijltjestoetsen en Enter, en het veld bewaart de IRI van de resource. Je kunt
+altijd ook een andere IRI typen.</p>
+<p><img src="images/record-lookup.png" alt="Een opgeslagen Agent-record kiezen als Publisher van een Dataset"></p>
+<h3 id="een-bestaand-record-importeren">Een bestaand record importeren</h3>
+<p><strong>Importeren…</strong> leest een RDF-bestand (Turtle, N-Triples, TriG of N3) en laadt
+elke resource die getypeerd is met de doelklasse van het schema als record, klaar
+om te corrigeren of aan te vullen. Een record met dezelfde IRI wordt vervangen
+(Contour vraagt het eerst). Triples waarvoor het formulier geen veld heeft,
+worden geteld en weggelaten, zodat je weet wanneer een bestand meer bevat dan je
+schema beschrijft.</p>
+<h3 id="waar-records-worden-bewaard">Waar records worden bewaard</h3>
+<p>Records, vocabulaires en de basis-IRI worden in je browser bewaard — er wordt
+niets geüpload. Ze blijven bestaan na herladen, maar niet na het wissen van je
+browsergegevens of in een andere browser; <strong>download</strong> dus de records die je wilt
+bewaren. Records horen bij een schema via de <strong>Shape-IRI</strong>: open het schema
+opnieuw en de records zijn terug.</p>
+<hr>
+<h2 id="6-je-werk-controleren-het-paneel-problemen">6. Je werk controleren (het paneel Problemen)</h2>
 <p>Terwijl je bouwt, controleert Contour het schema voortdurend en vat het problemen
 samen in de <strong>Problemen</strong>-indicator op de actiebalk van de Visuele editor. Klik
 erop om de lijst uit te klappen; klik op een item om direct naar het betreffende
@@ -584,7 +680,7 @@ gedeclareerd</strong>;</li>
 ze oplossen betekent dat de geëxporteerde SHACL welgevormd is en alleen verwijst
 naar gedeclareerde vocabulaires.</p>
 <hr>
-<h2 id="6-geavanceerde-functies-geavanceerd-modelleren">6. Geavanceerde functies (geavanceerd modelleren)</h2>
+<h2 id="7-geavanceerde-functies-geavanceerd-modelleren">7. Geavanceerde functies (geavanceerd modelleren)</h2>
 <p>Naast de kernwidgets en -beperkingen biedt de Inspector een paar geavanceerde
 besturingselementen voor rijkere schema&#39;s. Elk is optioneel — grijp ernaar wanneer
 je model het nodig heeft.</p>
@@ -623,7 +719,7 @@ geëxporteerd als <code>sh:path [ sh:inversePath … ]</code>, en de eigenschapk
 met een voorloop-<code>^</code>.</p>
 <p><img src="images/inverse-path.png" alt="Het selectievakje Inverse pad op een eigenschap"></p>
 <hr>
-<h2 id="7-referentie">7. Referentie</h2>
+<h2 id="8-referentie">8. Referentie</h2>
 <h3 id="widgetcatalogus">Widgetcatalogus</h3>
 <p>Elke widget verwijst naar een DASH-editor en een verstandige standaard node kind /
 datatype.</p>
@@ -841,7 +937,7 @@ klasse in de Inspector wanneer je model iets anders nodig heeft.</p>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="8-recepten--veelvoorkomende-modelleerpatronen">8. Recepten — veelvoorkomende modelleerpatronen</h2>
+<h2 id="9-recepten--veelvoorkomende-modelleerpatronen">9. Recepten — veelvoorkomende modelleerpatronen</h2>
 <p>Korte, op zichzelf staande patronen die je boven op de tutorial kunt toepassen.</p>
 <p><strong>Een veld verplicht maken.</strong> Stel <strong>Min. aantal</strong> in op <code>1</code>. De kaart toont een
 rode stip en het formulier markeert het met <code>*</code>.</p>
@@ -886,7 +982,7 @@ in de Visuele editor en gebruik vervolgens <strong>Opslaan als…</strong> voor 
 — alles wat Contour niet modelleert blijft bewaard (zie
 <a href="#4-rechtstreeks-met-de-code-werken-het-tabblad-shacl-code">§4</a>).</p>
 <hr>
-<h2 id="9-tips-en-probleemoplossing">9. Tips en probleemoplossing</h2>
+<h2 id="10-tips-en-probleemoplossing">10. Tips en probleemoplossing</h2>
 <ul>
 <li><strong>Stel altijd het eigenschapspad in.</strong> Nieuwe widgets krijgen een tijdelijk pad
 als <code>:textfield</code>; vervang het door de echte RDF-term (<code>dct:title</code>, <code>dcat:theme</code>,

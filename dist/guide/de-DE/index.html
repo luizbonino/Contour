@@ -136,15 +136,25 @@ dann mit einem Speichern im Download-Stil.</p>
 <li><a href="#den-graph-visualisieren">Den Graph visualisieren</a></li>
 </ul>
 </li>
-<li><a href="#5-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">Deine Arbeit überprüfen (das Problem-Panel)</a></li>
-<li><a href="#6-power-funktionen-fortgeschrittene-modellierung">Power-Funktionen (fortgeschrittene Modellierung)</a></li>
-<li><a href="#7-referenz">Referenz</a><ul>
+<li><a href="#5-einen-metadatensatz-ausf%C3%BCllen-der-tab-metadatensatz">Einen Metadatensatz ausfüllen (der Tab Metadatensatz)</a><ul>
+<li><a href="#das-formular-ausf%C3%BCllen">Das Formular ausfüllen</a></li>
+<li><a href="#die-datensatz-iri">Die Datensatz-IRI</a></li>
+<li><a href="#den-datensatz-pr%C3%BCfen">Den Datensatz prüfen</a></li>
+<li><a href="#das-rdf-erhalten">Das RDF erhalten</a></li>
+<li><a href="#mehrere-datens%C3%A4tze-und-wie-man-sie-nachschl%C3%A4gt">Mehrere Datensätze und wie man sie nachschlägt</a></li>
+<li><a href="#einen-vorhandenen-datensatz-importieren">Einen vorhandenen Datensatz importieren</a></li>
+<li><a href="#wo-datens%C3%A4tze-gespeichert-werden">Wo Datensätze gespeichert werden</a></li>
+</ul>
+</li>
+<li><a href="#6-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">Deine Arbeit überprüfen (das Problem-Panel)</a></li>
+<li><a href="#7-power-funktionen-fortgeschrittene-modellierung">Power-Funktionen (fortgeschrittene Modellierung)</a></li>
+<li><a href="#8-referenz">Referenz</a><ul>
 <li><a href="#widget-katalog">Widget-Katalog</a></li>
 <li><a href="#referenz-der-eigenschaftseinstellungen">Referenz der Eigenschaftseinstellungen</a></li>
 </ul>
 </li>
-<li><a href="#8-rezepte--g%C3%A4ngige-modellierungsmuster">Rezepte — gängige Modellierungsmuster</a></li>
-<li><a href="#9-tipps-und-fehlerbehebung">Tipps und Fehlerbehebung</a></li>
+<li><a href="#9-rezepte--g%C3%A4ngige-modellierungsmuster">Rezepte — gängige Modellierungsmuster</a></li>
+<li><a href="#10-tipps-und-fehlerbehebung">Tipps und Fehlerbehebung</a></li>
 </ol>
 <hr>
 <h2 id="1-was-du-erstellst-schlüsselkonzepte">1. Was du erstellst (Schlüsselkonzepte)</h2>
@@ -191,8 +201,8 @@ Ein paar Begriffe, die dir durchgehend begegnen werden:</p>
 <hr>
 <h2 id="2-die-oberfläche-im-überblick">2. Die Oberfläche im Überblick</h2>
 <p><img src="images/interface-overview.png" alt="Contour mit dem geladenen Beispielschema „Datensatz&quot;"></p>
-<p>Das Fenster hat drei Tabs:</p>
-<p><img src="images/tabs.png" alt="Die drei Tabs: SHACL-Code, Visueller Editor, Formularvorschau"></p>
+<p>Das Fenster hat vier Tabs:</p>
+<p><img src="images/tabs.png" alt="Die vier Tabs: SHACL-Code, Visueller Editor, Formularvorschau, Metadatensatz"></p>
 <ul>
 <li><strong>SHACL-Code</strong> — das serialisierte Schema. Standardmäßig Turtle, mit
 Autovervollständigung; Änderungen werden mit der visuellen Arbeitsfläche
@@ -204,6 +214,8 @@ findet der größte Teil deiner Arbeit statt.</li>
 <li><strong>Formularvorschau</strong> — eine realistische Darstellung des Eingabeformulars, das
 dein Schema erzeugt, damit du das Ergebnis vor der Veröffentlichung testen
 kannst.</li>
+<li><strong>Metadatensatz</strong> — fülle das erzeugte Formular aus und erhalte den
+Metadatensatz als RDF (siehe <a href="#5-einen-metadatensatz-ausf%C3%BCllen-der-tab-metadatensatz">§5</a>).</li>
 </ul>
 <p>Der <strong>Visuelle Editor</strong> ist in drei Spalten aufgeteilt:</p>
 <table>
@@ -228,7 +240,7 @@ kannst.</li>
 </tbody></table>
 <p>Unter dem Arbeitsbereich befindet sich eine <strong>Aktionsleiste</strong> mit einem Zähler
 für Eigenschaften/Gruppen, einer <strong>Problem</strong>-Anzeige (eine laufende Prüfung
-deines Schemas — siehe <a href="#5-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">§5</a>) sowie
+deines Schemas — siehe <a href="#6-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">§6</a>) sowie
 Schaltflächen zum Speichern und Kopieren. Um das serialisierte Schema zu sehen,
 wechsle zum Tab <strong>SHACL-Code</strong>; um das gerenderte Formular zu sehen, wechsle zur
 <strong>Formularvorschau</strong>.</p>
@@ -440,7 +452,7 @@ vor.</p>
 (<code>sh:or</code>)</strong> auch <em>entweder</em> ein Literal <em>oder</em> eine IRI akzeptieren (und ähnliche
 „einer dieser Typen&quot;-Regeln) oder einer Beziehung rückwärts über einen
 <strong>Inverse (<code>^</code>)</strong>-Pfad folgen — siehe
-<a href="#6-power-funktionen-fortgeschrittene-modellierung">§6 Power-Funktionen</a>.</p>
+<a href="#7-power-funktionen-fortgeschrittene-modellierung">§7 Power-Funktionen</a>.</p>
 </blockquote>
 <h3 id="schritt-10--ein-unterobjekt-mit-einer-verschachtelten-shape-modellieren">Schritt 10 — Ein Unterobjekt mit einer verschachtelten Shape modellieren</h3>
 <p>Manchmal ist ein Feld selbst ein kleines strukturiertes Objekt. Ein
@@ -466,7 +478,7 @@ Shape erstellen und verknüpfen</strong> klicken, um in einem Schritt eine neue 
 anzulegen und <code>sh:node</code> damit zu verdrahten — füge dann einfach ihre Felder
 hinzu. Die Eigenschaftskarte zeigt den Link, auf den sie verweist (z. B.
 <code>→ :ContactShape</code>), und das
-<a href="#5-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">Problem-Panel</a> markiert eine
+<a href="#6-deine-arbeit-%C3%BCberpr%C3%BCfen-das-problem-panel">Problem-Panel</a> markiert eine
 Details-Eigenschaft, deren Ziel fehlt.</p>
 </blockquote>
 <p><img src="images/nested-canvas.png" alt="Ein Schema mit einer Details-Eigenschaft und einer befüllten verschachtelten ContactShape"></p>
@@ -488,8 +500,9 @@ sprachmarkierter Text erhält ein kleines Sprachfeld, jede
 rendern die Felder ihrer verschachtelten Shape inline — in beliebiger
 Schachtelungstiefe:</p>
 <p><img src="images/form-preview-tab.png" alt="Die gerenderte Formularvorschau, einschließlich eines inline eingebetteten verschachtelten Kontaktformulars"></p>
-<p>Diese Vorschau ist schreibgeschützt — sie dient dazu, das Design zu validieren,
-nicht dazu, echte Daten zu erfassen.</p>
+<p>Diese Vorschau dient dazu, das Design zu prüfen. Um einen echten Datensatz
+auszufüllen und sein RDF zu erhalten, nutze den Tab <strong>Metadatensatz</strong> (siehe
+<a href="#5-einen-metadatensatz-ausf%C3%BCllen-der-tab-metadatensatz">§5</a>).</p>
 <h3 id="schritt-12--den-generierten-shacl-code-prüfen">Schritt 12 — Den generierten SHACL-Code prüfen</h3>
 <p>Der Tab <strong>SHACL-Code</strong> zeigt das aus deinem Design generierte Turtle (und lässt
 dich es direkt bearbeiten):</p>
@@ -584,7 +597,91 @@ hervortritt. Eine schnelle Möglichkeit, den Shape-Graphen (und alle
 verschachtelten Shapes oder erhaltenen Konstrukte) auf einen Blick zu sehen.</p>
 <p><img src="images/schema-graph.png" alt="Das als RDF-Knoten-Kanten-Graph gerenderte Schema"></p>
 <hr>
-<h2 id="5-deine-arbeit-überprüfen-das-problem-panel">5. Deine Arbeit überprüfen (das Problem-Panel)</h2>
+<h2 id="5-einen-metadatensatz-ausfüllen-der-tab-metadatensatz">5. Einen Metadatensatz ausfüllen (der Tab Metadatensatz)</h2>
+<p>Sobald dein Schema entworfen ist, macht der Tab <strong>Metadatensatz</strong> daraus ein
+funktionierendes Eingabeformular: Fülle es aus, und Contour erzeugt den
+<strong>Metadatensatz als RDF</strong> — bereit zum Abgeben, Veröffentlichen oder Laden in
+einen Triple Store. Sieh es als leichtgewichtigen Ersatz für die
+Metadateneingabe in einem FAIR Data Point — ganz ohne Server.</p>
+<p><img src="images/record-tab.png" alt="Der Tab Metadatensatz: links das Formular, rechts Validierung und das erzeugte RDF"></p>
+<h3 id="das-formular-ausfüllen">Das Formular ausfüllen</h3>
+<p>Das Formular ist dasselbe wie in der <strong>Formularvorschau</strong>, nur jetzt aktiv: Jeder
+eingegebene Wert erscheint sofort in der <strong>RDF-Ausgabe</strong> rechts. Nutze
+<strong>+ Hinzufügen</strong> und <strong>×</strong> für wiederholbare Felder und das kleine Sprachfeld für
+Text mit Sprach-Tag. <strong>Details</strong>-Unterformulare füllst du direkt im Formular aus;
+sie werden zu verschachtelten Ressourcen mit der Zielklasse der verschachtelten
+Shape als Typ. Leere Felder werden weggelassen.</p>
+<p>Jeder Wert wird so geschrieben, wie das Schema es vorgibt: Datumsangaben als
+<code>xsd:date</code>, Zahlen mit ihrem Datentyp, Wahrheitswerte als <code>xsd:boolean</code>,
+IRI-Felder als IRIs (eine vollständige IRI oder ein Präfixname wie
+<code>dct:Standard</code>, mit den Präfixen des Schemas) und Auswahlen aus einer
+Enumeration als Literal oder IRI, wie in <code>sh:in</code> deklariert.</p>
+<h3 id="die-datensatz-iri">Die Datensatz-IRI</h3>
+<p>Jeder Datensatz braucht einen Bezeichner: das Subjekt all seiner Tripel. Contour
+erzeugt ihn aus der <strong>Basis-IRI</strong>, der Zielklasse und dem Titel — zum Beispiel
+<code>https://example.org/dataset/luftqualitaet-2025</code> — und hält ihn beim Tippen
+mit dem Titel synchron. Bearbeite ihn, um einen eigenen zu wählen; <strong>Neu
+erzeugen</strong> kehrt zur erzeugten IRI zurück. Lege die <strong>Basis-IRI für neue
+Datensätze</strong> einmal fest (etwa auf den Namensraum deiner Organisation oder
+deines Kurses), und sie wird ab dann verwendet. Contour warnt, wenn die IRI
+keine gültige absolute IRI ist oder schon von einem anderen Datensatz genutzt
+wird.</p>
+<h3 id="den-datensatz-prüfen">Den Datensatz prüfen</h3>
+<p>Das Panel <strong>Validierung</strong> prüft den Datensatz beim Tippen gegen dein Schema:
+Mindest- und Höchstanzahlen, Datentypen (ein echtes Datum, eine ganze Zahl, …),
+Längen, Muster, Wertebereiche, erlaubte Werte (<code>sh:in</code>), IRIs und Sprach-Tags.
+Jedes Problem erscheint auch unter dem Feld selbst, mit der <strong>Validierungsmeldung</strong>
+und dem <strong>Schweregrad</strong> des Felds, sofern du sie festgelegt hast (siehe
+<a href="#7-power-funktionen-fortgeschrittene-modellierung">§7</a>). Klicke auf ein Problem, um zum Feld zu springen. Fehlende
+Pflichtwerte werden als dezenter Hinweis angezeigt, bis du sie ausfüllst.</p>
+<blockquote>
+<p>Contour prüft die Einschränkungen, die es modelliert. Was im Block
+„Beibehalten“ deines SHACL steht (zum Beispiel qualifizierte Shapes oder
+komplexe Pfade), wird nicht geprüft — nutze dafür einen vollständigen
+SHACL-Validator oder deinen FAIR Data Point.</p>
+</blockquote>
+<h3 id="das-rdf-erhalten">Das RDF erhalten</h3>
+<p>Wähle eine <strong>Syntax</strong> — Turtle (Standard), N-Triples, TriG, Notation3 oder
+JSON-LD — und <strong>Kopiere</strong> oder <strong>Lade</strong> den Datensatz <strong>herunter</strong>. Nur die
+tatsächlich verwendeten Präfixe werden deklariert, und Unterformulare stehen
+inline als <code>[ … ]</code>. Bei mehreren Datensätzen desselben Schemas speichert <strong>Alle
+herunterladen</strong> sie gemeinsam in einer Datei.</p>
+<h3 id="mehrere-datensätze-und-wie-man-sie-nachschlägt">Mehrere Datensätze und wie man sie nachschlägt</h3>
+<p>Das Menü <strong>Datensatz</strong> listet alle Datensätze, die du für dieses Schema angelegt
+hast; mit <strong>Neu</strong>, <strong>Duplizieren</strong> und <strong>Löschen</strong> verwaltest du sie.
+Gespeicherte Datensätze werden auch in Suchfeldern angeboten. Ein Feld
+<strong>Autovervollständigung</strong> oder <strong>Instanzauswahl</strong> durchsucht:</p>
+<ul>
+<li>in Contour gespeicherte <strong>Datensätze</strong> beliebiger Schemas — lege einen
+<em>Agent</em>-Datensatz für deine Organisation an und wähle ihn als <em>Publisher</em>
+eines <em>Dataset</em>-Datensatzes;</li>
+<li><strong>Vokabulardateien</strong>, die du unter <strong>Suchquellen → Vokabular…</strong> hinzufügst
+(Turtle, N-Triples, TriG oder N3), etwa ein SKOS-Begriffsschema oder eine
+Liste von Lizenzen;</li>
+<li>die <strong>erlaubten Werte</strong> des Felds, wenn es eine <code>sh:in</code>-Liste hat.</li>
+</ul>
+<p>Die Kandidaten werden nach der <strong>Klasse</strong> des Felds (<code>sh:class</code>) gefiltert. Ein
+auf <code>foaf:Agent</code> beschränktes Feld bietet auch <code>foaf:Person</code>- und
+<code>foaf:Organization</code>-Ressourcen an, dazu Unterklassen, die in deinen Vokabularen
+stehen (<code>rdfs:subClassOf</code>). Tippe, um nach Bezeichnung zu filtern, wähle mit der
+Maus oder den Pfeiltasten und Enter, und das Feld speichert die IRI der
+Ressource. Du kannst jederzeit auch eine andere IRI eingeben.</p>
+<p><img src="images/record-lookup.png" alt="Einen gespeicherten Agent-Datensatz als Publisher eines Datasets wählen"></p>
+<h3 id="einen-vorhandenen-datensatz-importieren">Einen vorhandenen Datensatz importieren</h3>
+<p><strong>Importieren…</strong> liest eine RDF-Datei (Turtle, N-Triples, TriG oder N3) und lädt
+jede Ressource mit der Zielklasse des Schemas als Datensatz, bereit zum
+Korrigieren oder Ergänzen. Ein Datensatz mit derselben IRI wird ersetzt (Contour
+fragt vorher). Tripel, für die das Formular kein Feld hat, werden gezählt und
+weggelassen — so weißt du, wenn eine Datei mehr enthält, als dein Schema
+beschreibt.</p>
+<h3 id="wo-datensätze-gespeichert-werden">Wo Datensätze gespeichert werden</h3>
+<p>Datensätze, Vokabulare und die Basis-IRI werden in deinem Browser gespeichert —
+nichts wird hochgeladen. Sie überstehen ein Neuladen, aber nicht das Löschen der
+Browserdaten oder einen Browserwechsel; <strong>lade</strong> also die Datensätze <strong>herunter</strong>,
+die du behalten willst. Datensätze gehören über ihre <strong>Shape-IRI</strong> zu einem
+Schema: Öffne das Schema erneut, und seine Datensätze sind wieder da.</p>
+<hr>
+<h2 id="6-deine-arbeit-überprüfen-das-problem-panel">6. Deine Arbeit überprüfen (das Problem-Panel)</h2>
 <p>Während du baust, prüft Contour das Schema fortlaufend und fasst Probleme in der
 <strong>Problem</strong>-Anzeige in der Aktionsleiste des Visuellen Editors zusammen. Klicke
 darauf, um die Liste aufzuklappen; klicke auf einen beliebigen Eintrag, um direkt
@@ -603,7 +700,7 @@ deklariertes Präfix</strong> verwenden;</li>
 Sperren —, aber sie zu beheben bedeutet, dass das exportierte SHACL wohlgeformt
 ist und nur deklarierte Vokabulare referenziert.</p>
 <hr>
-<h2 id="6-power-funktionen-fortgeschrittene-modellierung">6. Power-Funktionen (fortgeschrittene Modellierung)</h2>
+<h2 id="7-power-funktionen-fortgeschrittene-modellierung">7. Power-Funktionen (fortgeschrittene Modellierung)</h2>
 <p>Über die zentralen Widgets und Einschränkungen hinaus stellt der Inspektor einige
 fortgeschrittene Bedienelemente für reichhaltigere Schemata bereit. Jedes ist
 optional — greife darauf zurück, wenn dein Modell sie benötigt.</p>
@@ -645,7 +742,7 @@ Es wird als <code>sh:path [ sh:inversePath … ]</code> exportiert, und die Eige
 zeigt den Pfad mit einem führenden <code>^</code>.</p>
 <p><img src="images/inverse-path.png" alt="Das Kontrollkästchen Inverse Pfad an einer Eigenschaft"></p>
 <hr>
-<h2 id="7-referenz">7. Referenz</h2>
+<h2 id="8-referenz">8. Referenz</h2>
 <h3 id="widget-katalog">Widget-Katalog</h3>
 <p>Jedes Widget wird auf einen DASH-Editor sowie ein sinnvolles Standard-Node-Kind /
 einen Standard-Datentyp abgebildet.</p>
@@ -863,7 +960,7 @@ die Klasse im Inspektor, wann immer dein Modell etwas anderes benötigt.</p>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="8-rezepte--gängige-modellierungsmuster">8. Rezepte — gängige Modellierungsmuster</h2>
+<h2 id="9-rezepte--gängige-modellierungsmuster">9. Rezepte — gängige Modellierungsmuster</h2>
 <p>Kurze, in sich geschlossene Muster, die du zusätzlich zum Tutorial anwenden
 kannst.</p>
 <p><strong>Ein Feld erforderlich machen.</strong> Setze <strong>Min count</strong> auf <code>1</code>. Die Karte zeigt
@@ -910,7 +1007,7 @@ passe sie im Visuellen Editor an und <strong>Speichere</strong> sie dann als neu
 <strong>unter …</strong> — alles, was Contour nicht modelliert, bleibt erhalten (siehe
 <a href="#4-direkt-mit-dem-code-arbeiten-der-tab-shacl-code">§4</a>).</p>
 <hr>
-<h2 id="9-tipps-und-fehlerbehebung">9. Tipps und Fehlerbehebung</h2>
+<h2 id="10-tipps-und-fehlerbehebung">10. Tipps und Fehlerbehebung</h2>
 <ul>
 <li><strong>Setze immer den Eigenschaftspfad.</strong> Neue Widgets erhalten einen Platzhalterpfad
 wie <code>:textfield</code>; ersetze ihn durch den echten RDF-Term (<code>dct:title</code>,

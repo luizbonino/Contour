@@ -133,15 +133,25 @@ Safari work too, with a download-style save.</p>
 <li><a href="#visualize-the-graph">Visualize the graph</a></li>
 </ul>
 </li>
-<li><a href="#5-checking-your-work-the-issues-panel">Checking your work (the Issues panel)</a></li>
-<li><a href="#6-power-features-advanced-modelling">Power features (advanced modelling)</a></li>
-<li><a href="#7-reference">Reference</a><ul>
+<li><a href="#5-filling-in-a-metadata-record-the-metadata-record-tab">Filling in a metadata record (the Metadata Record tab)</a><ul>
+<li><a href="#filling-in-the-form">Filling in the form</a></li>
+<li><a href="#the-record-iri">The record IRI</a></li>
+<li><a href="#checking-the-record">Checking the record</a></li>
+<li><a href="#getting-the-rdf">Getting the RDF</a></li>
+<li><a href="#several-records-and-looking-them-up">Several records, and looking them up</a></li>
+<li><a href="#importing-an-existing-record">Importing an existing record</a></li>
+<li><a href="#where-records-are-kept">Where records are kept</a></li>
+</ul>
+</li>
+<li><a href="#6-checking-your-work-the-issues-panel">Checking your work (the Issues panel)</a></li>
+<li><a href="#7-power-features-advanced-modelling">Power features (advanced modelling)</a></li>
+<li><a href="#8-reference">Reference</a><ul>
 <li><a href="#widget-catalogue">Widget catalogue</a></li>
 <li><a href="#property-settings-reference">Property settings reference</a></li>
 </ul>
 </li>
-<li><a href="#8-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
-<li><a href="#9-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
+<li><a href="#9-recipes--common-modelling-patterns">Recipes — common modelling patterns</a></li>
+<li><a href="#10-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
 </ol>
 <hr>
 <h2 id="1-what-you-are-building-key-concepts">1. What you are building (key concepts)</h2>
@@ -187,8 +197,8 @@ valid record of a given kind looks like. A few terms you will meet throughout:</
 <hr>
 <h2 id="2-the-interface-at-a-glance">2. The interface at a glance</h2>
 <p><img src="images/interface-overview.png" alt="Contour with the example Dataset schema loaded"></p>
-<p>The window has three tabs:</p>
-<p><img src="images/tabs.png" alt="The three tabs: SHACL Code, Visual Editor, Form Preview"></p>
+<p>The window has four tabs:</p>
+<p><img src="images/tabs.png" alt="The four tabs: SHACL Code, Visual Editor, Form Preview, Metadata Record"></p>
 <ul>
 <li><strong>SHACL Code</strong> — the serialized schema. Turtle by default, with autocomplete;
 edits sync back to the visual canvas. A <strong>syntax</strong> selector also offers
@@ -198,6 +208,8 @@ you open are shown.</li>
 most of your work happens.</li>
 <li><strong>Form Preview</strong> — a realistic rendering of the data-entry form your schema
 produces, so you can test the experience before publishing.</li>
+<li><strong>Metadata Record</strong> — fill in the generated form and get the metadata record
+as RDF (see <a href="#5-filling-in-a-metadata-record-the-metadata-record-tab">§5</a>).</li>
 </ul>
 <p>The <strong>Visual Editor</strong> is split into three columns:</p>
 <table>
@@ -222,7 +234,7 @@ produces, so you can test the experience before publishing.</li>
 </tbody></table>
 <p>Below the workbench is an <strong>actions bar</strong> with a property/group counter, an
 <strong>Issues</strong> indicator (a live check of your schema — see
-<a href="#5-checking-your-work-the-issues-panel">§5</a>), and Save / Copy buttons. To see
+<a href="#6-checking-your-work-the-issues-panel">§6</a>), and Save / Copy buttons. To see
 the serialized schema, switch to the <strong>SHACL Code</strong> tab; to see the rendered
 form, switch to <strong>Form Preview</strong>.</p>
 <p>The header holds the file actions — <strong>Undo / Redo</strong>, <strong>New</strong>, <strong>Recent</strong>,
@@ -408,7 +420,7 @@ drop-down of instances). Use whichever fits how the value is chosen. The
 <p><strong>Advanced:</strong> a property can also accept <em>either</em> a literal <em>or</em> an IRI (and
 similar &quot;one of these types&quot; rules) via <strong>Alternative value types (<code>sh:or</code>)</strong>,
 or follow a relationship backwards with an <strong>Inverse (<code>^</code>)</strong> path — see
-<a href="#6-power-features-advanced-modelling">§6 Power features</a>.</p>
+<a href="#7-power-features-advanced-modelling">§7 Power features</a>.</p>
 </blockquote>
 <h3 id="step-10--model-a-sub-object-with-a-nested-shape">Step 10 — Model a sub-object with a nested shape</h3>
 <p>Sometimes a field is itself a small structured object. A <strong>contact point</strong>, for
@@ -430,7 +442,7 @@ shapes as suggestions).</li>
 <p><strong>Shortcut.</strong> On a <strong>Details</strong> property you can click <strong>Create &amp; link nested
 shape</strong> to mint a new shape and wire <code>sh:node</code> to it in one step — then just
 add its fields. The property card shows the link it points to (e.g.
-<code>→ :ContactShape</code>), and the <a href="#5-checking-your-work-the-issues-panel">Issues panel</a>
+<code>→ :ContactShape</code>), and the <a href="#6-checking-your-work-the-issues-panel">Issues panel</a>
 flags a Details property whose target is missing.</p>
 </blockquote>
 <p><img src="images/nested-canvas.png" alt="A schema with a Details property and a populated nested ContactShape"></p>
@@ -448,8 +460,8 @@ gets a small language box, any <strong>validation message</strong> appears under
 and <strong>Details</strong> properties render their nested shape&#39;s fields inline — nesting
 to any depth:</p>
 <p><img src="images/form-preview-tab.png" alt="The rendered form preview, including an inline nested Contact form"></p>
-<p>This preview is read-only — it is there to validate the design, not to capture
-real data.</p>
+<p>This preview is there to check the design. To fill in a real record and get its
+RDF, use the <strong>Metadata Record</strong> tab (see <a href="#5-filling-in-a-metadata-record-the-metadata-record-tab">§5</a>).</p>
 <h3 id="step-12--review-the-generated-shacl">Step 12 — Review the generated SHACL</h3>
 <p>The <strong>SHACL Code</strong> tab shows the Turtle generated from your design (and lets you
 edit it directly):</p>
@@ -531,7 +543,79 @@ annotations</strong> drops labels and form hints (<code>sh:name</code>, <code>da
 nested shapes or preserved constructs) at a glance.</p>
 <p><img src="images/schema-graph.png" alt="The schema rendered as an RDF node-link graph"></p>
 <hr>
-<h2 id="5-checking-your-work-the-issues-panel">5. Checking your work (the Issues panel)</h2>
+<h2 id="5-filling-in-a-metadata-record-the-metadata-record-tab">5. Filling in a metadata record (the Metadata Record tab)</h2>
+<p>Once your schema is designed, the <strong>Metadata Record</strong> tab turns it into a
+working data-entry form: fill it in and Contour produces the <strong>metadata record as
+RDF</strong>, ready to hand in, publish or load into a triple store. Think of it as a
+lightweight stand-in for entering metadata in a FAIR Data Point — no server
+needed.</p>
+<p><img src="images/record-tab.png" alt="The Metadata Record tab: the form on the left, validation and the generated RDF on the right"></p>
+<h3 id="filling-in-the-form">Filling in the form</h3>
+<p>The form is the one you see in <strong>Form Preview</strong>, now live: every value you type
+appears straight away in the <strong>RDF output</strong> on the right. Use <strong>+ Add</strong> and <strong>×</strong>
+for repeatable fields and the small language box for language-tagged text.
+<strong>Details</strong> sub-forms are filled in inline and become nested resources, typed
+with the nested shape&#39;s target class. Empty fields are left out of the output.</p>
+<p>Each value is written the way the schema says: dates as <code>xsd:date</code>, numbers with
+their datatype, booleans as <code>xsd:boolean</code>, IRI fields as IRIs (a full IRI, or a
+prefixed name such as <code>dct:Standard</code> using the schema&#39;s prefixes), and enumeration
+choices as a literal or an IRI, as declared in <code>sh:in</code>.</p>
+<h3 id="the-record-iri">The record IRI</h3>
+<p>Every record needs an identifier: the subject of all its triples. Contour
+generates one from the <strong>base IRI</strong>, the target class and the title — for
+example <code>https://example.org/dataset/air-quality-2025</code> — and keeps it in step
+with the title while you type. Edit it to choose your own; <strong>Regenerate</strong> goes
+back to the generated one. Set <strong>Base IRI for new records</strong> once (for example to
+your organisation&#39;s or course&#39;s namespace) and it is used from then on. Contour
+warns when the IRI isn&#39;t a valid absolute IRI or another record already uses it.</p>
+<h3 id="checking-the-record">Checking the record</h3>
+<p>The <strong>Validation</strong> panel checks the record against your schema as you type:
+minimum and maximum counts, datatypes (a real date, a whole number, …), lengths,
+patterns, value ranges, allowed values (<code>sh:in</code>), IRIs and language tags. Each
+problem also appears under its field, using the field&#39;s own <strong>validation
+message</strong> and <strong>severity</strong> when you defined one (see <a href="#7-power-features-advanced-modelling">§7</a>). Click a
+problem to jump to the field. Missing required values are shown as a quiet hint
+until you fill them in.</p>
+<blockquote>
+<p>Contour checks the constraints it models. Anything kept in the “Preserved”
+block of your SHACL (for example qualified shapes or complex paths) is not
+checked — use a full SHACL validator, or your FAIR Data Point, for those.</p>
+</blockquote>
+<h3 id="getting-the-rdf">Getting the RDF</h3>
+<p>Pick a <strong>Syntax</strong> — Turtle (default), N-Triples, TriG, Notation3 or JSON-LD —
+then <strong>Copy</strong> or <strong>Download</strong> the record. Only the prefixes the record actually
+uses are declared, and sub-forms are printed inline as <code>[ … ]</code>. With several
+records for the same schema, <strong>Download all</strong> saves them together in one file.</p>
+<h3 id="several-records-and-looking-them-up">Several records, and looking them up</h3>
+<p>The <strong>Record</strong> menu lists every record you created for this schema; <strong>New</strong>,
+<strong>Duplicate</strong> and <strong>Delete</strong> manage them. Saved records are also offered by
+lookup fields. An <strong>Auto-complete</strong> or <strong>Instances select</strong> field searches:</p>
+<ul>
+<li><strong>records</strong> saved in Contour, of any schema — fill in an <em>Agent</em> record for
+your organisation, then pick it as the <em>Publisher</em> of a <em>Dataset</em> record;</li>
+<li><strong>vocabulary files</strong> you add under <strong>Lookup sources → Vocabulary…</strong> (Turtle,
+N-Triples, TriG or N3), such as a SKOS concept scheme or a list of licences;</li>
+<li>the field&#39;s <strong>allowed values</strong>, when it has an <code>sh:in</code> list.</li>
+</ul>
+<p>Candidates are filtered by the field&#39;s <strong>Class</strong> (<code>sh:class</code>). A field
+constrained to <code>foaf:Agent</code> also offers <code>foaf:Person</code> and <code>foaf:Organization</code>
+resources, plus any subclasses stated in your vocabularies (<code>rdfs:subClassOf</code>).
+Type to filter by label, pick with the mouse or the arrow keys and Enter, and the
+field stores the resource&#39;s IRI. You can always type any other IRI instead.</p>
+<p><img src="images/record-lookup.png" alt="Picking a saved Agent record as the Publisher of a Dataset"></p>
+<h3 id="importing-an-existing-record">Importing an existing record</h3>
+<p><strong>Import…</strong> reads an RDF file (Turtle, N-Triples, TriG or N3) and loads every
+resource typed with the schema&#39;s target class as a record, ready to correct or
+complete. A record with the same IRI is replaced (Contour asks first). Triples
+the form has no field for are counted and left out, so you know when a file
+holds more than your schema describes.</p>
+<h3 id="where-records-are-kept">Where records are kept</h3>
+<p>Records, vocabularies and the base IRI are kept in your browser — nothing is
+uploaded. They survive a reload, but not clearing your browser data or moving to
+another browser, so <strong>download</strong> the records you want to keep. Records belong to
+a schema through its <strong>Shape IRI</strong>: reopen the schema and its records are back.</p>
+<hr>
+<h2 id="6-checking-your-work-the-issues-panel">6. Checking your work (the Issues panel)</h2>
 <p>As you build, Contour continuously checks the schema and summarizes problems in
 the <strong>Issues</strong> indicator on the Visual Editor&#39;s actions bar. Click it to expand
 the list; click any item to jump straight to the offending element.</p>
@@ -548,7 +632,7 @@ declared</strong>;</li>
 <p>Issues are <strong>non-blocking</strong> — they&#39;re guidance, not gates — but clearing them
 means the exported SHACL is well-formed and references only declared vocabularies.</p>
 <hr>
-<h2 id="6-power-features-advanced-modelling">6. Power features (advanced modelling)</h2>
+<h2 id="7-power-features-advanced-modelling">7. Power features (advanced modelling)</h2>
 <p>Beyond the core widgets and constraints, the Inspector exposes a few advanced
 controls for richer schemas. Each is optional — reach for them when your model
 needs them.</p>
@@ -587,7 +671,7 @@ round. It exports as <code>sh:path [ sh:inversePath … ]</code>, and the proper
 the path with a leading <code>^</code>.</p>
 <p><img src="images/inverse-path.png" alt="The Inverse path checkbox on a property"></p>
 <hr>
-<h2 id="7-reference">7. Reference</h2>
+<h2 id="8-reference">8. Reference</h2>
 <h3 id="widget-catalogue">Widget catalogue</h3>
 <p>Every widget maps to a DASH editor and sensible default node kind / datatype.</p>
 <table>
@@ -804,7 +888,7 @@ Inspector whenever your model needs something different.</p>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="8-recipes--common-modelling-patterns">8. Recipes — common modelling patterns</h2>
+<h2 id="9-recipes--common-modelling-patterns">9. Recipes — common modelling patterns</h2>
 <p>Short, self-contained patterns you can apply on top of the tutorial.</p>
 <p><strong>Make a field required.</strong> Set <strong>Min count</strong> to <code>1</code>. The card shows a red dot and
 the form marks it with <code>*</code>.</p>
@@ -843,7 +927,7 @@ Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.</p>
 Visual Editor, then <strong>Save As…</strong> a new file — anything Contour doesn&#39;t model is
 preserved (see <a href="#4-working-directly-with-the-code-the-shacl-code-tab">§4</a>).</p>
 <hr>
-<h2 id="9-tips--troubleshooting">9. Tips &amp; troubleshooting</h2>
+<h2 id="10-tips--troubleshooting">10. Tips &amp; troubleshooting</h2>
 <ul>
 <li><strong>Always set the property path.</strong> New widgets get a placeholder path like
 <code>:textfield</code>; replace it with the real RDF term (<code>dct:title</code>, <code>dcat:theme</code>, …)

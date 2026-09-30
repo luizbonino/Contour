@@ -138,15 +138,25 @@ enregistrement de type téléchargement.</p>
 <li><a href="#visualiser-le-graphe">Visualiser le graphe</a></li>
 </ul>
 </li>
-<li><a href="#5-v%C3%A9rifier-votre-travail-le-panneau-probl%C3%A8mes">Vérifier votre travail (le panneau Problèmes)</a></li>
-<li><a href="#6-fonctionnalit%C3%A9s-avanc%C3%A9es-mod%C3%A9lisation-avanc%C3%A9e">Fonctionnalités avancées (modélisation avancée)</a></li>
-<li><a href="#7-r%C3%A9f%C3%A9rence">Référence</a><ul>
+<li><a href="#5-remplir-une-fiche-de-m%C3%A9tadonn%C3%A9es-longlet-fiche-de-m%C3%A9tadonn%C3%A9es">Remplir une fiche de métadonnées (l’onglet Fiche de métadonnées)</a><ul>
+<li><a href="#remplir-le-formulaire">Remplir le formulaire</a></li>
+<li><a href="#liri-de-la-fiche">L’IRI de la fiche</a></li>
+<li><a href="#v%C3%A9rifier-la-fiche">Vérifier la fiche</a></li>
+<li><a href="#obtenir-le-rdf">Obtenir le RDF</a></li>
+<li><a href="#plusieurs-fiches-et-les-retrouver">Plusieurs fiches, et les retrouver</a></li>
+<li><a href="#importer-une-fiche-existante">Importer une fiche existante</a></li>
+<li><a href="#o%C3%B9-les-fiches-sont-conserv%C3%A9es">Où les fiches sont conservées</a></li>
+</ul>
+</li>
+<li><a href="#6-v%C3%A9rifier-votre-travail-le-panneau-probl%C3%A8mes">Vérifier votre travail (le panneau Problèmes)</a></li>
+<li><a href="#7-fonctionnalit%C3%A9s-avanc%C3%A9es-mod%C3%A9lisation-avanc%C3%A9e">Fonctionnalités avancées (modélisation avancée)</a></li>
+<li><a href="#8-r%C3%A9f%C3%A9rence">Référence</a><ul>
 <li><a href="#catalogue-des-widgets">Catalogue des widgets</a></li>
 <li><a href="#r%C3%A9f%C3%A9rence-des-param%C3%A8tres-de-propri%C3%A9t%C3%A9">Référence des paramètres de propriété</a></li>
 </ul>
 </li>
-<li><a href="#8-recettes--sch%C3%A9mas-de-mod%C3%A9lisation-courants">Recettes — schémas de modélisation courants</a></li>
-<li><a href="#9-conseils-et-d%C3%A9pannage">Conseils et dépannage</a></li>
+<li><a href="#9-recettes--sch%C3%A9mas-de-mod%C3%A9lisation-courants">Recettes — schémas de modélisation courants</a></li>
+<li><a href="#10-conseils-et-d%C3%A9pannage">Conseils et dépannage</a></li>
 </ol>
 <hr>
 <h2 id="1-ce-que-vous-construisez-concepts-clés">1. Ce que vous construisez (concepts clés)</h2>
@@ -193,8 +203,8 @@ Voici quelques termes que vous rencontrerez tout au long du guide :</p>
 <hr>
 <h2 id="2-linterface-en-un-coup-dœil">2. L&#39;interface en un coup d&#39;œil</h2>
 <p><img src="images/interface-overview.png" alt="Contour avec l&#39;exemple de schéma Jeu de données chargé"></p>
-<p>La fenêtre comporte trois onglets :</p>
-<p><img src="images/tabs.png" alt="Les trois onglets : Code SHACL, Éditeur visuel, Aperçu du formulaire"></p>
+<p>La fenêtre comporte quatre onglets :</p>
+<p><img src="images/tabs.png" alt="Les quatre onglets : Code SHACL, Éditeur visuel, Aperçu du formulaire, Fiche de métadonnées"></p>
 <ul>
 <li><strong>Code SHACL</strong> — le schéma sérialisé. Turtle par défaut, avec autocomplétion ;
 les modifications sont synchronisées vers la zone de travail visuelle. Un
@@ -205,6 +215,8 @@ vous ouvrez.</li>
 que se déroule l&#39;essentiel de votre travail.</li>
 <li><strong>Aperçu du formulaire</strong> — un rendu réaliste du formulaire de saisie que
 produit votre schéma, pour tester l&#39;expérience avant publication.</li>
+<li><strong>Fiche de métadonnées</strong> — remplissez le formulaire généré et obtenez la
+fiche de métadonnées en RDF (voir <a href="#5-remplir-une-fiche-de-m%C3%A9tadonn%C3%A9es-longlet-fiche-de-m%C3%A9tadonn%C3%A9es">§5</a>).</li>
 </ul>
 <p>L&#39;<strong>Éditeur visuel</strong> est divisé en trois colonnes :</p>
 <table>
@@ -229,7 +241,7 @@ produit votre schéma, pour tester l&#39;expérience avant publication.</li>
 </tbody></table>
 <p>Sous l&#39;atelier se trouve une <strong>barre d&#39;actions</strong> comportant un compteur de
 propriétés/groupes, un indicateur <strong>Problèmes</strong> (une vérification en direct de
-votre schéma — voir la <a href="#5-v%C3%A9rifier-votre-travail-le-panneau-probl%C3%A8mes">§5</a>) et
+votre schéma — voir la <a href="#6-v%C3%A9rifier-votre-travail-le-panneau-probl%C3%A8mes">§6</a>) et
 des boutons Enregistrer / Copier. Pour voir le schéma sérialisé, basculez vers
 l&#39;onglet <strong>Code SHACL</strong> ; pour voir le formulaire rendu, basculez vers <strong>Aperçu
 du formulaire</strong>.</p>
@@ -448,7 +460,7 @@ courantes à mesure que vous saisissez.</p>
 (et des règles similaires du type « l&#39;un de ces types ») via <strong>Types de valeur
 alternatifs (<code>sh:or</code>)</strong>, ou suivre une relation à l&#39;envers avec un chemin
 <strong>Inverse (<code>^</code>)</strong> — voir la
-<a href="#6-fonctionnalit%C3%A9s-avanc%C3%A9es-mod%C3%A9lisation-avanc%C3%A9e">§6 Fonctionnalités avancées</a>.</p>
+<a href="#7-fonctionnalit%C3%A9s-avanc%C3%A9es-mod%C3%A9lisation-avanc%C3%A9e">§7 Fonctionnalités avancées</a>.</p>
 </blockquote>
 <h3 id="étape-10--modéliser-un-sous-objet-avec-une-forme-imbriquée">Étape 10 — Modéliser un sous-objet avec une forme imbriquée</h3>
 <p>Parfois, un champ est lui-même un petit objet structuré. Un <strong>point de contact</strong>,
@@ -473,7 +485,7 @@ et lier une forme imbriquée</strong> pour créer une nouvelle forme et y connec
 <code>sh:node</code> en une seule étape — puis il ne reste qu&#39;à ajouter ses champs. La
 carte de propriété affiche le lien vers lequel elle pointe (p. ex.
 <code>→ :ContactShape</code>), et le
-<a href="#5-v%C3%A9rifier-votre-travail-le-panneau-probl%C3%A8mes">panneau Problèmes</a> signale une
+<a href="#6-v%C3%A9rifier-votre-travail-le-panneau-probl%C3%A8mes">panneau Problèmes</a> signale une
 propriété Détails dont la cible est manquante.</p>
 </blockquote>
 <p><img src="images/nested-canvas.png" alt="Un schéma avec une propriété Détails et une ContactShape imbriquée renseignée"></p>
@@ -495,8 +507,8 @@ validation</strong> apparaît sous le champ, et les propriétés <strong>Détail
 champs de leur forme imbriquée en ligne — à n&#39;importe quelle profondeur
 d&#39;imbrication :</p>
 <p><img src="images/form-preview-tab.png" alt="L&#39;aperçu du formulaire rendu, incluant un formulaire de Contact imbriqué en ligne"></p>
-<p>Cet aperçu est en lecture seule — il sert à valider la conception, non à saisir
-des données réelles.</p>
+<p>Cet aperçu sert à vérifier la conception. Pour remplir une vraie fiche et
+obtenir son RDF, utilisez l&#39;onglet <strong>Fiche de métadonnées</strong> (voir <a href="#5-remplir-une-fiche-de-m%C3%A9tadonn%C3%A9es-longlet-fiche-de-m%C3%A9tadonn%C3%A9es">§5</a>).</p>
 <h3 id="étape-12--examiner-le-shacl-généré">Étape 12 — Examiner le SHACL généré</h3>
 <p>L&#39;onglet <strong>Code SHACL</strong> affiche le Turtle généré à partir de votre conception (et
 permet de le modifier directement) :</p>
@@ -596,7 +608,92 @@ structure ressorte. C&#39;est un moyen rapide de voir le graphe des formes (ains
 toute forme imbriquée ou construction préservée) en un coup d&#39;œil.</p>
 <p><img src="images/schema-graph.png" alt="Le schéma rendu sous forme de graphe RDF en nœuds et liens"></p>
 <hr>
-<h2 id="5-vérifier-votre-travail-le-panneau-problèmes">5. Vérifier votre travail (le panneau Problèmes)</h2>
+<h2 id="5-remplir-une-fiche-de-métadonnées-longlet-fiche-de-métadonnées">5. Remplir une fiche de métadonnées (l’onglet Fiche de métadonnées)</h2>
+<p>Une fois votre schéma conçu, l&#39;onglet <strong>Fiche de métadonnées</strong> en fait un
+formulaire de saisie opérationnel : remplissez-le et Contour produit la <strong>fiche
+de métadonnées en RDF</strong>, prête à être rendue, publiée ou chargée dans un triple
+store. Voyez-le comme un substitut léger à la saisie de métadonnées dans un FAIR
+Data Point — sans serveur.</p>
+<p><img src="images/record-tab.png" alt="L&#39;onglet Fiche de métadonnées : le formulaire à gauche, la validation et le RDF généré à droite"></p>
+<h3 id="remplir-le-formulaire">Remplir le formulaire</h3>
+<p>Le formulaire est celui de l&#39;<strong>Aperçu du formulaire</strong>, désormais actif : chaque
+valeur saisie apparaît aussitôt dans la <strong>Sortie RDF</strong> à droite. Utilisez
+<strong>+ Ajouter</strong> et <strong>×</strong> pour les champs répétables, et la petite zone de langue
+pour les textes avec étiquette de langue. Les sous-formulaires <strong>Détails</strong> se
+remplissent directement dans le formulaire et deviennent des ressources
+imbriquées, typées avec la classe cible de la shape imbriquée. Les champs vides
+sont omis.</p>
+<p>Chaque valeur est écrite comme le schéma l&#39;indique : les dates en <code>xsd:date</code>, les
+nombres avec leur type de données, les booléens en <code>xsd:boolean</code>, les champs IRI
+en IRI (une IRI complète, ou un nom préfixé comme <code>dct:Standard</code> selon les
+préfixes du schéma) et les choix d&#39;une énumération en littéral ou en IRI, comme
+déclaré dans <code>sh:in</code>.</p>
+<h3 id="liri-de-la-fiche">L’IRI de la fiche</h3>
+<p>Chaque fiche a besoin d&#39;un identifiant : le sujet de tous ses triplets. Contour
+en génère un à partir de l&#39;<strong>IRI de base</strong>, de la classe cible et du titre — par
+exemple <code>https://example.org/dataset/qualite-de-l-air-2025</code> — et le garde
+aligné sur le titre pendant la saisie. Modifiez-le pour choisir le vôtre ;
+<strong>Régénérer</strong> revient à l&#39;IRI générée. Définissez une fois l&#39;<strong>IRI de base des
+nouvelles fiches</strong> (par exemple l&#39;espace de noms de votre organisation ou de
+votre cours) et elle sera utilisée ensuite. Contour vous avertit si l&#39;IRI n&#39;est
+pas une IRI absolue valide ou si une autre fiche l&#39;utilise déjà.</p>
+<h3 id="vérifier-la-fiche">Vérifier la fiche</h3>
+<p>Le panneau <strong>Validation</strong> vérifie la fiche par rapport à votre schéma pendant la
+saisie : nombres minimum et maximum, types de données (une vraie date, un nombre
+entier, …), longueurs, motifs, plages de valeurs, valeurs autorisées (<code>sh:in</code>),
+IRI et étiquettes de langue. Chaque problème apparaît aussi sous le champ, avec
+le <strong>message de validation</strong> et la <strong>sévérité</strong> propres au champ si vous les avez
+définis (voir <a href="#7-fonctionnalit%C3%A9s-avanc%C3%A9es-mod%C3%A9lisation-avanc%C3%A9e">§7</a>). Cliquez sur un problème pour atteindre le champ. Les
+valeurs obligatoires manquantes s&#39;affichent comme une indication discrète
+jusqu&#39;à ce que vous les remplissiez.</p>
+<blockquote>
+<p>Contour vérifie les contraintes qu&#39;il modélise. Ce qui reste dans le bloc
+« Préservé » de votre SHACL (par exemple des shapes qualifiées ou des chemins
+complexes) n&#39;est pas vérifié — utilisez pour cela un validateur SHACL complet
+ou votre FAIR Data Point.</p>
+</blockquote>
+<h3 id="obtenir-le-rdf">Obtenir le RDF</h3>
+<p>Choisissez une <strong>Syntaxe</strong> — Turtle (par défaut), N-Triples, TriG, Notation3 ou
+JSON-LD — puis <strong>Copiez</strong> ou <strong>Téléchargez</strong> la fiche. Seuls les préfixes
+réellement utilisés sont déclarés, et les sous-formulaires sont écrits en ligne
+sous forme <code>[ … ]</code>. Avec plusieurs fiches pour le même schéma, <strong>Tout
+télécharger</strong> les enregistre ensemble dans un seul fichier.</p>
+<h3 id="plusieurs-fiches-et-les-retrouver">Plusieurs fiches, et les retrouver</h3>
+<p>Le menu <strong>Fiche</strong> liste toutes les fiches créées pour ce schéma ; <strong>Nouveau</strong>,
+<strong>Dupliquer</strong> et <strong>Supprimer</strong> permettent de les gérer. Les fiches enregistrées
+sont aussi proposées dans les champs de recherche. Un champ <strong>Saisie semi-automatique</strong>
+ou <strong>Sélection d&#39;instances</strong> cherche dans :</p>
+<ul>
+<li>les <strong>fiches</strong> enregistrées dans Contour, de n&#39;importe quel schéma — remplissez
+une fiche <em>Agent</em> pour votre organisation, puis choisissez-la comme
+<em>Publisher</em> d&#39;une fiche <em>Dataset</em> ;</li>
+<li>les <strong>fichiers de vocabulaire</strong> ajoutés via <strong>Sources de recherche →
+Vocabulaire…</strong> (Turtle, N-Triples, TriG ou N3), comme un schéma de concepts
+SKOS ou une liste de licences ;</li>
+<li>les <strong>valeurs autorisées</strong> du champ, s&#39;il a une liste <code>sh:in</code>.</li>
+</ul>
+<p>Les candidats sont filtrés selon la <strong>Classe</strong> du champ (<code>sh:class</code>). Un champ
+limité à <code>foaf:Agent</code> propose aussi les ressources <code>foaf:Person</code> et
+<code>foaf:Organization</code>, ainsi que les sous-classes déclarées dans vos vocabulaires
+(<code>rdfs:subClassOf</code>). Tapez pour filtrer par libellé, choisissez à la souris ou
+avec les flèches et Entrée, et le champ enregistre l&#39;IRI de la ressource. Vous
+pouvez toujours saisir une autre IRI.</p>
+<p><img src="images/record-lookup.png" alt="Choisir une fiche Agent enregistrée comme Publisher d&#39;un Dataset"></p>
+<h3 id="importer-une-fiche-existante">Importer une fiche existante</h3>
+<p><strong>Importer…</strong> lit un fichier RDF (Turtle, N-Triples, TriG ou N3) et charge comme
+fiche chaque ressource typée avec la classe cible du schéma, prête à être
+corrigée ou complétée. Une fiche ayant la même IRI est remplacée (Contour
+demande d&#39;abord). Les triplets sans champ correspondant sont comptés et
+ignorés : vous savez ainsi quand un fichier contient plus que ce que décrit
+votre schéma.</p>
+<h3 id="où-les-fiches-sont-conservées">Où les fiches sont conservées</h3>
+<p>Les fiches, les vocabulaires et l&#39;IRI de base sont conservés dans votre
+navigateur — rien n&#39;est envoyé. Ils résistent à un rechargement, mais pas à
+l&#39;effacement des données du navigateur ni à un changement de navigateur :
+<strong>téléchargez</strong> donc les fiches à garder. Les fiches sont rattachées à un schéma
+par son <strong>IRI de shape</strong> : rouvrez le schéma et ses fiches reviennent.</p>
+<hr>
+<h2 id="6-vérifier-votre-travail-le-panneau-problèmes">6. Vérifier votre travail (le panneau Problèmes)</h2>
 <p>À mesure que vous construisez, Contour vérifie le schéma en continu et résume les
 problèmes dans l&#39;indicateur <strong>Problèmes</strong> de la barre d&#39;actions de l&#39;Éditeur
 visuel. Cliquez dessus pour développer la liste ; cliquez sur n&#39;importe quel
@@ -616,7 +713,7 @@ groupe ;</li>
 mais les résoudre garantit que le SHACL exporté est bien formé et ne référence
 que des vocabulaires déclarés.</p>
 <hr>
-<h2 id="6-fonctionnalités-avancées-modélisation-avancée">6. Fonctionnalités avancées (modélisation avancée)</h2>
+<h2 id="7-fonctionnalités-avancées-modélisation-avancée">7. Fonctionnalités avancées (modélisation avancée)</h2>
 <p>Au-delà des widgets et contraintes de base, l&#39;Inspecteur expose quelques
 contrôles avancés pour des schémas plus riches. Chacun est facultatif — utilisez-les
 lorsque votre modèle en a besoin.</p>
@@ -658,7 +755,7 @@ que l&#39;inverse. Cela s&#39;exporte sous la forme <code>sh:path [ sh:inversePa
 carte de propriété affiche le chemin avec un <code>^</code> en tête.</p>
 <p><img src="images/inverse-path.png" alt="La case à cocher de chemin Inverse sur une propriété"></p>
 <hr>
-<h2 id="7-référence">7. Référence</h2>
+<h2 id="8-référence">8. Référence</h2>
 <h3 id="catalogue-des-widgets">Catalogue des widgets</h3>
 <p>Chaque widget correspond à un éditeur DASH et à un type de nœud / de données par
 défaut judicieux.</p>
@@ -877,7 +974,7 @@ quelque chose de différent.</p>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="8-recettes--schémas-de-modélisation-courants">8. Recettes — schémas de modélisation courants</h2>
+<h2 id="9-recettes--schémas-de-modélisation-courants">9. Recettes — schémas de modélisation courants</h2>
 <p>Des schémas courts et autonomes que vous pouvez appliquer en complément du
 tutoriel.</p>
 <p><strong>Rendre un champ obligatoire.</strong> Définissez <strong>Nombre min.</strong> sur <code>1</code>. La carte
@@ -923,7 +1020,7 @@ dans l&#39;Éditeur visuel, puis <strong>Enregistrez sous…</strong> un nouveau
 que Contour ne modélise pas est préservé (voir la
 <a href="#4-travailler-directement-avec-le-code-longlet-code-shacl">§4</a>).</p>
 <hr>
-<h2 id="9-conseils-et-dépannage">9. Conseils et dépannage</h2>
+<h2 id="10-conseils-et-dépannage">10. Conseils et dépannage</h2>
 <ul>
 <li><strong>Définissez toujours le chemin de propriété.</strong> Les nouveaux widgets reçoivent
 un chemin d&#39;espace réservé comme <code>:textfield</code> ; remplacez-le par le terme RDF
