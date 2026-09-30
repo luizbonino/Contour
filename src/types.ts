@@ -30,6 +30,15 @@ export interface OrType {
   class?: string;
 }
 
+// A remote lookup source for an AutoComplete / Instances-select field, stored
+// as a Contour annotation on the property shape (contour:lookupService, …).
+export type LookupService = 'sparql' | 'ols' | 'wikidata';
+export interface LookupConfig {
+  service: LookupService;
+  endpoint?: string; // SPARQL endpoint, or an OLS instance (default: EBI OLS4)
+  filter?: string;   // OLS ontologies ("efo,chebi"), or a Wikidata "instance of" Q-id
+}
+
 export interface WidgetDefaults {
   nodeKind?: NodeKind;
   datatype?: string;
@@ -86,6 +95,8 @@ export interface Field {
   // sh:Violation default, sh:Warning, sh:Info). Both optional.
   message?: string;
   severity?: string;
+  // Remote lookup source (Record tab) — AutoComplete / Instances-select only.
+  lookup?: LookupConfig;
   // Stable blank-node label, set only when this property carries SHACL the
   // visual editor doesn't model (e.g. sh:or, sh:message). Those triples live in
   // Schema.residual keyed by this label; the generator emits the property as a

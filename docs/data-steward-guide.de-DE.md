@@ -49,6 +49,7 @@ dafür Turtle von Hand zu schreiben.
    - [Den Datensatz prüfen](#den-datensatz-prüfen)
    - [Das RDF erhalten](#das-rdf-erhalten)
    - [Mehrere Datensätze und wie man sie nachschlägt](#mehrere-datensätze-und-wie-man-sie-nachschlägt)
+   - [Externe Dienste durchsuchen](#externe-dienste-durchsuchen)
    - [Einen vorhandenen Datensatz importieren](#einen-vorhandenen-datensatz-importieren)
    - [Wo Datensätze gespeichert werden](#wo-datensätze-gespeichert-werden)
 6. [Deine Arbeit überprüfen (das Problem-Panel)](#6-deine-arbeit-überprüfen-das-problem-panel)
@@ -474,10 +475,12 @@ bestehenden Shape ausgehen? Verwende den Tab **SHACL-Code**.
 ![Turtle-Autovervollständigung, die sh:datatype vorschlägt](images/turtle-autocomplete.png)
 
 - **Eine bestehende Datei öffnen.** **Öffnen …** in der Kopfzeile lädt eine
-  `.ttl`-/`.nt`-/`.trig`-/`.n3`-Datei in diesen Tab, erkennt ihre Syntax und parst
-  sie in den Visuellen Editor — ein schneller Weg, ein bestehendes Schema
-  anzupassen. Wenn eine Datei nicht geparst werden kann, verweist eine Inline-
-  Meldung auf die fehlerhafte Zeile; den Rohtext kannst du trotzdem bearbeiten.
+  Turtle-, N-Triples-, TriG-, Notation3-, JSON-LD- (`.jsonld`) oder RDF/XML-Datei
+  (`.rdf`, `.owl`) in diesen Tab, erkennt ihre Syntax und überträgt sie in den
+  Visuellen Editor — ein schneller Weg, ein vorhandenes Schema anzupassen. RDF/XML
+  wird gelesen, aber nicht geschrieben: Das Schema wird als Turtle angezeigt und
+  gespeichert. Lässt sich eine Datei nicht lesen, weist eine Meldung auf das
+  Problem hin; du kannst den Rohtext trotzdem bearbeiten.
 - **Name und Beschreibung** des Schemas haben oben in diesem Tab ebenfalls
   einfache Eingabefelder.
 
@@ -486,13 +489,13 @@ zurückzuspringen.
 
 ### Eine Syntax wählen (und JSON-LD exportieren)
 
-Eine **Syntax**-Auswahl in diesem Tab wechselt die Serialisierung zwischen
-**Turtle** (Standard), **N-Triples**, **TriG**, **Notation3** und **JSON-LD
-(Export)**. Die ersten vier sind voll editierbar — Änderungen werden
-zurücksynchronisiert. **JSON-LD ist nur für den Export** (es gibt keinen
-JSON-LD-Parser): Der Editor zeigt es schreibgeschützt an, damit du es
-**Kopieren** oder als `.jsonld`-Datei **Speichern unter** kannst; wechsle dann
-zurück zu Turtle, um weiterzubearbeiten.
+Eine **Syntax**-Auswahl in diesem Tab schaltet die Serialisierung zwischen
+**Turtle** (Standard), **N-Triples**, **TriG**, **Notation3** und **JSON-LD** um.
+Die ersten vier sind hier voll bearbeitbar — Änderungen werden
+zurücksynchronisiert. **JSON-LD wird in diesem Tab schreibgeschützt angezeigt**:
+**Kopiere** es oder nutze **Speichern unter** für eine `.jsonld`-Datei und wechsle
+dann zurück zu Turtle, um weiter zu bearbeiten. (Eine `.jsonld`-Datei *öffnen*
+kannst du trotzdem — siehe oben.)
 
 ![Die Syntax-Auswahl und der JSON-LD-Export im Tab SHACL-Code](images/syntax-jsonld.png)
 
@@ -575,10 +578,19 @@ und dem **Schweregrad** des Felds, sofern du sie festgelegt hast (siehe
 [§7](#7-power-funktionen-fortgeschrittene-modellierung)). Klicke auf ein Problem, um zum Feld zu springen. Fehlende
 Pflichtwerte werden als dezenter Hinweis angezeigt, bis du sie ausfüllst.
 
-> Contour prüft die Einschränkungen, die es modelliert. Was im Block
-> „Beibehalten“ deines SHACL steht (zum Beispiel qualifizierte Shapes oder
-> komplexe Pfade), wird nicht geprüft — nutze dafür einen vollständigen
-> SHACL-Validator oder deinen FAIR Data Point.
+**Vollständige SHACL-Prüfung.** Aktiviere **Vollständige SHACL-Prüfung (ganzes
+Schema)**, um den Datensatz zusätzlich mit einer echten SHACL-Core-Engine gegen
+das vollständige Schema zu prüfen — einschließlich dessen, was im Block
+„Beibehalten“ steht (qualifizierte Shapes, `sh:languageIn`, `sh:xone`, komplexe
+Pfade, …). Die Ergebnisse erscheinen im selben Panel, mit der verletzten
+Einschränkung (z. B. `sh:MinCount`); ein Klick springt zum Feld.
+
+> Für `sh:class` muss die Engine den Typ jeder verknüpften Ressource kennen.
+> Contour liefert die Typen deiner gespeicherten Datensätze, der Vokabularbegriffe
+> und der SPARQL-Suchergebnisse sowie bekannte Unterklassenbeziehungen. Eine
+> verknüpfte IRI, deren Typ Contour nicht sieht — etwa ein Wikidata-Objekt —, wird
+> als *keine bekannte Instanz* der Klasse gemeldet. Das ist zu erwarten; ein FAIR
+> Data Point, der die Ressource kennt, kann sie durchaus akzeptieren.
 
 ### Das RDF erhalten
 
@@ -599,7 +611,7 @@ Gespeicherte Datensätze werden auch in Suchfeldern angeboten. Ein Feld
   *Agent*-Datensatz für deine Organisation an und wähle ihn als *Publisher*
   eines *Dataset*-Datensatzes;
 - **Vokabulardateien**, die du unter **Suchquellen → Vokabular…** hinzufügst
-  (Turtle, N-Triples, TriG oder N3), etwa ein SKOS-Begriffsschema oder eine
+  (Turtle, N-Triples, TriG, N3, JSON-LD oder RDF/XML), etwa ein SKOS-Begriffsschema oder eine
   Liste von Lizenzen;
 - die **erlaubten Werte** des Felds, wenn es eine `sh:in`-Liste hat.
 
@@ -612,9 +624,37 @@ Ressource. Du kannst jederzeit auch eine andere IRI eingeben.
 
 ![Einen gespeicherten Agent-Datensatz als Publisher eines Datasets wählen](images/record-lookup.png)
 
+### Externe Dienste durchsuchen
+
+Ein Suchfeld kann auch einen Onlinedienst durchsuchen. Wähle das Feld im
+**Visuellen Editor** aus und wähle im Abschnitt **Suchquelle** des Inspektors
+einen Dienst:
+
+![Wikidata als Suchquelle des Felds Publisher wählen](images/lookup-source.png)
+
+| Dienst | Durchsucht | Einstellungen |
+|---|---|---|
+| **Ein SPARQL-Endpunkt** | die Bezeichnungen von Instanzen der `sh:class` des Felds, in jedem Triple Store | die URL des Endpunkts |
+| **EBI Ontology Lookup Service (OLS)** | Begriffe aus Hunderten von Ontologien — praktisch für Themen und Schlagwörter | optionale Ontologien (z. B. `efo, chebi`); optionale OLS-Instanz |
+| **Wikidata** | Wikidata-Objekte — Organisationen, Orte, Personen, … | optionaler Filter „ist ein(e)“ (z. B. `Q3918`, Universität) |
+
+Lokale Datensätze und Vokabulare werden weiterhin zuerst durchsucht; Ergebnisse
+des Dienstes folgen, mit Angabe der Quelle. Die Auswahl wird im Schema als kleine
+Contour-Annotation an der Eigenschaft gespeichert — `contour:lookupService`,
+`contour:lookupEndpoint` und `contour:lookupFilter` im Namensraum
+`https://contour.fairdatapoint.org/ns#` — und reist so mit der SHACL-Datei mit.
+Andere SHACL-Werkzeuge und der FAIR Data Point ignorieren sie einfach.
+
+> **Zugriff aus dem Browser (CORS).** Contour läuft vollständig in deinem Browser
+> und kann daher nur Dienste abfragen, die Anfragen von Webseiten annehmen. EBI OLS
+> und Wikidata tun das, viele SPARQL-Endpunkte nicht. Der Endpunkt des
+> Amts für Veröffentlichungen der EU etwa antwortet, blockiert aber Anfragen aus
+> dem Browser — Contour meldet dann, dass der Dienst nicht erreichbar ist. Eine
+> Seite ohne Server kann das nicht umgehen.
+
 ### Einen vorhandenen Datensatz importieren
 
-**Importieren…** liest eine RDF-Datei (Turtle, N-Triples, TriG oder N3) und lädt
+**Importieren…** liest eine RDF-Datei (Turtle, N-Triples, TriG, N3, JSON-LD oder RDF/XML) und lädt
 jede Ressource mit der Zielklasse des Schemas als Datensatz, bereit zum
 Korrigieren oder Ergänzen. Ein Datensatz mit derselben IRI wird ersetzt (Contour
 fragt vorher). Tripel, für die das Formular kein Feld hat, werden gezählt und
@@ -828,8 +868,8 @@ für Stewards verständlichen Text und wähle einen **Schweregrad**, damit eine
 Plattform eine hilfreiche Warnung statt eines bloßen Fehlschlags anzeigen kann.
 
 **Nach JSON-LD exportieren.** Stelle im Tab SHACL-Code **Syntax** → *JSON-LD
-(Export)* und **Kopiere** oder **Speichere unter** `.jsonld` für Werkzeuge, die
-JSON-LD verarbeiten.
+(schreibgeschützt)* ein und **Kopiere** oder **Speichere** als `.jsonld` für
+Werkzeuge, die JSON-LD verarbeiten.
 
 **Von einem Beispiel ausgehen.** Verwende das Menü **Beispiele**, um eine Vorlage
 für Datensatz (DCAT), Agent (FOAF) oder Konzept (SKOS) zu laden, und passe sie
@@ -868,8 +908,9 @@ passe sie im Visuellen Editor an und **Speichere** sie dann als neue Datei
 - **Sieh ins Problem-Panel.** Klappe vor dem Exportieren **Probleme** in der
   Aktionsleiste auf und behebe alle Fehler (leere Pfade, nicht deklarierte
   Präfixe, defekte `sh:node`).
-- **JSON-LD bearbeiten?** Geht nicht — es ist nur für den Export. Stelle **Syntax**
-  zurück auf Turtle (oder N-Triples / TriG / N3), um weiterzubearbeiten.
+- **JSON-LD bearbeiten?** Nicht im Codefeld — dort ist es schreibgeschützt. Stelle
+  **Syntax** zurück auf Turtle (oder N-Triples / TriG / N3), um weiter zu
+  bearbeiten, oder lade eine `.jsonld`-Datei mit **Öffnen …** in die Editoren.
 - **Von vorn beginnen.** Verwende die Schaltfläche **Neu** für ein leeres Schema,
   lade eines aus **Beispiele** oder **Öffne …** eine bestehende Datei.
 

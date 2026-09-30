@@ -288,6 +288,9 @@ function literalTerm(lex: string, datatype: string | null, lang: string): Term {
 
 // ── RDF generation ───────────────────────────────────────────────────────────
 
+/** Where each generated RDF node sits in the form (to map SHACL results back). */
+export type NodeLocations = Map<string, { loc: string; fields: Field[] }>;
+
 function emitNode(
   schema: Schema,
   fields: Field[],
@@ -295,13 +298,17 @@ function emitNode(
   subject: Quad['subject'],
   out: Quad[],
   depth: number,
+  loc = '',
+  nodes?: NodeLocations,
 ): void {
   const prefixes = schema.prefixes;
+  nodes?.set(subject.id, { loc, fields });
   for (const f of fields) {
     const pred = expandTerm(f.path, prefixes);
     if (!pred) continue;
     const p = namedNode(pred);
-    for (const e of node[fieldKey(f)] || []) {
+    const fieldLoc = loc ? `${loc}/${fieldKey(f)}` : fieldKey(f);
+    for (const [i, e] of (node[fieldKey(f)] || []).entries()) {
       if (!entryHasContent(e)) continue;
       const it = interpret(f, e, prefixes);
       let obj: Term | null = null;
@@ -313,7 +320,7 @@ function emitNode(
         const b = blankNode();
         const cls = ns.targetClass ? expandTerm(ns.targetClass, prefixes) : null;
         if (cls) out.push(quad(b, namedNode(RDF_TYPE), namedNode(cls)));
-        emitNode(schema, nestedFieldsOf(ns), e.node, b, out, depth + 1);
+        emitNode(schema, nestedFieldsOf(ns), e.node, b, out, depth + 1, `${fieldLoc}/${i}`, nodes);
         obj = b;
       }
       if (!obj) continue;
@@ -326,19 +333,19 @@ function emitNode(
       // A nested IRI value still carries its sub-form's data.
       if (it.kind === 'iri' && obj.termType === 'NamedNode' && f.widgetId === 'DetailsEditor') {
         const ns = nestedShapeOf(schema, f);
-        if (ns && e.node && depth < MAX_DEPTH) emitNode(schema, nestedFieldsOf(ns), e.node, obj, out, depth + 1);
+        if (ns && e.node && depth < MAX_DEPTH) emitNode(schema, nestedFieldsOf(ns), e.node, obj, out, depth + 1, `${fieldLoc}/${i}`, nodes);
       }
     }
   }
 }
 
 /** The record as RDF quads (subject typed with the schema's target class). */
-export function recordToQuads(schema: Schema, subjectIri: string, values: RecordNode): Quad[] {
+export function recordToQuads(schema: Schema, subjectIri: string, values: RecordNode, nodes?: NodeLocations): Quad[] {
   const out: Quad[] = [];
   const s = namedNode(subjectIri);
   const cls = schema.targetClass ? expandTerm(schema.targetClass, schema.prefixes) : null;
   if (cls) out.push(quad(s, namedNode(RDF_TYPE), namedNode(cls)));
-  emitNode(schema, shapeFields(schema), values, s, out, 0);
+  emitNode(schema, shapeFields(schema), values, s, out, 0, '', nodes);
   return out;
 }
 

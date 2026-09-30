@@ -46,6 +46,7 @@ a study, a sample, a software package — without hand-writing Turtle.
    - [Checking the record](#checking-the-record)
    - [Getting the RDF](#getting-the-rdf)
    - [Several records, and looking them up](#several-records-and-looking-them-up)
+   - [Searching external services](#searching-external-services)
    - [Importing an existing record](#importing-an-existing-record)
    - [Where records are kept](#where-records-are-kept)
 6. [Checking your work (the Issues panel)](#6-checking-your-work-the-issues-panel)
@@ -427,11 +428,12 @@ Use the **SHACL Code** tab.
 
 ![Turtle autocomplete suggesting sh:datatype](images/turtle-autocomplete.png)
 
-- **Open an existing file.** **Open…** in the header loads a `.ttl`/`.nt`/
-  `.trig`/`.n3` file into this tab, detects its syntax, and parses it into the
-  Visual Editor — a fast way to adapt an existing schema. If a file can't be
-  parsed, an inline message points to the problem line; you can still edit the
-  raw text.
+- **Open an existing file.** **Open…** in the header loads a Turtle, N-Triples,
+  TriG, Notation3, JSON-LD (`.jsonld`) or RDF/XML (`.rdf`, `.owl`) file into this
+  tab, detects its syntax, and parses it into the Visual Editor — a fast way to
+  adapt an existing schema. RDF/XML is read but not written: the schema is shown
+  and saved as Turtle. If a file can't be parsed, an inline message points to the
+  problem; you can still edit the raw text.
 - **Name & Description** for the schema also have plain inputs at the top of this
   tab.
 
@@ -440,10 +442,10 @@ Click **Open in Visual Editor** to jump back to the drag-and-drop view.
 ### Choosing a syntax (and exporting JSON-LD)
 
 A **Syntax** selector in this tab switches the serialization between **Turtle**
-(default), **N-Triples**, **TriG**, **Notation3**, and **JSON-LD (export)**. The
-first four are fully editable — edits sync back. **JSON-LD is export-only**
-(there's no JSON-LD parser): the editor shows it read-only so you can **Copy** it
-or **Save As** a `.jsonld` file, then switch back to Turtle to keep editing.
+(default), **N-Triples**, **TriG**, **Notation3** and **JSON-LD**. The first four
+are fully editable here — edits sync back. **JSON-LD is shown read-only** in this
+tab: **Copy** it or **Save As** a `.jsonld` file, then switch back to Turtle to keep
+editing. (You can still *open* a `.jsonld` file — see above.)
 
 ![The syntax selector and JSON-LD export in the SHACL Code tab](images/syntax-jsonld.png)
 
@@ -518,9 +520,17 @@ message** and **severity** when you defined one (see [§7](#7-power-features-adv
 problem to jump to the field. Missing required values are shown as a quiet hint
 until you fill them in.
 
-> Contour checks the constraints it models. Anything kept in the “Preserved”
-> block of your SHACL (for example qualified shapes or complex paths) is not
-> checked — use a full SHACL validator, or your FAIR Data Point, for those.
+**Full SHACL check.** Tick **Full SHACL check (whole schema)** to also run the
+record through a real SHACL Core engine against the complete schema — including
+what is kept in the “Preserved” block (qualified shapes, `sh:languageIn`,
+`sh:xone`, complex paths, …). Results appear in the same panel, with the
+constraint that failed (e.g. `sh:MinCount`); click one to jump to the field.
+
+> For `sh:class`, the engine needs to know each linked resource's type. Contour
+> supplies the types of your saved records, vocabulary terms and SPARQL lookup
+> results, plus known subclass links. A linked IRI whose type Contour can't see —
+> a Wikidata item, say — is reported as *not a known instance* of the class. That
+> is expected; a FAIR Data Point that knows the resource may well accept it.
 
 ### Getting the RDF
 
@@ -538,7 +548,7 @@ lookup fields. An **Auto-complete** or **Instances select** field searches:
 - **records** saved in Contour, of any schema — fill in an *Agent* record for
   your organisation, then pick it as the *Publisher* of a *Dataset* record;
 - **vocabulary files** you add under **Lookup sources → Vocabulary…** (Turtle,
-  N-Triples, TriG or N3), such as a SKOS concept scheme or a list of licences;
+  N-Triples, TriG, N3, JSON-LD or RDF/XML), such as a SKOS concept scheme or a list of licences;
 - the field's **allowed values**, when it has an `sh:in` list.
 
 Candidates are filtered by the field's **Class** (`sh:class`). A field
@@ -549,9 +559,36 @@ field stores the resource's IRI. You can always type any other IRI instead.
 
 ![Picking a saved Agent record as the Publisher of a Dataset](images/record-lookup.png)
 
+### Searching external services
+
+A lookup field can also search an online service. Select the field in the
+**Visual Editor** and choose a service in the Inspector's **Lookup source**
+section:
+
+![Choosing Wikidata as the lookup source of the Publisher field](images/lookup-source.png)
+
+| Service | Searches | Settings |
+|---|---|---|
+| **A SPARQL endpoint** | the labels of instances of the field's `sh:class`, in any triple store | the endpoint URL |
+| **EBI Ontology Lookup Service (OLS)** | terms from hundreds of ontologies — handy for themes and keywords | optional ontologies (e.g. `efo, chebi`); optional OLS instance |
+| **Wikidata** | Wikidata items — organisations, places, people, … | optional “instance of” filter (e.g. `Q3918`, university) |
+
+Local records and vocabularies are still searched first; remote results follow,
+with their source shown. The choice is saved in the schema as a small Contour
+annotation on the property — `contour:lookupService`, `contour:lookupEndpoint`
+and `contour:lookupFilter`, in the namespace
+`https://contour.fairdatapoint.org/ns#` — so it travels with the SHACL file.
+Other SHACL tools and the FAIR Data Point simply ignore it.
+
+> **Browser access (CORS).** Contour runs entirely in your browser, so it can
+> only query services that accept requests from web pages. EBI OLS and Wikidata
+> do; many SPARQL endpoints don't. The EU Publications Office endpoint, for
+> example, answers but blocks browser requests — Contour then says it couldn't
+> reach the service. A page without a server can't work around this.
+
 ### Importing an existing record
 
-**Import…** reads an RDF file (Turtle, N-Triples, TriG or N3) and loads every
+**Import…** reads an RDF file (Turtle, N-Triples, TriG, N3, JSON-LD or RDF/XML) and loads every
 resource typed with the schema's target class as a record, ready to correct or
 complete. A record with the same IRI is replaced (Contour asks first). Triples
 the form has no field for are counted and left out, so you know when a file
@@ -751,7 +788,7 @@ friendly text and pick a **Severity** so a platform can show a helpful Warning
 instead of a bare failure.
 
 **Export to JSON-LD.** In the SHACL Code tab, set **Syntax** → *JSON-LD
-(export)* and **Copy** or **Save As** `.jsonld` for tools that consume JSON-LD.
+(read-only)* and **Copy** or **Save As** `.jsonld` for tools that consume JSON-LD.
 
 **Start from an example.** Use the **Examples** menu to load a Dataset (DCAT),
 Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.
@@ -780,8 +817,9 @@ preserved (see [§4](#4-working-directly-with-the-code-the-shacl-code-tab)).
   every edit, and your work is autosaved — a refresh restores it.
 - **Check the Issues panel.** Before exporting, expand **Issues** in the actions
   bar and clear any errors (empty paths, undeclared prefixes, broken `sh:node`).
-- **Editing JSON-LD?** You can't — it's export-only. Switch **Syntax** back to
-  Turtle (or N-Triples / TriG / N3) to keep editing.
+- **Editing JSON-LD?** Not in the code box — it's read-only there. Switch
+  **Syntax** back to Turtle (or N-Triples / TriG / N3) to keep editing, or **Open…**
+  a `.jsonld` file to load it into the editors.
 - **Start over.** Use the **New** button for a blank schema, load one from
   **Examples**, or **Open…** an existing file.
 

@@ -21,8 +21,11 @@ import {
   type MetadataRecord,
   type RecordIssue,
 } from '../record';
-import { SYNTAXES, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf, serializeQuads } from '../rdf';
+import { OUTPUT_SYNTAXES, RDF_FILE_ACCEPT, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf, serializeQuads } from '../rdf';
 import { indexQuads, searchLookup, type LookupItem } from '../lookup';
+import { remoteSearch } from '../remote';
+import { checkRecordShacl, type ShaclFinding } from '../shaclCheck';
+import { DataFactory } from '../rdf';
 import { newId } from '../data';
 import { useRecords, useLookupIndex } from '../composables/useRecords';
 import { FILL_CONTEXT } from '../composables/useFillContext';
@@ -212,21 +215,22 @@ function readFile(e: Event): Promise<{ name: string; text: string } | null> {
   return file.text().then((text) => ({ name: file.name, text }));
 }
 
+// The JSON-LD reader signals remote (URL) contexts with a code.
+function jsonLdErrorText(error: string): string {
+  return error === 'remoteContext' ? t('record.remoteContext') : error;
+}
+
 async function onRecordFile(e: Event) {
   const f = await readFile(e);
   if (!f) return;
   const syn = detectSyntax(f.name);
-  if (syn === 'jsonld') {
-    notice.value = { kind: 'error', text: t('record.importJsonLd') };
-    return;
-  }
   const prev = current.value;
   const res = importRecords(f.text, syn, props.schema);
   if (res.error) {
     const msg =
       res.error === 'noRecords' ? t('record.noRecords', { class: props.schema.targetClass })
       : res.error === 'noTargetClass' ? t('record.noTargetClass')
-      : res.error;
+      : jsonLdErrorText(res.error);
     notice.value = { kind: 'error', text: t('record.importError', { error: msg }) };
     return;
   }
@@ -269,12 +273,9 @@ async function onVocabFile(e: Event) {
   const f = await readFile(e);
   if (!f) return;
   const syn = detectSyntax(f.name);
-  const parsed = syn === 'jsonld' ? null : parseRdf(f.text, syn);
-  if (!parsed || parsed.error) {
-    notice.value = {
-      kind: 'error',
-      text: t('record.sources.error', { name: f.name, error: parsed?.error || t('record.importJsonLd') }),
-    };
+  const parsed = parseRdf(f.text, syn);
+  if (parsed.error) {
+    notice.value = { kind: 'error', text: t('record.sources.error', { name: f.name, error: jsonLdErrorText(parsed.error) }) };
     return;
   }
   const n = indexQuads(parsed.quads, f.name, 'vocab').length;
@@ -296,7 +297,7 @@ const otherRecordCount = computed(() => records.value.filter((r) => r.id !== cur
 
 // ── Lookups ──────────────────────────────────────────────────────────────────
 
-const { items: lookupItems, supers } = useLookupIndex(() => currentId.value, () => locale.value);
+const { items: lookupItems, supers, pairs } = useLookupIndex(() => currentId.value, () => locale.value);
 
 function inItems(field: Field): LookupItem[] {
   return (field.inValues || [])
@@ -309,10 +310,22 @@ function search(field: Field, text: string): LookupItem[] {
   return searchLookup([...inItems(field), ...lookupItems.value], { classIri, text }, supers.value);
 }
 
+// Items seen from remote services this session, so a chosen one keeps its label.
+const remoteSeen = new Map<string, LookupItem>();
+
+function remote(field: Field, text: string, signal: AbortSignal): Promise<LookupItem[]> | null {
+  if (!field.lookup) return null;
+  const classIri = field.class ? expandTerm(field.class, props.schema.prefixes) : null;
+  return remoteSearch(field.lookup, { text, classIri, lang: locale.value }, undefined, signal).then((items) => {
+    for (const it of items) remoteSeen.set(it.iri, it);
+    return items;
+  });
+}
+
 function describe(field: Field, value: string): LookupItem | undefined {
   const iri = expandTerm(value, props.schema.prefixes);
   if (!iri) return undefined;
-  return [...inItems(field), ...lookupItems.value].find((it) => it.iri === iri);
+  return [...inItems(field), ...lookupItems.value].find((it) => it.iri === iri) ?? remoteSeen.get(iri);
 }
 
 // ── Validation ───────────────────────────────────────────────────────────────
@@ -326,6 +339,71 @@ const issues = computed<RecordIssue[]>(() => {
 const errorCount = computed(() => issues.value.filter((i) => i.severity === 'error').length);
 const warningCount = computed(() => issues.value.length - errorCount.value);
 const subjectIssue = computed(() => issues.value.find((i) => i.loc === ''));
+
+// ── Full SHACL (Core) check ────────────────────────────────────────────────
+// Runs the whole schema — including the "Preserved" constructs — through a real
+// SHACL engine. Linked resources' types (from records, vocabularies and remote
+// results) and subclass links are added so sh:class can be checked.
+const fullCheck = ref(false);
+const shaclState = ref<'idle' | 'running' | 'done' | 'error'>('idle');
+const shaclConforms = ref(true);
+const shaclFindings = ref<ShaclFinding[]>([]);
+const shaclError = ref('');
+let shaclTimer: ReturnType<typeof setTimeout> | null = null;
+let shaclRun = 0;
+
+function contextQuads() {
+  const { namedNode, quad } = DataFactory;
+  const known = new Map<string, LookupItem>();
+  for (const it of [...lookupItems.value, ...remoteSeen.values()]) if (it.types.length && !known.has(it.iri)) known.set(it.iri, it);
+  const linked = new Set(quads.value.filter((q) => q.object.termType === 'NamedNode').map((q) => q.object.value));
+  const out = [];
+  for (const iri of linked) {
+    for (const ty of known.get(iri)?.types || []) {
+      out.push(quad(namedNode(iri), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode(ty)));
+    }
+  }
+  for (const [sub, sup] of pairs.value) {
+    out.push(quad(namedNode(sub), namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), namedNode(sup)));
+  }
+  return out;
+}
+
+async function runShacl() {
+  const r = current.value;
+  if (!r) return;
+  const run = ++shaclRun;
+  shaclState.value = 'running';
+  try {
+    const res = await checkRecordShacl(props.schema, r.subject, r.values, contextQuads());
+    if (run !== shaclRun) return;
+    shaclConforms.value = res.conforms;
+    shaclFindings.value = res.findings;
+    shaclState.value = 'done';
+  } catch (e) {
+    if (run !== shaclRun) return;
+    shaclError.value = e instanceof Error ? e.message : String(e);
+    shaclState.value = 'error';
+  }
+}
+
+watch([fullCheck, quads, () => props.schema], () => {
+  if (!fullCheck.value) return;
+  if (shaclTimer) clearTimeout(shaclTimer);
+  shaclTimer = setTimeout(runShacl, 400);
+}, { deep: true });
+
+function findingText(f: ShaclFinding): string {
+  if (f.message) return f.message;
+  const key = `record.shacl.component.${f.component}`;
+  const txt = t(key, { value: f.value ?? '' });
+  if (txt !== key) return txt;
+  return f.engineMessage || t('record.shacl.generic', { component: f.component });
+}
+
+function focusFinding(f: ShaclFinding) {
+  if (f.loc !== null) focusIssue({ loc: f.loc, severity: f.severity, code: f.component, fieldName: f.fieldName });
+}
 
 function issueText(i: RecordIssue): string {
   return i.message || t(`record.issue.${i.code}`, i.params);
@@ -342,6 +420,7 @@ async function focusIssue(i: RecordIssue) {
 
 provide(FILL_CONTEXT, {
   search,
+  remote,
   describe,
   issuesAt: (loc) => issues.value.filter((i) => i.loc === loc),
   issueText,
@@ -379,7 +458,7 @@ provide(FILL_CONTEXT, {
             <Icon name="folder" :size="13" /> {{ t('record.import') }}
           </button>
           <button class="btn btn-danger-ghost btn-sm" @click="deleteRecord"><Icon name="trash" :size="13" /> {{ t('fieldCard.delete') }}</button>
-          <input ref="recordFileRef" type="file" accept=".ttl,.nt,.trig,.n3" style="display: none" @change="onRecordFile" />
+          <input ref="recordFileRef" type="file" :accept="RDF_FILE_ACCEPT" style="display: none" @change="onRecordFile" />
         </div>
         <div class="record-subject form-row">
           <label>{{ t('record.subject') }}</label>
@@ -441,6 +520,34 @@ provide(FILL_CONTEXT, {
                 <span><strong v-if="iss.fieldName">{{ iss.fieldName }}:</strong> {{ issueText(iss) }}</span>
               </button>
               <p class="record-hint">{{ t('record.validationScope') }}</p>
+              <div class="record-shacl">
+                <label class="record-shacl__toggle">
+                  <input v-model="fullCheck" type="checkbox" />
+                  {{ t('record.shacl.toggle') }}
+                </label>
+                <template v-if="fullCheck">
+                  <p v-if="shaclState === 'running' && !shaclFindings.length" class="record-hint">{{ t('record.shacl.running') }}</p>
+                  <p v-else-if="shaclState === 'error'" class="record-issue is-error">{{ t('record.shacl.error', { error: shaclError }) }}</p>
+                  <template v-else-if="shaclState === 'done' || shaclFindings.length">
+                    <p v-if="shaclConforms && !shaclFindings.length" class="record-issues__ok">{{ t('record.shacl.conforms') }}</p>
+                    <button
+                      v-for="(f, i) in shaclFindings"
+                      :key="`s${i}`"
+                      class="issues-panel__item"
+                      :class="`is-${f.severity === 'error' ? 'error' : 'warning'}`"
+                      :disabled="f.loc === null"
+                      @click="focusFinding(f)"
+                    >
+                      <Icon :name="f.severity === 'error' ? 'warning' : 'info'" :size="13" />
+                      <span>
+                        <strong v-if="f.fieldName">{{ f.fieldName }}:</strong> {{ findingText(f) }}
+                        <code class="record-shacl__comp">sh:{{ f.component }}</code>
+                      </span>
+                    </button>
+                  </template>
+                  <p class="record-hint">{{ t('record.shacl.scope') }}</p>
+                </template>
+              </div>
             </div>
           </div>
 
@@ -450,7 +557,7 @@ provide(FILL_CONTEXT, {
               <label class="syntax-select">
                 {{ t('definition.syntax') }}
                 <select v-model="syntax">
-                  <option v-for="s in SYNTAXES" :key="s.id" :value="s.id">{{ s.label.replace(' (export)', '') }}</option>
+                  <option v-for="s in OUTPUT_SYNTAXES" :key="s.id" :value="s.id">{{ s.label }}</option>
                 </select>
               </label>
             </div>
@@ -477,7 +584,7 @@ provide(FILL_CONTEXT, {
               <button class="btn btn-ghost btn-xs" :title="t('record.sources.formats')" @click="vocabFileRef?.click()">
                 <Icon name="plus" :size="12" /> {{ t('record.sources.import') }}
               </button>
-              <input ref="vocabFileRef" type="file" accept=".ttl,.nt,.trig,.n3" style="display: none" @change="onVocabFile" />
+              <input ref="vocabFileRef" type="file" :accept="RDF_FILE_ACCEPT" style="display: none" @change="onVocabFile" />
             </div>
             <div class="record-sources">
               <p class="record-hint">{{ t('record.sources.hint') }}</p>

@@ -4,6 +4,8 @@
 // everything they don't model in a residual graph so nothing is lost.
 import N3 from 'n3';
 import type { Prefix } from './types';
+import { parseJsonLd } from './jsonldParse';
+import { parseRdfXml } from './rdfxml';
 
 const { Parser, Writer, Store, DataFactory } = N3;
 export { Store, DataFactory };
@@ -16,7 +18,8 @@ export interface RdfSyntax {
   format: string; // N3 format string
   ext: string;    // file extension (no dot)
   hasPrefixes: boolean;
-  editable?: boolean; // false → serialize/export only, no parse-back (default true)
+  editable?: boolean; // false → not editable in the SHACL Code textarea (default true)
+  output?: boolean;   // false → import only, never offered as an output syntax (default true)
 }
 
 export const SYNTAXES: RdfSyntax[] = [
@@ -24,9 +27,17 @@ export const SYNTAXES: RdfSyntax[] = [
   { id: 'ntriples', label: 'N-Triples', format: 'application/n-triples', ext: 'nt', hasPrefixes: false },
   { id: 'trig', label: 'TriG', format: 'application/trig', ext: 'trig', hasPrefixes: true },
   { id: 'n3', label: 'Notation3', format: 'text/n3', ext: 'n3', hasPrefixes: true },
-  // Export only — JSON-LD isn't round-trip editable in Contour (no JSON-LD parser).
-  { id: 'jsonld', label: 'JSON-LD (export)', format: 'application/ld+json', ext: 'jsonld', hasPrefixes: true, editable: false },
+  // Read on import, but not edited in the SHACL Code textarea.
+  { id: 'jsonld', label: 'JSON-LD', format: 'application/ld+json', ext: 'jsonld', hasPrefixes: true, editable: false },
+  // Import only (files you open / import); never written.
+  { id: 'rdfxml', label: 'RDF/XML', format: 'application/rdf+xml', ext: 'rdf', hasPrefixes: true, editable: false, output: false },
 ];
+
+/** Syntaxes Contour can write (the syntax menus). */
+export const OUTPUT_SYNTAXES: RdfSyntax[] = SYNTAXES.filter((s) => s.output !== false);
+
+/** File extensions accepted when opening / importing RDF. */
+export const RDF_FILE_ACCEPT = '.ttl,.shacl,.nt,.trig,.n3,.jsonld,.json,.rdf,.owl,.xml';
 
 export const SYNTAX_BY_ID: Record<string, RdfSyntax> = Object.fromEntries(
   SYNTAXES.map((s) => [s.id, s]),
@@ -40,7 +51,8 @@ export function detectSyntax(filename: string): string {
   const ext = m ? m[1] : '';
   const found = SYNTAXES.find((s) => s.ext === ext);
   if (found) return found.id;
-  if (ext === 'shacl' || ext === 'n3' || ext === 'ttl') return ext === 'n3' ? 'n3' : 'turtle';
+  if (ext === 'json') return 'jsonld';
+  if (ext === 'owl' || ext === 'xml') return 'rdfxml';
   return DEFAULT_SYNTAX;
 }
 
@@ -70,10 +82,38 @@ export interface RdfParseResult {
   errorLine: number | null;
 }
 
+// Prefixes declared in a JSON-LD @context (string-valued terms ending in / or #).
+function jsonLdPrefixes(text: string): Prefix[] {
+  try {
+    const doc = JSON.parse(text);
+    const ctxs = [doc?.['@context']].flat().filter((c) => c && typeof c === 'object');
+    const out: Prefix[] = [];
+    for (const c of ctxs) {
+      for (const [k, v] of Object.entries(c as Record<string, unknown>)) {
+        if (typeof v === 'string' && /[/#]$/.test(v)) out.push({ prefix: k === '@vocab' ? '' : k, uri: v });
+      }
+    }
+    return out.filter((p) => !p.prefix.startsWith('@'));
+  } catch {
+    return [];
+  }
+}
+
+// Namespace declarations (xmlns:p="…") of an RDF/XML document.
+function xmlPrefixes(text: string): Prefix[] {
+  const out: Prefix[] = [];
+  const re = /xmlns:([\w.-]+)\s*=\s*(["'])(.*?)\2/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) if (m[1] !== 'rdf' || m[3]) out.push({ prefix: m[1], uri: m[3] });
+  return out;
+}
+
 /** Parse RDF text in the given syntax into quads + declared prefixes. */
 export function parseRdf(text: string, syntaxId: string): RdfParseResult {
   const syntax = SYNTAX_BY_ID[syntaxId] || SYNTAX_BY_ID[DEFAULT_SYNTAX];
   try {
+    if (syntax.id === 'jsonld') return { quads: parseJsonLd(text), prefixes: jsonLdPrefixes(text), error: null, errorLine: null };
+    if (syntax.id === 'rdfxml') return { quads: parseRdfXml(text), prefixes: xmlPrefixes(text), error: null, errorLine: null };
     const parser = new Parser({ format: syntax.format });
     const quads = parser.parse(text);
     return { quads, prefixes: syntax.hasPrefixes ? extractPrefixes(text) : [], error: null, errorLine: null };
