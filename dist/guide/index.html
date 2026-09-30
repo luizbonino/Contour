@@ -139,6 +139,7 @@ Safari work too, with a download-style save.</p>
 <li><a href="#checking-the-record">Checking the record</a></li>
 <li><a href="#getting-the-rdf">Getting the RDF</a></li>
 <li><a href="#several-records-and-looking-them-up">Several records, and looking them up</a></li>
+<li><a href="#searching-external-services">Searching external services</a></li>
 <li><a href="#importing-an-existing-record">Importing an existing record</a></li>
 <li><a href="#where-records-are-kept">Where records are kept</a></li>
 </ul>
@@ -506,21 +507,22 @@ and <code>@prefix</code> lines. Use <strong>↑/↓</strong> to move, <strong>Ta
 </ul>
 <p><img src="images/turtle-autocomplete.png" alt="Turtle autocomplete suggesting sh:datatype"></p>
 <ul>
-<li><strong>Open an existing file.</strong> <strong>Open…</strong> in the header loads a <code>.ttl</code>/<code>.nt</code>/
-<code>.trig</code>/<code>.n3</code> file into this tab, detects its syntax, and parses it into the
-Visual Editor — a fast way to adapt an existing schema. If a file can&#39;t be
-parsed, an inline message points to the problem line; you can still edit the
-raw text.</li>
+<li><strong>Open an existing file.</strong> <strong>Open…</strong> in the header loads a Turtle, N-Triples,
+TriG, Notation3, JSON-LD (<code>.jsonld</code>) or RDF/XML (<code>.rdf</code>, <code>.owl</code>) file into this
+tab, detects its syntax, and parses it into the Visual Editor — a fast way to
+adapt an existing schema. RDF/XML is read but not written: the schema is shown
+and saved as Turtle. If a file can&#39;t be parsed, an inline message points to the
+problem; you can still edit the raw text.</li>
 <li><strong>Name &amp; Description</strong> for the schema also have plain inputs at the top of this
 tab.</li>
 </ul>
 <p>Click <strong>Open in Visual Editor</strong> to jump back to the drag-and-drop view.</p>
 <h3 id="choosing-a-syntax-and-exporting-json-ld">Choosing a syntax (and exporting JSON-LD)</h3>
 <p>A <strong>Syntax</strong> selector in this tab switches the serialization between <strong>Turtle</strong>
-(default), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong>, and <strong>JSON-LD (export)</strong>. The
-first four are fully editable — edits sync back. <strong>JSON-LD is export-only</strong>
-(there&#39;s no JSON-LD parser): the editor shows it read-only so you can <strong>Copy</strong> it
-or <strong>Save As</strong> a <code>.jsonld</code> file, then switch back to Turtle to keep editing.</p>
+(default), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> and <strong>JSON-LD</strong>. The first four
+are fully editable here — edits sync back. <strong>JSON-LD is shown read-only</strong> in this
+tab: <strong>Copy</strong> it or <strong>Save As</strong> a <code>.jsonld</code> file, then switch back to Turtle to keep
+editing. (You can still <em>open</em> a <code>.jsonld</code> file — see above.)</p>
 <p><img src="images/syntax-jsonld.png" alt="The syntax selector and JSON-LD export in the SHACL Code tab"></p>
 <p>New schemas always start as Turtle, and <strong>Save As</strong> uses the extension that
 matches the selected syntax.</p>
@@ -576,10 +578,17 @@ problem also appears under its field, using the field&#39;s own <strong>validati
 message</strong> and <strong>severity</strong> when you defined one (see <a href="#7-power-features-advanced-modelling">§7</a>). Click a
 problem to jump to the field. Missing required values are shown as a quiet hint
 until you fill them in.</p>
+<p><strong>Full SHACL check.</strong> Tick <strong>Full SHACL check (whole schema)</strong> to also run the
+record through a real SHACL Core engine against the complete schema — including
+what is kept in the “Preserved” block (qualified shapes, <code>sh:languageIn</code>,
+<code>sh:xone</code>, complex paths, …). Results appear in the same panel, with the
+constraint that failed (e.g. <code>sh:MinCount</code>); click one to jump to the field.</p>
 <blockquote>
-<p>Contour checks the constraints it models. Anything kept in the “Preserved”
-block of your SHACL (for example qualified shapes or complex paths) is not
-checked — use a full SHACL validator, or your FAIR Data Point, for those.</p>
+<p>For <code>sh:class</code>, the engine needs to know each linked resource&#39;s type. Contour
+supplies the types of your saved records, vocabulary terms and SPARQL lookup
+results, plus known subclass links. A linked IRI whose type Contour can&#39;t see —
+a Wikidata item, say — is reported as <em>not a known instance</em> of the class. That
+is expected; a FAIR Data Point that knows the resource may well accept it.</p>
 </blockquote>
 <h3 id="getting-the-rdf">Getting the RDF</h3>
 <p>Pick a <strong>Syntax</strong> — Turtle (default), N-Triples, TriG, Notation3 or JSON-LD —
@@ -594,7 +603,7 @@ lookup fields. An <strong>Auto-complete</strong> or <strong>Instances select</st
 <li><strong>records</strong> saved in Contour, of any schema — fill in an <em>Agent</em> record for
 your organisation, then pick it as the <em>Publisher</em> of a <em>Dataset</em> record;</li>
 <li><strong>vocabulary files</strong> you add under <strong>Lookup sources → Vocabulary…</strong> (Turtle,
-N-Triples, TriG or N3), such as a SKOS concept scheme or a list of licences;</li>
+N-Triples, TriG, N3, JSON-LD or RDF/XML), such as a SKOS concept scheme or a list of licences;</li>
 <li>the field&#39;s <strong>allowed values</strong>, when it has an <code>sh:in</code> list.</li>
 </ul>
 <p>Candidates are filtered by the field&#39;s <strong>Class</strong> (<code>sh:class</code>). A field
@@ -603,8 +612,50 @@ resources, plus any subclasses stated in your vocabularies (<code>rdfs:subClassO
 Type to filter by label, pick with the mouse or the arrow keys and Enter, and the
 field stores the resource&#39;s IRI. You can always type any other IRI instead.</p>
 <p><img src="images/record-lookup.png" alt="Picking a saved Agent record as the Publisher of a Dataset"></p>
+<h3 id="searching-external-services">Searching external services</h3>
+<p>A lookup field can also search an online service. Select the field in the
+<strong>Visual Editor</strong> and choose a service in the Inspector&#39;s <strong>Lookup source</strong>
+section:</p>
+<p><img src="images/lookup-source.png" alt="Choosing Wikidata as the lookup source of the Publisher field"></p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Searches</th>
+<th>Settings</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A SPARQL endpoint</strong></td>
+<td>the labels of instances of the field&#39;s <code>sh:class</code>, in any triple store</td>
+<td>the endpoint URL</td>
+</tr>
+<tr>
+<td><strong>EBI Ontology Lookup Service (OLS)</strong></td>
+<td>terms from hundreds of ontologies — handy for themes and keywords</td>
+<td>optional ontologies (e.g. <code>efo, chebi</code>); optional OLS instance</td>
+</tr>
+<tr>
+<td><strong>Wikidata</strong></td>
+<td>Wikidata items — organisations, places, people, …</td>
+<td>optional “instance of” filter (e.g. <code>Q3918</code>, university)</td>
+</tr>
+</tbody></table>
+<p>Local records and vocabularies are still searched first; remote results follow,
+with their source shown. The choice is saved in the schema as a small Contour
+annotation on the property — <code>contour:lookupService</code>, <code>contour:lookupEndpoint</code>
+and <code>contour:lookupFilter</code>, in the namespace
+<code>https://contour.fairdatapoint.org/ns#</code> — so it travels with the SHACL file.
+Other SHACL tools and the FAIR Data Point simply ignore it.</p>
+<blockquote>
+<p><strong>Browser access (CORS).</strong> Contour runs entirely in your browser, so it can
+only query services that accept requests from web pages. EBI OLS and Wikidata
+do; many SPARQL endpoints don&#39;t. The EU Publications Office endpoint, for
+example, answers but blocks browser requests — Contour then says it couldn&#39;t
+reach the service. A page without a server can&#39;t work around this.</p>
+</blockquote>
 <h3 id="importing-an-existing-record">Importing an existing record</h3>
-<p><strong>Import…</strong> reads an RDF file (Turtle, N-Triples, TriG or N3) and loads every
+<p><strong>Import…</strong> reads an RDF file (Turtle, N-Triples, TriG, N3, JSON-LD or RDF/XML) and loads every
 resource typed with the schema&#39;s target class as a record, ready to correct or
 complete. A record with the same IRI is replaced (Contour asks first). Triples
 the form has no field for are counted and left out, so you know when a file
@@ -920,7 +971,7 @@ as <code>[ sh:inversePath … ]</code>.</p>
 friendly text and pick a <strong>Severity</strong> so a platform can show a helpful Warning
 instead of a bare failure.</p>
 <p><strong>Export to JSON-LD.</strong> In the SHACL Code tab, set <strong>Syntax</strong> → <em>JSON-LD
-(export)</em> and <strong>Copy</strong> or <strong>Save As</strong> <code>.jsonld</code> for tools that consume JSON-LD.</p>
+(read-only)</em> and <strong>Copy</strong> or <strong>Save As</strong> <code>.jsonld</code> for tools that consume JSON-LD.</p>
 <p><strong>Start from an example.</strong> Use the <strong>Examples</strong> menu to load a Dataset (DCAT),
 Agent (FOAF), or Concept (SKOS) template, then adapt it to your needs.</p>
 <p><strong>Reuse an existing schema.</strong> <strong>Open…</strong> the existing file, adapt it in the
@@ -945,8 +996,9 @@ For in-place saves, use a Chromium-based browser (Chrome/Edge).</li>
 every edit, and your work is autosaved — a refresh restores it.</li>
 <li><strong>Check the Issues panel.</strong> Before exporting, expand <strong>Issues</strong> in the actions
 bar and clear any errors (empty paths, undeclared prefixes, broken <code>sh:node</code>).</li>
-<li><strong>Editing JSON-LD?</strong> You can&#39;t — it&#39;s export-only. Switch <strong>Syntax</strong> back to
-Turtle (or N-Triples / TriG / N3) to keep editing.</li>
+<li><strong>Editing JSON-LD?</strong> Not in the code box — it&#39;s read-only there. Switch
+<strong>Syntax</strong> back to Turtle (or N-Triples / TriG / N3) to keep editing, or <strong>Open…</strong>
+a <code>.jsonld</code> file to load it into the editors.</li>
 <li><strong>Start over.</strong> Use the <strong>New</strong> button for a blank schema, load one from
 <strong>Examples</strong>, or <strong>Open…</strong> an existing file.</li>
 </ul>

@@ -143,6 +143,7 @@ de descarga.</p>
 <li><a href="#comprobar-el-registro">Comprobar el registro</a></li>
 <li><a href="#obtener-el-rdf">Obtener el RDF</a></li>
 <li><a href="#varios-registros-y-c%C3%B3mo-buscarlos">Varios registros y cómo buscarlos</a></li>
+<li><a href="#buscar-en-servicios-externos">Buscar en servicios externos</a></li>
 <li><a href="#importar-un-registro-existente">Importar un registro existente</a></li>
 <li><a href="#d%C3%B3nde-se-guardan-los-registros">Dónde se guardan los registros</a></li>
 </ul>
@@ -545,10 +546,11 @@ desplazarte, <strong>Tab</strong>/<strong>Enter</strong> para aceptar y <strong>
 <p><img src="images/turtle-autocomplete.png" alt="Autocompletado de Turtle sugiriendo sh:datatype"></p>
 <ul>
 <li><strong>Abrir un archivo existente.</strong> <strong>Abrir…</strong> en la cabecera carga un archivo
-<code>.ttl</code>/<code>.nt</code>/<code>.trig</code>/<code>.n3</code> en esta pestaña, detecta su sintaxis y lo analiza en
-el Editor visual — una forma rápida de adaptar un esquema existente. Si un
-archivo no se puede analizar, un mensaje en línea apunta a la línea
-problemática; aun así, puedes editar el texto en bruto.</li>
+Turtle, N-Triples, TriG, Notation3, JSON-LD (<code>.jsonld</code>) o RDF/XML (<code>.rdf</code>,
+<code>.owl</code>) en esta pestaña, detecta su sintaxis y lo analiza en el Editor visual —
+una forma rápida de adaptar un esquema existente. El RDF/XML se lee, pero no se
+escribe: el esquema se muestra y se guarda en Turtle. Si un archivo no se puede
+analizar, un mensaje señala el problema; aún puedes editar el texto en bruto.</li>
 <li><strong>Nombre y Descripción</strong> del esquema también tienen campos sencillos en la
 parte superior de esta pestaña.</li>
 </ul>
@@ -556,12 +558,11 @@ parte superior de esta pestaña.</li>
 soltar.</p>
 <h3 id="elegir-una-sintaxis-y-exportar-json-ld">Elegir una sintaxis (y exportar JSON-LD)</h3>
 <p>Un selector de <strong>sintaxis</strong> en esta pestaña cambia la serialización entre
-<strong>Turtle</strong> (por defecto), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> y <strong>JSON-LD
-(exportación)</strong>. Las cuatro primeras son totalmente editables — las ediciones se
-sincronizan de vuelta. El <strong>JSON-LD es solo de exportación</strong> (no hay analizador
-de JSON-LD): el editor lo muestra en solo lectura para que puedas <strong>Copiarlo</strong> o
-hacer <strong>Guardar como</strong> un archivo <code>.jsonld</code>, y luego volver a Turtle para seguir
-editando.</p>
+<strong>Turtle</strong> (por defecto), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> y <strong>JSON-LD</strong>. Las
+cuatro primeras se pueden editar por completo aquí — los cambios se sincronizan de
+vuelta. <strong>El JSON-LD se muestra en solo lectura</strong> en esta pestaña: <strong>Cópialo</strong> o
+usa <strong>Guardar como</strong> con un archivo <code>.jsonld</code> y luego vuelve a Turtle para seguir
+editando. (Aun así puedes <em>abrir</em> un archivo <code>.jsonld</code> — véase arriba.)</p>
 <p><img src="images/syntax-jsonld.png" alt="El selector de sintaxis y la exportación a JSON-LD en la pestaña Código SHACL"></p>
 <p>Los esquemas nuevos siempre empiezan en Turtle, y <strong>Guardar como</strong> usa la
 extensión que corresponde a la sintaxis seleccionada.</p>
@@ -624,11 +625,19 @@ campo, con el <strong>mensaje de validación</strong> y la <strong>severidad</st
 los has definido (consulta el <a href="#7-funciones-avanzadas-modelado-avanzado">§7</a>). Haz clic en un problema para ir al
 campo. Los valores obligatorios que faltan se muestran como una indicación
 discreta hasta que los rellenas.</p>
+<p><strong>Comprobación SHACL completa.</strong> Marca <strong>Comprobación SHACL completa (todo el
+esquema)</strong> para pasar además el registro por un motor SHACL Core real, frente al
+esquema completo — incluido lo que queda en el bloque «Preservado» (shapes
+cualificadas, <code>sh:languageIn</code>, <code>sh:xone</code>, rutas complejas, …). Los resultados
+aparecen en el mismo panel, con la restricción incumplida (p. ej.,
+<code>sh:MinCount</code>); haz clic en uno para ir al campo.</p>
 <blockquote>
-<p>Contour comprueba las restricciones que modela. Lo que queda en el bloque
-«Preservado» de tu SHACL (por ejemplo, shapes cualificadas o rutas complejas)
-no se comprueba — para eso, usa un validador SHACL completo o tu FAIR Data
-Point.</p>
+<p>Para <code>sh:class</code>, el motor necesita conocer el tipo de cada recurso enlazado.
+Contour aporta los tipos de tus registros guardados, de los términos de
+vocabulario y de los resultados de búsqueda SPARQL, además de las relaciones de
+subclase conocidas. Un IRI enlazado cuyo tipo Contour no ve — un elemento de
+Wikidata, por ejemplo — se marca como <em>no es una instancia conocida</em> de la clase.
+Es lo esperado; un FAIR Data Point que conozca el recurso bien puede aceptarlo.</p>
 </blockquote>
 <h3 id="obtener-el-rdf">Obtener el RDF</h3>
 <p>Elige una <strong>Sintaxis</strong> — Turtle (por defecto), N-Triples, TriG, Notation3 o
@@ -646,7 +655,7 @@ registros guardados también se ofrecen en los campos de búsqueda. Un campo
 registro <em>Agent</em> para tu organización y elígelo como <em>Publisher</em> de un
 registro <em>Dataset</em>;</li>
 <li>los <strong>archivos de vocabulario</strong> que añadas en <strong>Fuentes de búsqueda →
-Vocabulario…</strong> (Turtle, N-Triples, TriG o N3), como un esquema de conceptos
+Vocabulario…</strong> (Turtle, N-Triples, TriG, N3, JSON-LD o RDF/XML), como un esquema de conceptos
 SKOS o una lista de licencias;</li>
 <li>los <strong>valores permitidos</strong> del campo, si tiene una lista <code>sh:in</code>.</li>
 </ul>
@@ -657,8 +666,52 @@ restringido a <code>foaf:Agent</code> ofrece también recursos <code>foaf:Person
 las flechas y Intro, y el campo guarda el IRI del recurso. Siempre puedes
 escribir otro IRI.</p>
 <p><img src="images/record-lookup.png" alt="Elegir un registro Agent guardado como Publisher de un Dataset"></p>
+<h3 id="buscar-en-servicios-externos">Buscar en servicios externos</h3>
+<p>Un campo de búsqueda también puede consultar un servicio en línea. Selecciona el
+campo en el <strong>Editor visual</strong> y elige un servicio en la sección <strong>Fuente de
+búsqueda</strong> del Inspector:</p>
+<p><img src="images/lookup-source.png" alt="Elegir Wikidata como fuente de búsqueda del campo Publisher"></p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Busca</th>
+<th>Ajustes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Un punto de acceso SPARQL</strong></td>
+<td>las etiquetas de las instancias de la <code>sh:class</code> del campo, en cualquier triple store</td>
+<td>la URL del punto de acceso</td>
+</tr>
+<tr>
+<td><strong>EBI Ontology Lookup Service (OLS)</strong></td>
+<td>términos de cientos de ontologías — útil para temas y palabras clave</td>
+<td>ontologías opcionales (p. ej., <code>efo, chebi</code>); instancia de OLS opcional</td>
+</tr>
+<tr>
+<td><strong>Wikidata</strong></td>
+<td>elementos de Wikidata — organizaciones, lugares, personas, …</td>
+<td>filtro opcional «instancia de» (p. ej., <code>Q3918</code>, universidad)</td>
+</tr>
+</tbody></table>
+<p>Los registros y vocabularios locales se siguen buscando primero; después vienen
+los resultados del servicio, con su fuente indicada. La elección se guarda en el
+esquema como una pequeña anotación de Contour en la propiedad —
+<code>contour:lookupService</code>, <code>contour:lookupEndpoint</code> y <code>contour:lookupFilter</code>, en el
+espacio de nombres <code>https://contour.fairdatapoint.org/ns#</code> — y viaja así con el
+archivo SHACL. Las demás herramientas SHACL y el FAIR Data Point simplemente la
+ignoran.</p>
+<blockquote>
+<p><strong>Acceso desde el navegador (CORS).</strong> Contour funciona por completo en tu
+navegador, así que solo puede consultar servicios que acepten peticiones de
+páginas web. EBI OLS y Wikidata lo hacen; muchos puntos de acceso SPARQL no. El
+de la Oficina de Publicaciones de la UE, por ejemplo, responde pero bloquea las
+peticiones del navegador — Contour indica entonces que no pudo acceder al
+servicio. Una página sin servidor no puede sortear esto.</p>
+</blockquote>
 <h3 id="importar-un-registro-existente">Importar un registro existente</h3>
-<p><strong>Importar…</strong> lee un archivo RDF (Turtle, N-Triples, TriG o N3) y carga como
+<p><strong>Importar…</strong> lee un archivo RDF (Turtle, N-Triples, TriG, N3, JSON-LD o RDF/XML) y carga como
 registro cada recurso con la clase objetivo del esquema como tipo, listo para
 corregirlo o completarlo. Un registro con el mismo IRI se reemplaza (Contour
 pregunta antes). Las tripletas sin campo en el formulario se cuentan y se
@@ -986,7 +1039,7 @@ colección) — se exporta como <code>[ sh:inversePath … ]</code>.</p>
 texto amable para el data steward y elige una <strong>Gravedad</strong> para que una
 plataforma pueda mostrar un Warning útil en lugar de un fallo escueto.</p>
 <p><strong>Exportar a JSON-LD.</strong> En la pestaña Código SHACL, pon la <strong>sintaxis</strong> en
-<em>JSON-LD (exportación)</em> y haz <strong>Copiar</strong> o <strong>Guardar como</strong> <code>.jsonld</code> para
+<em>JSON-LD (solo lectura)</em> y haz <strong>Copiar</strong> o <strong>Guardar como</strong> <code>.jsonld</code> para las
 herramientas que consumen JSON-LD.</p>
 <p><strong>Partir de un ejemplo.</strong> Usa el menú <strong>Ejemplos</strong> para cargar una plantilla de
 Dataset (DCAT), Agente (FOAF) o Concepto (SKOS), y luego adáptala a tus
@@ -1020,8 +1073,9 @@ recarga lo restaura.</li>
 <li><strong>Revisa el panel de Problemas.</strong> Antes de exportar, despliega <strong>Problemas</strong> en
 la barra de acciones y resuelve cualquier error (rutas vacías, prefijos no
 declarados, <code>sh:node</code> roto).</li>
-<li><strong>¿Editando JSON-LD?</strong> No se puede — es solo de exportación. Cambia la
-<strong>sintaxis</strong> de vuelta a Turtle (o N-Triples / TriG / N3) para seguir editando.</li>
+<li><strong>¿Editar JSON-LD?</strong> No en el cuadro de código — ahí es de solo lectura. Vuelve a
+poner la <strong>sintaxis</strong> en Turtle (o N-Triples / TriG / N3) para seguir editando, o
+usa <strong>Abrir…</strong> con un archivo <code>.jsonld</code> para cargarlo en los editores.</li>
 <li><strong>Empezar de cero.</strong> Usa el botón <strong>Nuevo</strong> para un esquema en blanco, carga
 uno desde <strong>Ejemplos</strong> o <strong>Abre…</strong> un archivo existente.</li>
 </ul>

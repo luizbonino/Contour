@@ -142,6 +142,7 @@ downloadstijl.</p>
 <li><a href="#het-record-controleren">Het record controleren</a></li>
 <li><a href="#de-rdf-ophalen">De RDF ophalen</a></li>
 <li><a href="#meerdere-records-en-ze-opzoeken">Meerdere records en ze opzoeken</a></li>
+<li><a href="#externe-diensten-doorzoeken">Externe diensten doorzoeken</a></li>
 <li><a href="#een-bestaand-record-importeren">Een bestaand record importeren</a></li>
 <li><a href="#waar-records-worden-bewaard">Waar records worden bewaard</a></li>
 </ul>
@@ -536,23 +537,25 @@ eigenschapsgroepen en <code>@prefix</code>-regels voor. Gebruik <strong>↑/↓<
 </ul>
 <p><img src="images/turtle-autocomplete.png" alt="Turtle-autoaanvullen dat sh:datatype voorstelt"></p>
 <ul>
-<li><strong>Een bestaand bestand openen.</strong> <strong>Openen…</strong> in de koptekst laadt een
-<code>.ttl</code>/<code>.nt</code>/<code>.trig</code>/<code>.n3</code>-bestand in dit tabblad, detecteert de syntaxis en
-parseert het in de Visuele editor — een snelle manier om een bestaand schema aan
-te passen. Als een bestand niet kan worden geparseerd, wijst een inline-melding
-naar de probleemregel; je kunt de ruwe tekst nog altijd bewerken.</li>
+<li><strong>Een bestaand bestand openen.</strong> <strong>Openen…</strong> in de kopregel laadt een Turtle-,
+N-Triples-, TriG-, Notation3-, JSON-LD- (<code>.jsonld</code>) of RDF/XML-bestand (<code>.rdf</code>,
+<code>.owl</code>) in dit tabblad, detecteert de syntaxis en zet het om naar de Visuele
+editor — een snelle manier om een bestaand schema aan te passen. RDF/XML wordt
+gelezen maar niet geschreven: het schema wordt als Turtle getoond en opgeslagen.
+Kan een bestand niet worden gelezen, dan wijst een melding het probleem aan; je
+kunt de ruwe tekst nog steeds bewerken.</li>
 <li><strong>Naam en Beschrijving</strong> voor het schema hebben ook eenvoudige invoervelden boven
 aan dit tabblad.</li>
 </ul>
 <p>Klik op <strong>Openen in Visuele editor</strong> om terug te springen naar de
 slepen-en-neerzetten-weergave.</p>
 <h3 id="een-syntaxis-kiezen-en-json-ld-exporteren">Een syntaxis kiezen (en JSON-LD exporteren)</h3>
-<p>Een keuzemenu <strong>Syntaxis</strong> in dit tabblad schakelt de serialisatie tussen
-<strong>Turtle</strong> (standaard), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> en <strong>JSON-LD
-(export)</strong>. De eerste vier zijn volledig bewerkbaar — bewerkingen synchroniseren
-terug. <strong>JSON-LD is alleen voor export</strong> (er is geen JSON-LD-parser): de editor
-toont het alleen-lezen, zodat je het kunt <strong>kopiëren</strong> of als <code>.jsonld</code>-bestand kunt
-<strong>opslaan als</strong>, en daarna terug kunt schakelen naar Turtle om verder te bewerken.</p>
+<p>Met een <strong>Syntaxis</strong>-keuzemenu in dit tabblad wissel je de serialisatie tussen
+<strong>Turtle</strong> (standaard), <strong>N-Triples</strong>, <strong>TriG</strong>, <strong>Notation3</strong> en <strong>JSON-LD</strong>. De
+eerste vier zijn hier volledig bewerkbaar — wijzigingen worden teruggesynchroniseerd.
+<strong>JSON-LD wordt in dit tabblad alleen-lezen getoond</strong>: <strong>Kopieer</strong> het of <strong>Sla het
+op als</strong> <code>.jsonld</code>-bestand en schakel daarna terug naar Turtle om verder te
+bewerken. (Een <code>.jsonld</code>-bestand <em>openen</em> kan wel — zie hierboven.)</p>
 <p><img src="images/syntax-jsonld.png" alt="Het syntaxis-keuzemenu en de JSON-LD-export in het tabblad SHACL-code"></p>
 <p>Nieuwe schema&#39;s beginnen altijd als Turtle, en <strong>Opslaan als</strong> gebruikt de extensie
 die bij de geselecteerde syntaxis past.</p>
@@ -614,11 +617,19 @@ taaltags. Elk probleem verschijnt ook onder het veld zelf, met de eigen
 <strong>validatiemelding</strong> en <strong>ernst</strong> van het veld als je die hebt ingesteld (zie
 <a href="#7-geavanceerde-functies-geavanceerd-modelleren">§7</a>). Klik op een probleem om naar het veld te springen. Ontbrekende
 verplichte waarden zie je als een onopvallende hint tot je ze invult.</p>
+<p><strong>Volledige SHACL-controle.</strong> Vink <strong>Volledige SHACL-controle (hele schema)</strong> aan
+om het record ook door een echte SHACL Core-engine te halen, tegen het volledige
+schema — inclusief wat in het blok “Behouden” staat (qualified shapes,
+<code>sh:languageIn</code>, <code>sh:xone</code>, complexe paden, …). De resultaten verschijnen in
+hetzelfde paneel, met de beperking die faalde (bijv. <code>sh:MinCount</code>); klik erop om
+naar het veld te springen.</p>
 <blockquote>
-<p>Contour controleert de beperkingen die het modelleert. Wat in het blok
-“Behouden” van je SHACL staat (bijvoorbeeld qualified shapes of complexe
-paden), wordt niet gecontroleerd — gebruik daarvoor een volledige
-SHACL-validator of je FAIR Data Point.</p>
+<p>Voor <code>sh:class</code> moet de engine het type van elke gekoppelde resource kennen.
+Contour levert de types van je opgeslagen records, vocabulairetermen en
+SPARQL-zoekresultaten, plus bekende subklasserelaties. Een gekoppelde IRI
+waarvan Contour het type niet ziet — bijvoorbeeld een Wikidata-item — wordt
+gemeld als <em>geen bekende instantie</em> van de klasse. Dat is te verwachten; een
+FAIR Data Point dat de resource kent, kan hem best accepteren.</p>
 </blockquote>
 <h3 id="de-rdf-ophalen">De RDF ophalen</h3>
 <p>Kies een <strong>Syntaxis</strong> — Turtle (standaard), N-Triples, TriG, Notation3 of JSON-LD
@@ -636,7 +647,7 @@ worden ook aangeboden in opzoekvelden. Een veld <strong>Automatisch aanvullen</s
 <em>Agent</em>-record in voor je organisatie en kies het als <em>Publisher</em> van een
 <em>Dataset</em>-record;</li>
 <li><strong>vocabulairebestanden</strong> die je toevoegt via <strong>Opzoekbronnen → Vocabulaire…</strong>
-(Turtle, N-Triples, TriG of N3), zoals een SKOS-conceptschema of een lijst met
+(Turtle, N-Triples, TriG, N3, JSON-LD of RDF/XML), zoals een SKOS-conceptschema of een lijst met
 licenties;</li>
 <li>de <strong>toegestane waarden</strong> van het veld, als het een <code>sh:in</code>-lijst heeft.</li>
 </ul>
@@ -647,8 +658,51 @@ dat beperkt is tot <code>foaf:Agent</code> biedt ook <code>foaf:Person</code>- e
 pijltjestoetsen en Enter, en het veld bewaart de IRI van de resource. Je kunt
 altijd ook een andere IRI typen.</p>
 <p><img src="images/record-lookup.png" alt="Een opgeslagen Agent-record kiezen als Publisher van een Dataset"></p>
+<h3 id="externe-diensten-doorzoeken">Externe diensten doorzoeken</h3>
+<p>Een opzoekveld kan ook een onlinedienst doorzoeken. Selecteer het veld in de
+<strong>Visuele editor</strong> en kies een dienst in de sectie <strong>Opzoekbron</strong> van de
+Inspector:</p>
+<p><img src="images/lookup-source.png" alt="Wikidata kiezen als opzoekbron van het veld Publisher"></p>
+<table>
+<thead>
+<tr>
+<th>Dienst</th>
+<th>Zoekt in</th>
+<th>Instellingen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Een SPARQL-endpoint</strong></td>
+<td>de labels van instanties van de <code>sh:class</code> van het veld, in elke triple store</td>
+<td>de URL van het endpoint</td>
+</tr>
+<tr>
+<td><strong>EBI Ontology Lookup Service (OLS)</strong></td>
+<td>termen uit honderden ontologieën — handig voor thema’s en trefwoorden</td>
+<td>optionele ontologieën (bijv. <code>efo, chebi</code>); optionele OLS-instantie</td>
+</tr>
+<tr>
+<td><strong>Wikidata</strong></td>
+<td>Wikidata-items — organisaties, plaatsen, personen, …</td>
+<td>optioneel filter “instantie van” (bijv. <code>Q3918</code>, universiteit)</td>
+</tr>
+</tbody></table>
+<p>Lokale records en vocabulaires worden nog steeds eerst doorzocht; resultaten van
+de dienst volgen, met hun bron erbij. De keuze wordt in het schema opgeslagen als
+een kleine Contour-annotatie op de eigenschap — <code>contour:lookupService</code>,
+<code>contour:lookupEndpoint</code> en <code>contour:lookupFilter</code>, in de namespace
+<code>https://contour.fairdatapoint.org/ns#</code> — en reist dus mee met het SHACL-bestand.
+Andere SHACL-tools en het FAIR Data Point negeren haar gewoon.</p>
+<blockquote>
+<p><strong>Toegang vanuit de browser (CORS).</strong> Contour draait volledig in je browser en
+kan dus alleen diensten bevragen die verzoeken van webpagina’s accepteren. EBI
+OLS en Wikidata doen dat; veel SPARQL-endpoints niet. Het endpoint van het
+Publicatiebureau van de EU bijvoorbeeld antwoordt wel, maar blokkeert verzoeken
+vanuit de browser — Contour meldt dan dat de dienst niet bereikbaar is. Een pagina
+zonder server kan daar niet omheen.</p>
+</blockquote>
 <h3 id="een-bestaand-record-importeren">Een bestaand record importeren</h3>
-<p><strong>Importeren…</strong> leest een RDF-bestand (Turtle, N-Triples, TriG of N3) en laadt
+<p><strong>Importeren…</strong> leest een RDF-bestand (Turtle, N-Triples, TriG, N3, JSON-LD of RDF/XML) en laadt
 elke resource die getypeerd is met de doelklasse van het schema als record, klaar
 om te corrigeren of aan te vullen. Een record met dezelfde IRI wordt vervangen
 (Contour vraagt het eerst). Triples waarvoor het formulier geen veld heeft,
@@ -972,8 +1026,8 @@ geëxporteerd als <code>[ sh:inversePath … ]</code>.</p>
 steward begrijpt en kies een <strong>Ernst</strong> zodat een platform een nuttige Warning kan
 tonen in plaats van een kale fout.</p>
 <p><strong>Naar JSON-LD exporteren.</strong> Stel in het tabblad SHACL-code <strong>Syntaxis</strong> in op
-<em>JSON-LD (export)</em> en <strong>Kopieer</strong> of <strong>Sla op als</strong> <code>.jsonld</code> voor gereedschappen
-die JSON-LD verwerken.</p>
+<em>JSON-LD (alleen-lezen)</em> en <strong>Kopieer</strong> of <strong>Sla op als</strong> <code>.jsonld</code> voor
+gereedschappen die JSON-LD verwerken.</p>
 <p><strong>Beginnen vanuit een voorbeeld.</strong> Gebruik het menu <strong>Voorbeelden</strong> om een sjabloon
 Dataset (DCAT), Agent (FOAF) of Concept (SKOS) te laden en pas het vervolgens aan
 je behoeften aan.</p>
@@ -1006,8 +1060,9 @@ Firefox/Safari. Gebruik voor opslaan op de plek zelf een browser op Chromium-bas
 <li><strong>Controleer het paneel Problemen.</strong> Klap vóór het exporteren <strong>Problemen</strong> in de
 actiebalk uit en los eventuele fouten op (lege paden, niet-gedeclareerde
 prefixes, gebroken <code>sh:node</code>).</li>
-<li><strong>JSON-LD aan het bewerken?</strong> Dat kan niet — het is alleen voor export. Schakel
-<strong>Syntaxis</strong> terug naar Turtle (of N-Triples / TriG / N3) om verder te bewerken.</li>
+<li><strong>JSON-LD bewerken?</strong> Niet in het codevak — daar is het alleen-lezen. Zet
+<strong>Syntaxis</strong> terug op Turtle (of N-Triples / TriG / N3) om verder te bewerken, of
+gebruik <strong>Openen…</strong> met een <code>.jsonld</code>-bestand om het in de editors te laden.</li>
 <li><strong>Opnieuw beginnen.</strong> Gebruik de knop <strong>Nieuw</strong> voor een leeg schema, laad er een
 uit <strong>Voorbeelden</strong>, of <strong>Open…</strong> een bestaand bestand.</li>
 </ul>
