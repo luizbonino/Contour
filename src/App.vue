@@ -15,6 +15,7 @@ import Palette from './components/Palette.vue';
 import Canvas from './components/Canvas.vue';
 import Inspector from './components/Inspector.vue';
 import FormPreview from './components/FormPreview.vue';
+import RecordPane from './components/RecordPane.vue';
 import contourIcon from './assets/contour-icon.svg';
 import { useI18n } from './composables/useI18n';
 import { LOCALES, type Locale } from './i18n';
@@ -37,7 +38,7 @@ watch(
   { immediate: true },
 );
 
-type Tab = 'definition' | 'visual' | 'preview';
+type Tab = 'definition' | 'visual' | 'preview' | 'record';
 const tab = ref<Tab>('visual');
 
 // Tab clicks are counted (anonymously) so we can see which views get used;
@@ -842,6 +843,15 @@ async function saveAsShacl() {
             <Icon name="eye" :size="14" /> {{ t('tabs.formPreview') }}
           </button>
         </li>
+        <li>
+          <button
+            class="nav-link"
+            :class="{ active: tab === 'record' }"
+            @click="selectTab('record')"
+          >
+            <Icon name="document" :size="14" /> {{ t('tabs.record') }}
+          </button>
+        </li>
       </ul>
 
       <!-- Visual editor tab -->
@@ -1003,6 +1013,11 @@ async function saveAsShacl() {
             <button class="btn btn-primary" @click="saveAsShacl">{{ t('common.saveAs') }}</button>
           </div>
         </div>
+      </template>
+
+      <!-- Record tab: fill in the form, get the RDF -->
+      <template v-else-if="tab === 'record'">
+        <RecordPane :schema="schema" />
       </template>
 
       <!-- Form Preview tab -->

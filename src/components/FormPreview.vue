@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Schema } from '../types';
+import type { RecordNode } from '../record';
 import { useI18n } from '../composables/useI18n';
 import PreviewField from './PreviewField.vue';
 
@@ -8,6 +9,8 @@ const { t } = useI18n();
 
 interface Props {
   schema: Schema;
+  // Record tab: bind the form to a record's values (fill-in mode).
+  node?: RecordNode;
 }
 const props = defineProps<Props>();
 
@@ -26,7 +29,13 @@ const sortedGroups = computed(() =>
     </div>
     <div v-for="g in sortedGroups" :key="g.id">
       <div class="form-preview__group-title">{{ g.label }}</div>
-      <PreviewField v-for="f in g.fields" :key="f.id" :field="f" :schema="schema" />
+      <PreviewField
+        v-for="f in g.fields"
+        :key="f.id"
+        :field="f"
+        :schema="schema"
+        :node="f.path ? node : undefined"
+      />
     </div>
   </div>
 </template>

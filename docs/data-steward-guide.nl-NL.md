@@ -43,13 +43,21 @@ Turtle te schrijven.
    - [Een syntaxis kiezen (en JSON-LD exporteren)](#een-syntaxis-kiezen-en-json-ld-exporteren)
    - [Een bestaand schema bewerken gebeurt zonder verlies](#een-bestaand-schema-bewerken-gebeurt-zonder-verlies)
    - [De graaf visualiseren](#de-graaf-visualiseren)
-5. [Je werk controleren (het paneel Problemen)](#5-je-werk-controleren-het-paneel-problemen)
-6. [Geavanceerde functies (geavanceerd modelleren)](#6-geavanceerde-functies-geavanceerd-modelleren)
-7. [Referentie](#7-referentie)
+5. [Een metadatarecord invullen (het tabblad Metadatarecord)](#5-een-metadatarecord-invullen-het-tabblad-metadatarecord)
+   - [Het formulier invullen](#het-formulier-invullen)
+   - [De record-IRI](#de-record-iri)
+   - [Het record controleren](#het-record-controleren)
+   - [De RDF ophalen](#de-rdf-ophalen)
+   - [Meerdere records en ze opzoeken](#meerdere-records-en-ze-opzoeken)
+   - [Een bestaand record importeren](#een-bestaand-record-importeren)
+   - [Waar records worden bewaard](#waar-records-worden-bewaard)
+6. [Je werk controleren (het paneel Problemen)](#6-je-werk-controleren-het-paneel-problemen)
+7. [Geavanceerde functies (geavanceerd modelleren)](#7-geavanceerde-functies-geavanceerd-modelleren)
+8. [Referentie](#8-referentie)
    - [Widgetcatalogus](#widgetcatalogus)
    - [Referentie van eigenschapsinstellingen](#referentie-van-eigenschapsinstellingen)
-8. [Recepten — veelvoorkomende modelleerpatronen](#8-recepten--veelvoorkomende-modelleerpatronen)
-9. [Tips en probleemoplossing](#9-tips-en-probleemoplossing)
+9. [Recepten — veelvoorkomende modelleerpatronen](#9-recepten--veelvoorkomende-modelleerpatronen)
+10. [Tips en probleemoplossing](#10-tips-en-probleemoplossing)
 
 ---
 
@@ -77,9 +85,9 @@ Je ontwerpt dit allemaal visueel; het gereedschap schrijft de SHACL voor je.
 
 ![Contour met het voorbeeldschema Dataset geladen](images/interface-overview.png)
 
-Het venster heeft drie tabbladen:
+Het venster heeft vier tabbladen:
 
-![De drie tabbladen: SHACL-code, Visuele editor, Formuliervoorbeeld](images/tabs.png)
+![De vier tabbladen: SHACL-code, Visuele editor, Formuliervoorbeeld, Metadatarecord](images/tabs.png)
 
 - **SHACL-code** — het geserialiseerde schema. Standaard Turtle, met
   autoaanvullen; bewerkingen worden teruggesynchroniseerd naar het visuele canvas.
@@ -89,6 +97,8 @@ Het venster heeft drie tabbladen:
   Hier vindt het meeste werk plaats.
 - **Formuliervoorbeeld** — een realistische weergave van het invoerformulier dat
   je schema oplevert, zodat je de ervaring kunt testen voordat je publiceert.
+- **Metadatarecord** — vul het gegenereerde formulier in en krijg het
+  metadatarecord als RDF (zie [§5](#5-een-metadatarecord-invullen-het-tabblad-metadatarecord)).
 
 De **Visuele editor** is verdeeld in drie kolommen:
 
@@ -100,7 +110,7 @@ De **Visuele editor** is verdeeld in drie kolommen:
 
 Onder de werkbank staat een **actiebalk** met een teller voor
 eigenschappen/groepen, een **Problemen**-indicator (een live controle van je
-schema — zie [§5](#5-je-werk-controleren-het-paneel-problemen)) en knoppen voor
+schema — zie [§6](#6-je-werk-controleren-het-paneel-problemen)) en knoppen voor
 Opslaan / Kopiëren. Om het geserialiseerde schema te zien, ga je naar het tabblad
 **SHACL-code**; om het weergegeven formulier te zien, ga je naar
 **Formuliervoorbeeld**.
@@ -334,7 +344,7 @@ Dit geeft een zoekvak weer dat bestaande instanties opzoekt.
 > **Geavanceerd:** een eigenschap kan ook *ofwel* een literal *of* een IRI
 > accepteren (en vergelijkbare "een van deze types"-regels) via **Alternatieve
 > waardetypes (`sh:or`)**, of een relatie achterstevoren volgen met een
-> **Inverse (`^`)**-pad — zie [§6 Geavanceerde functies](#6-geavanceerde-functies-geavanceerd-modelleren).
+> **Inverse (`^`)**-pad — zie [§7 Geavanceerde functies](#7-geavanceerde-functies-geavanceerd-modelleren).
 
 ### Stap 10 — Modelleer een subobject met een geneste vorm
 
@@ -358,7 +368,7 @@ vorm** en de widget **Details (genest)**.
 > maken en koppelen** om in één stap een nieuwe vorm te creëren en `sh:node` eraan
 > te koppelen — voeg er vervolgens gewoon de velden aan toe. De eigenschapkaart
 > toont de koppeling waarnaar hij verwijst (bijv. `→ :ContactShape`), en het
-> [paneel Problemen](#5-je-werk-controleren-het-paneel-problemen) markeert een
+> [paneel Problemen](#6-je-werk-controleren-het-paneel-problemen) markeert een
 > Details-eigenschap waarvan het doel ontbreekt.
 
 ![Een schema met een Details-eigenschap en een ingevulde geneste ContactShape](images/nested-canvas.png)
@@ -386,8 +396,9 @@ elke gewenste diepte genest:
 
 ![Het weergegeven formuliervoorbeeld, inclusief een inline genest Contact-formulier](images/form-preview-tab.png)
 
-Dit voorbeeld is alleen-lezen — het is er om het ontwerp te valideren, niet om
-echte gegevens vast te leggen.
+Dit voorbeeld is er om het ontwerp te controleren. Om een echt record in te
+vullen en de RDF ervan te krijgen, gebruik je het tabblad **Metadatarecord** (zie
+[§5](#5-een-metadatarecord-invullen-het-tabblad-metadatarecord)).
 
 ### Stap 12 — Bekijk de gegenereerde SHACL
 
@@ -499,7 +510,109 @@ in één oogopslag te zien.
 
 ---
 
-## 5. Je werk controleren (het paneel Problemen)
+## 5. Een metadatarecord invullen (het tabblad Metadatarecord)
+
+Zodra je schema ontworpen is, maakt het tabblad **Metadatarecord** er een
+werkend invoerformulier van: vul het in en Contour levert het **metadatarecord als
+RDF**, klaar om in te leveren, te publiceren of in een triple store te laden. Zie
+het als een lichte vervanger voor het invoeren van metadata in een FAIR Data
+Point — zonder server.
+
+![Het tabblad Metadatarecord: het formulier links, validatie en de gegenereerde RDF rechts](images/record-tab.png)
+
+### Het formulier invullen
+
+Het formulier is hetzelfde als in het **Formuliervoorbeeld**, maar nu actief: elke
+waarde die je typt, verschijnt direct in de **RDF-uitvoer** rechts. Gebruik
+**+ Toevoegen** en **×** voor herhaalbare velden en het kleine taalvak voor tekst
+met een taaltag. **Details**-subformulieren vul je inline in; ze worden geneste
+resources, getypeerd met de doelklasse van de geneste shape. Lege velden worden
+weggelaten.
+
+Elke waarde wordt geschreven zoals het schema voorschrijft: datums als
+`xsd:date`, getallen met hun datatype, booleans als `xsd:boolean`, IRI-velden als
+IRI's (een volledige IRI, of een naam met prefix zoals `dct:Standard`, via de
+prefixen van het schema) en keuzes uit een enumeratie als literal of IRI, zoals
+gedeclareerd in `sh:in`.
+
+### De record-IRI
+
+Elk record heeft een identifier nodig: het subject van al zijn triples. Contour
+maakt er een uit de **basis-IRI**, de doelklasse en de titel — bijvoorbeeld
+`https://example.org/dataset/luchtkwaliteit-2025` — en houdt die gelijk met de
+titel terwijl je typt. Pas hem aan om zelf te kiezen; **Opnieuw genereren** gaat
+terug naar de gegenereerde IRI. Stel de **Basis-IRI voor nieuwe records** één keer
+in (bijvoorbeeld op de namespace van je organisatie of cursus) en die wordt
+voortaan gebruikt. Contour waarschuwt als de IRI geen geldige absolute IRI is of
+al door een ander record wordt gebruikt.
+
+### Het record controleren
+
+Het paneel **Validatie** controleert het record tegen je schema terwijl je typt:
+minimum- en maximumaantallen, datatypes (een echte datum, een geheel getal, …),
+lengtes, patronen, waardebereiken, toegestane waarden (`sh:in`), IRI's en
+taaltags. Elk probleem verschijnt ook onder het veld zelf, met de eigen
+**validatiemelding** en **ernst** van het veld als je die hebt ingesteld (zie
+[§7](#7-geavanceerde-functies-geavanceerd-modelleren)). Klik op een probleem om naar het veld te springen. Ontbrekende
+verplichte waarden zie je als een onopvallende hint tot je ze invult.
+
+> Contour controleert de beperkingen die het modelleert. Wat in het blok
+> “Behouden” van je SHACL staat (bijvoorbeeld qualified shapes of complexe
+> paden), wordt niet gecontroleerd — gebruik daarvoor een volledige
+> SHACL-validator of je FAIR Data Point.
+
+### De RDF ophalen
+
+Kies een **Syntaxis** — Turtle (standaard), N-Triples, TriG, Notation3 of JSON-LD
+— en **Kopieer** of **Download** het record. Alleen de prefixen die het record
+echt gebruikt worden gedeclareerd, en subformulieren staan inline als `[ … ]`.
+Heb je meerdere records voor hetzelfde schema, dan bewaart **Alle downloaden** ze
+samen in één bestand.
+
+### Meerdere records en ze opzoeken
+
+Het menu **Record** toont alle records die je voor dit schema hebt gemaakt; met
+**Nieuw**, **Dupliceren** en **Verwijderen** beheer je ze. Opgeslagen records
+worden ook aangeboden in opzoekvelden. Een veld **Automatisch aanvullen** of
+**Instantiekeuze** zoekt in:
+
+- **records** die in Contour zijn opgeslagen, van elk schema — vul een
+  *Agent*-record in voor je organisatie en kies het als *Publisher* van een
+  *Dataset*-record;
+- **vocabulairebestanden** die je toevoegt via **Opzoekbronnen → Vocabulaire…**
+  (Turtle, N-Triples, TriG of N3), zoals een SKOS-conceptschema of een lijst met
+  licenties;
+- de **toegestane waarden** van het veld, als het een `sh:in`-lijst heeft.
+
+Kandidaten worden gefilterd op de **Klasse** van het veld (`sh:class`). Een veld
+dat beperkt is tot `foaf:Agent` biedt ook `foaf:Person`- en
+`foaf:Organization`-resources aan, plus subklassen die in je vocabulaires staan
+(`rdfs:subClassOf`). Typ om op label te filteren, kies met de muis of met de
+pijltjestoetsen en Enter, en het veld bewaart de IRI van de resource. Je kunt
+altijd ook een andere IRI typen.
+
+![Een opgeslagen Agent-record kiezen als Publisher van een Dataset](images/record-lookup.png)
+
+### Een bestaand record importeren
+
+**Importeren…** leest een RDF-bestand (Turtle, N-Triples, TriG of N3) en laadt
+elke resource die getypeerd is met de doelklasse van het schema als record, klaar
+om te corrigeren of aan te vullen. Een record met dezelfde IRI wordt vervangen
+(Contour vraagt het eerst). Triples waarvoor het formulier geen veld heeft,
+worden geteld en weggelaten, zodat je weet wanneer een bestand meer bevat dan je
+schema beschrijft.
+
+### Waar records worden bewaard
+
+Records, vocabulaires en de basis-IRI worden in je browser bewaard — er wordt
+niets geüpload. Ze blijven bestaan na herladen, maar niet na het wissen van je
+browsergegevens of in een andere browser; **download** dus de records die je wilt
+bewaren. Records horen bij een schema via de **Shape-IRI**: open het schema
+opnieuw en de records zijn terug.
+
+---
+
+## 6. Je werk controleren (het paneel Problemen)
 
 Terwijl je bouwt, controleert Contour het schema voortdurend en vat het problemen
 samen in de **Problemen**-indicator op de actiebalk van de Visuele editor. Klik
@@ -523,7 +636,7 @@ naar gedeclareerde vocabulaires.
 
 ---
 
-## 6. Geavanceerde functies (geavanceerd modelleren)
+## 7. Geavanceerde functies (geavanceerd modelleren)
 
 Naast de kernwidgets en -beperkingen biedt de Inspector een paar geavanceerde
 besturingselementen voor rijkere schema's. Elk is optioneel — grijp ernaar wanneer
@@ -581,7 +694,7 @@ met een voorloop-`^`.
 
 ---
 
-## 7. Referentie
+## 8. Referentie
 
 ### Widgetcatalogus
 
@@ -643,7 +756,7 @@ Besturingselementen op schema- en groepsniveau:
 
 ---
 
-## 8. Recepten — veelvoorkomende modelleerpatronen
+## 9. Recepten — veelvoorkomende modelleerpatronen
 
 Korte, op zichzelf staande patronen die je boven op de tutorial kunt toepassen.
 
@@ -705,7 +818,7 @@ in de Visuele editor en gebruik vervolgens **Opslaan als…** voor een nieuw bes
 
 ---
 
-## 9. Tips en probleemoplossing
+## 10. Tips en probleemoplossing
 
 - **Stel altijd het eigenschapspad in.** Nieuwe widgets krijgen een tijdelijk pad
   als `:textfield`; vervang het door de echte RDF-term (`dct:title`, `dcat:theme`,

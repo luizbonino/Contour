@@ -5,6 +5,7 @@ This file tracks Contour's implementation plans. The **active** plan is the
 review). The completed **Rebrand** plan is archived at the end for reference.
 
 - [SHACL Editor Enhancements](#shacl-editor-enhancements--implementation-plan) — **active**
+  (Phase 7 — **Fill in & export metadata records** — is the current focus)
 - [Contour Rebrand](#contour-rebrand--implementation-plan-archived--done) — ✅ done (archived)
 
 ---
@@ -35,7 +36,8 @@ engine that can **ingest and emit multiple RDF syntaxes**.
 | 3 — Form fidelity & linking UX | messages/severity, preview fidelity, nested linking | ✅ Done |
 | 4 — Expressiveness | language tags, sh:or / qualified, rich paths | ✅ Done (common cases; complex stays residual) |
 | 5 — Structure & scale | peer shapes, navigator, drag-order, a11y, autocomplete | 🟡 a11y/order/autocomplete/hygiene done; navigator + peer shapes pending |
-| 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | ⬜ Not started |
+| 6 — Optional / opt-in | JSON-LD & RDF/XML syntaxes, sample-data validation | 🟡 JSON-LD export done |
+| 7 — Fill in & export metadata records | "light FDP": fill the form, get RDF, lookups | ✅ 7a–7f done; 7g (remote lookups, full SHACL) later |
 
 ## Priority map (from the review)
 
@@ -360,6 +362,98 @@ reshape concentrate.
       bundle-size budget (heavier than N3.js); possibly lazy-loaded.
 - [ ] **Validate sample data against the shape:** paste/load instance RDF and run
       a SHACL validation, showing the report — closes the FAIR authoring loop.
+
+---
+
+## Phase 7 — Fill in & export metadata records ("light FDP") 🟡
+
+> **Verified (7a–7f):** `npm test` **177/177** (22 new record + lookup tests);
+> type-check clean; `npm run build` single-file `dist/index.html`
+> **880 KB / 432 KB gzip** (+21 KB gzip, no new dependency). Driven end-to-end
+> in Chrome: fill → live Turtle/N-Triples/TriG/N3/JSON-LD, inline + summary
+> validation, record import (with unmapped-triple count), cross-schema lookup
+> (Agent record → Dataset publisher), vocabulary lookup (SKOS), persistence
+> across reload; Form Preview unchanged. Guide §5 added in all six languages
+> (sections renumbered, all anchors verified) with regenerated screenshots.
+
+**Goal.** Close the loop for data stewards and students (e.g. the *FAIR Data
+Engineering* course): define a metadata schema (SHACL code or visual editor),
+**fill in the generated form**, and get the **metadata record as RDF** in any
+supported syntax — a lightweight, zero-backend stand-in for the FAIR Data
+Point's metadata editing.
+
+### Decisions (confirmed with the product owner)
+
+1. **One renderer.** The Form Preview and the new **Record** tab share
+   `PreviewField` / `FieldInput`; the fill-in mode just binds them to a record
+   model, so the preview and the fillable form can never drift apart.
+2. **Values keyed by property path**, not field id — ids are re-minted whenever
+   the SHACL code is re-parsed, paths are stable (and unique per shape, which
+   the linter already enforces). Inverse paths are keyed `^path`.
+3. **Built-in validation from day one** against the constraints Contour models
+   (min/max count, datatype lexical form, length, pattern, ranges, `sh:in`,
+   node kind / IRI validity, language tags), reported with the field's
+   `sh:message` / `sh:severity`. A full SHACL engine stays optional (7g).
+4. **Import records from the start**: an existing RDF record (Turtle,
+   N-Triples, TriG, N3) is mapped back into the form for further editing;
+   triples the form can't hold are counted and reported, never silently lost
+   without notice.
+5. **Subject IRI = generated default, editable.** `base + lower(localName(targetClass)) + "/" + slug`,
+   where the slug follows the title-like field (`dct:title`, `rdfs:label`,
+   `foaf:name`, `skos:prefLabel`, `vcard:fn`) until the user edits the IRI by
+   hand, falling back to a short random id. Base IRI is a per-browser setting
+   (default `https://example.org/`). Invalid or duplicate IRIs are flagged.
+   Imported records keep their IRI.
+6. **Lookup fields are real.** AutoComplete / Instances-select fields search
+   local sources, filtered by the field's `sh:class` (items typed with it):
+   - **Records** saved in Contour (any schema) — e.g. a Dataset's
+     `dct:isPartOf` offers the Catalog records.
+   - **Imported vocabulary files** (SKOS schemes, licence lists, …), labelled
+     by `skos:prefLabel` / `rdfs:label` / `dct:title` / `foaf:name`.
+   - **`sh:in` values** where the field declares them.
+   Free-text IRIs are always accepted. Remote sources come in 7g.
+7. **Nested sub-forms** (DetailsEditor → `sh:node`) become blank nodes typed
+   with the nested shape's `targetClass`; clean Turtle prints them inline
+   `[ … ]`.
+8. **Local-only persistence** (`localStorage`): the record library, imported
+   vocabularies and the base IRI — consistent with the zero-backend ethos.
+
+### Tasks
+
+- [x] **7a — Record model + RDF generation** ([`record.ts`](src/record.ts)):
+      record types, `normalizeRecord` (seed min-count entries + defaults),
+      record → quads (datatypes, lang tags, IRIs/CURIEs, inverse paths, nested
+      blank nodes), serialization in every syntax (clean nested Turtle; only the
+      prefixes actually used), subject-IRI minting/slugging. Unit tests.
+- [x] **7b — Built-in validation** (`validateRecord`): per-field / per-value
+      issues with codes + params (translated in the UI), `sh:message` /
+      `sh:severity` honoured, nested shapes recursed. Unit tests.
+- [x] **7c — Import** (`importRecords`): RDF text → records for every subject
+      typed with the schema's `targetClass` (enum / IRI / literal / nested /
+      inverse mapping), unmapped-triple count. Round-trip tests
+      (fill → RDF → import → same values).
+- [x] **7d — Lookups** ([`lookup.ts`](src/lookup.ts)): index from quads (label
+      + types), search by `sh:class` + text, sources = saved records, imported
+      vocabularies, `sh:in`. `LookupInput` component with keyboard navigation.
+      Unit tests.
+- [x] **7e — Stateful shared renderer + Record tab**: `PreviewField` /
+      `FieldInput` fill mode (per-value add/remove, lang tags, inline issues);
+      **Record** tab with record list (new / duplicate / delete / import),
+      subject IRI + base, live RDF output with syntax toggle, copy / download
+      (current record, or all records as one graph), issue summary, lookup-source
+      manager ([`useRecords.ts`](src/composables/useRecords.ts) persistence).
+- [x] **7f — i18n + guide**: all six locales; a "Filling in a record" section in
+      the data-steward guide.
+- [ ] **7g — Later / opt-in**: remote lookup sources (SPARQL endpoints incl.
+      Wikidata / FDP, EBI OLS, LOV) configured per field by a small
+      `contour:lookup…` annotation (preserved by the residual graph, ignored by
+      the FDP); optional full SHACL validation via a lazy-loaded engine
+      (e.g. `rdf-validate-shacl`); JSON-LD / RDF-XML *import*.
+
+> **Known limits (by design):** constraints kept in the residual graph
+> (qualified shapes, complex paths, `sh:xone`/`and`/`not`) are not checked by
+> the built-in validator; remote lookups (7g) will depend on the service
+> allowing browser (CORS) access.
 
 ---
 

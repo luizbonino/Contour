@@ -82,6 +82,7 @@ const deDE = {
     definition: 'SHACL-Code',
     visualEditor: 'Visueller Editor',
     formPreview: 'Formularvorschau',
+    record: 'Metadatensatz',
   },
   visual: {
     calloutHtml:
@@ -90,6 +91,84 @@ const deDE = {
       '<code>sh:property</code>. Wechsle zum Tab <strong>SHACL-Code</strong>, ' +
       'um das erzeugte Turtle anzusehen oder zu bearbeiten, oder zur ' +
       '<strong>Formularvorschau</strong>, um das gerenderte Formular zu sehen.',
+  },
+  record: {
+    calloutHtml:
+      '<strong>Metadatensatz</strong> — füllen Sie das aus diesem Schema erzeugte Formular aus ' +
+      'und erhalten Sie den Datensatz als RDF (Turtle, N-Triples, TriG, N3 oder JSON-LD). Datensätze werden ' +
+      'in diesem Browser gespeichert; gespeicherte Datensätze und importierte Vokabulare erscheinen in Suchfeldern.',
+    record: 'Datensatz',
+    untitled: 'Unbenannter Datensatz',
+    deleteConfirm: 'Den Datensatz „{name}“ löschen?',
+    import: 'Importieren…',
+    importTitle: 'Vorhandene Datensätze aus einer RDF-Datei importieren (Turtle, N-Triples, TriG oder N3)',
+    importError: 'Import fehlgeschlagen — {error}',
+    importJsonLd: 'JSON-LD-Import wird noch nicht unterstützt — verwenden Sie Turtle, N-Triples, TriG oder N3.',
+    noRecords: 'keine Ressource vom Typ {class} in der Datei.',
+    noTargetClass: 'das Schema hat keine Zielklasse.',
+    replaceConfirm: '{n} importierte(r) Datensatz/Datensätze existieren hier bereits (gleiche IRI). Ersetzen?',
+    imported: { one: '{n} Datensatz importiert.', other: '{n} Datensätze importiert.' },
+    unmapped: {
+      one: '{n} Tripel aus der Datei passt nicht in dieses Formular und wurde ausgelassen.',
+      other: '{n} Tripel aus der Datei passen nicht in dieses Formular und wurden ausgelassen.',
+    },
+    noFields: 'Dieses Schema hat noch keine Felder — fügen Sie im Visuellen Editor welche hinzu und füllen Sie dann hier einen Datensatz aus.',
+    noTargetClassHint:
+      'Das Schema hat keine Zielklasse, daher erhalten Datensätze keinen Typ (rdf:type) und können nicht zurückimportiert werden. Legen Sie sie in den Schema-Einstellungen fest.',
+    subject: 'Datensatz-IRI (Subjekt)',
+    subjectAutoHint: 'Erzeugt aus Basis-IRI, Zielklasse und Titel — bearbeiten Sie sie, um eine eigene zu wählen.',
+    subjectManualHint: 'Manuell festgelegt. „Neu erzeugen“ kehrt zur erzeugten IRI zurück.',
+    regenerate: 'Neu erzeugen',
+    regenerateTitle: 'Die IRI aus Basis-IRI, Zielklasse und Titel erzeugen',
+    baseIri: 'Basis-IRI für neue Datensätze',
+    form: 'Datensatzformular',
+    output: 'RDF-Ausgabe',
+    copied: 'Kopiert!',
+    download: 'Herunterladen',
+    downloadAll: 'Alle herunterladen ({n})',
+    downloadAllTitle: 'Alle Datensätze dieses Schemas als eine RDF-Datei herunterladen',
+    validation: 'Validierung',
+    valid: 'Der Datensatz erfüllt alle Einschränkungen, die Contour prüft.',
+    validationScope:
+      'Prüft Kardinalität, Datentypen, Längen, Muster, Wertebereiche, erlaubte Werte und IRIs. ' +
+      'Einschränkungen im SHACL-Block „Beibehalten“ werden nicht geprüft.',
+    issue: {
+      minCount: 'Benötigt mindestens {min} Wert(e).',
+      maxCount: 'Erlaubt höchstens {max} Wert(e).',
+      datatype: 'Kein gültiger {datatype}-Wert.',
+      iri: '„{value}“ ist keine gültige IRI — verwenden Sie eine vollständige IRI (https://…) oder ein deklariertes Präfix.',
+      in: '„{value}“ ist keiner der erlaubten Werte.',
+      minLength: 'Benötigt mindestens {min} Zeichen.',
+      maxLength: 'Erlaubt höchstens {max} Zeichen.',
+      pattern: 'Entspricht nicht dem Muster {pattern}.',
+      minInclusive: 'Muss ≥ {bound} sein.',
+      maxInclusive: 'Muss ≤ {bound} sein.',
+      minExclusive: 'Muss > {bound} sein.',
+      maxExclusive: 'Muss < {bound} sein.',
+      langRequired: 'Benötigt ein Sprach-Tag (z. B. de).',
+      langInvalid: '„{lang}“ ist kein gültiges Sprach-Tag (z. B. en, de-DE).',
+      inverseLiteral: 'Ein inverser Pfad benötigt eine IRI, keinen Text.',
+      orTypes: 'Muss eine IRI sein.',
+      subjectInvalid: 'Die Datensatz-IRI muss eine vollständige, absolute IRI sein (z. B. https://example.org/dataset/1).',
+      subjectDuplicate: 'Ein anderer gespeicherter Datensatz verwendet diese IRI bereits.',
+    },
+    sources: {
+      title: 'Suchquellen',
+      hint: 'Autovervollständigungs- und Instanzfelder durchsuchen diese Quellen, gefiltert nach der sh:class des Felds.',
+      records: { one: '{n} weiterer gespeicherter Datensatz', other: '{n} weitere gespeicherte Datensätze' },
+      import: 'Vokabular…',
+      formats: 'Eine Vokabulardatei importieren (Turtle, N-Triples, TriG oder N3), z. B. ein SKOS-Begriffsschema',
+      added: '{name} hinzugefügt — {terms}.',
+      error: '{name} konnte nicht gelesen werden — {error}',
+      storageFull: 'Zu groß zum Speichern in diesem Browser — verfügbar, bis Sie die Seite neu laden.',
+    },
+  },
+  lookup: {
+    noMatches: 'Keine Treffer — Sie können trotzdem eine IRI eingeben.',
+    noneOfClass: 'Kein {class} in Ihren Datensätzen oder Vokabularen gefunden — geben Sie eine IRI ein oder importieren Sie ein Vokabular.',
+    none: 'Noch nichts zum Nachschlagen — geben Sie eine IRI ein oder importieren Sie ein Vokabular.',
+    sourceRecord: 'Datensatz · {name}',
+    sourceIn: 'erlaubter Wert',
   },
   preview: {
     generatedShacl: 'Erzeugtes SHACL (Turtle)',
@@ -270,6 +349,7 @@ const deDE = {
     groups: { one: '{n} Gruppe', other: '{n} Gruppen' },
     nestedShapes: { one: '{n} verschachtelte Shape', other: '{n} verschachtelte Shapes' },
     fields: { one: '{n} Feld', other: '{n} Felder' },
+    terms: { one: '{n} Begriff', other: '{n} Begriffe' },
   },
   widget: {
     TextFieldEditor: { name: 'Textfeld', desc: 'Einzeiliger Text' },

@@ -82,6 +82,7 @@ const ptBR = {
     definition: 'Código SHACL',
     visualEditor: 'Editor visual',
     formPreview: 'Pré-visualização',
+    record: 'Registro de metadados',
   },
   visual: {
     calloutHtml:
@@ -90,6 +91,84 @@ const ptBR = {
       '<code>sh:property</code> do SHACL. Mude para a aba ' +
       '<strong>Código SHACL</strong> para visualizar ou editar o Turtle gerado, ' +
       'ou <strong>Pré-visualização</strong> para ver o formulário renderizado.',
+  },
+  record: {
+    calloutHtml:
+      '<strong>Registro de metadados</strong> — preencha o formulário gerado a partir deste esquema ' +
+      'e obtenha o registro em RDF (Turtle, N-Triples, TriG, N3 ou JSON-LD). Os registros ficam ' +
+      'neste navegador; registros salvos e vocabulários importados aparecem nos campos de busca.',
+    record: 'Registro',
+    untitled: 'Registro sem título',
+    deleteConfirm: 'Excluir o registro “{name}”?',
+    import: 'Importar…',
+    importTitle: 'Importar registros existentes de um arquivo RDF (Turtle, N-Triples, TriG ou N3)',
+    importError: 'Não foi possível importar — {error}',
+    importJsonLd: 'A importação de JSON-LD ainda não é suportada — use Turtle, N-Triples, TriG ou N3.',
+    noRecords: 'nenhum recurso do tipo {class} no arquivo.',
+    noTargetClass: 'o esquema não tem classe-alvo.',
+    replaceConfirm: '{n} registro(s) importado(s) já existe(m) aqui (mesmo IRI). Substituir?',
+    imported: { one: '{n} registro importado.', other: '{n} registros importados.' },
+    unmapped: {
+      one: '{n} tripla do arquivo não cabe neste formulário e foi deixada de fora.',
+      other: '{n} triplas do arquivo não cabem neste formulário e foram deixadas de fora.',
+    },
+    noFields: 'Este esquema ainda não tem campos — adicione alguns no Editor visual e depois preencha um registro aqui.',
+    noTargetClassHint:
+      'O esquema não tem classe-alvo, então os registros não recebem tipo (rdf:type) e não podem ser importados de volta. Defina-a nas configurações do esquema.',
+    subject: 'IRI do registro (sujeito)',
+    subjectAutoHint: 'Gerado a partir do IRI base, da classe-alvo e do título — edite para escolher o seu.',
+    subjectManualHint: 'Definido manualmente. “Regenerar” volta ao IRI gerado.',
+    regenerate: 'Regenerar',
+    regenerateTitle: 'Gerar o IRI a partir do IRI base, da classe-alvo e do título',
+    baseIri: 'IRI base para novos registros',
+    form: 'Formulário do registro',
+    output: 'Saída RDF',
+    copied: 'Copiado!',
+    download: 'Baixar',
+    downloadAll: 'Baixar todos ({n})',
+    downloadAllTitle: 'Baixar todos os registros deste esquema em um único arquivo RDF',
+    validation: 'Validação',
+    valid: 'O registro atende a todas as restrições que o Contour verifica.',
+    validationScope:
+      'Verifica cardinalidade, tipos de dados, comprimentos, padrões, intervalos de valores, valores permitidos e IRIs. ' +
+      'Restrições mantidas no bloco SHACL “Preservado” não são verificadas.',
+    issue: {
+      minCount: 'Precisa de pelo menos {min} valor(es).',
+      maxCount: 'Permite no máximo {max} valor(es).',
+      datatype: 'Não é um valor {datatype} válido.',
+      iri: '“{value}” não é um IRI válido — use um IRI completo (https://…) ou um prefixo declarado.',
+      in: '“{value}” não é um dos valores permitidos.',
+      minLength: 'Precisa de pelo menos {min} caracteres.',
+      maxLength: 'Permite no máximo {max} caracteres.',
+      pattern: 'Não corresponde ao padrão {pattern}.',
+      minInclusive: 'Deve ser ≥ {bound}.',
+      maxInclusive: 'Deve ser ≤ {bound}.',
+      minExclusive: 'Deve ser > {bound}.',
+      maxExclusive: 'Deve ser < {bound}.',
+      langRequired: 'Precisa de uma etiqueta de idioma (ex.: pt).',
+      langInvalid: '“{lang}” não é uma etiqueta de idioma válida (ex.: en, pt-BR).',
+      inverseLiteral: 'Um caminho inverso precisa de um IRI, não de texto.',
+      orTypes: 'Deve ser um IRI.',
+      subjectInvalid: 'O IRI do registro deve ser um IRI completo e absoluto (ex.: https://example.org/dataset/1).',
+      subjectDuplicate: 'Outro registro salvo já usa este IRI.',
+    },
+    sources: {
+      title: 'Fontes de busca',
+      hint: 'Campos de autocompletar e de instâncias buscam nestas fontes, filtrando pela sh:class do campo.',
+      records: { one: '{n} outro registro salvo', other: '{n} outros registros salvos' },
+      import: 'Vocabulário…',
+      formats: 'Importar um arquivo de vocabulário (Turtle, N-Triples, TriG ou N3), ex.: um esquema de conceitos SKOS',
+      added: '{name} adicionado — {terms}.',
+      error: 'Não foi possível ler {name} — {error}',
+      storageFull: 'Grande demais para guardar neste navegador — disponível até recarregar a página.',
+    },
+  },
+  lookup: {
+    noMatches: 'Nenhum resultado — você ainda pode digitar um IRI.',
+    noneOfClass: 'Nenhum {class} nos seus registros ou vocabulários — digite um IRI ou importe um vocabulário.',
+    none: 'Nada para buscar ainda — digite um IRI ou importe um vocabulário.',
+    sourceRecord: 'registro · {name}',
+    sourceIn: 'valor permitido',
   },
   preview: {
     generatedShacl: 'SHACL gerado (Turtle)',
@@ -270,6 +349,7 @@ const ptBR = {
     groups: { one: '{n} grupo', other: '{n} grupos' },
     nestedShapes: { one: '{n} forma aninhada', other: '{n} formas aninhadas' },
     fields: { one: '{n} campo', other: '{n} campos' },
+    terms: { one: '{n} termo', other: '{n} termos' },
   },
   widget: {
     TextFieldEditor: { name: 'Campo de texto', desc: 'Texto de uma linha' },
