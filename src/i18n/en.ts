@@ -83,6 +83,7 @@ const en = {
     definition: 'SHACL Code',
     visualEditor: 'Visual Editor',
     formPreview: 'Form Preview',
+    record: 'Metadata Record',
   },
   visual: {
     calloutHtml:
@@ -91,6 +92,84 @@ const en = {
       '<code>sh:property</code>. Switch to the <strong>SHACL Code</strong> tab ' +
       'to view or edit the generated Turtle, or <strong>Form Preview</strong> ' +
       'to see the rendered form.',
+  },
+  record: {
+    calloutHtml:
+      '<strong>Metadata Record</strong> — fill in the form generated from this schema ' +
+      'and get the record as RDF (Turtle, N-Triples, TriG, N3 or JSON-LD). Records are kept ' +
+      'in this browser; saved records and imported vocabularies are offered in lookup fields.',
+    record: 'Record',
+    untitled: 'Untitled record',
+    deleteConfirm: 'Delete the record “{name}”?',
+    import: 'Import…',
+    importTitle: 'Import existing records from an RDF file (Turtle, N-Triples, TriG or N3)',
+    importError: 'Could not import — {error}',
+    importJsonLd: 'JSON-LD import isn’t supported yet — use Turtle, N-Triples, TriG or N3.',
+    noRecords: 'no resource of type {class} in the file.',
+    noTargetClass: 'the schema has no target class.',
+    replaceConfirm: '{n} imported record(s) already exist here (same IRI). Replace them?',
+    imported: { one: 'Imported {n} record.', other: 'Imported {n} records.' },
+    unmapped: {
+      one: '{n} triple in the file doesn’t fit this form and was left out.',
+      other: '{n} triples in the file don’t fit this form and were left out.',
+    },
+    noFields: 'This schema has no fields yet — add some in the Visual Editor, then fill in a record here.',
+    noTargetClassHint:
+      'The schema has no target class, so records won’t be typed (rdf:type) and can’t be imported back. Set it in the schema settings.',
+    subject: 'Record IRI (subject)',
+    subjectAutoHint: 'Generated from the base IRI, the target class and the title — edit it to choose your own.',
+    subjectManualHint: 'Set by hand. “Regenerate” goes back to the generated IRI.',
+    regenerate: 'Regenerate',
+    regenerateTitle: 'Generate the IRI from the base IRI, target class and title',
+    baseIri: 'Base IRI for new records',
+    form: 'Record form',
+    output: 'RDF output',
+    copied: 'Copied!',
+    download: 'Download',
+    downloadAll: 'Download all ({n})',
+    downloadAllTitle: 'Download every record of this schema as one RDF file',
+    validation: 'Validation',
+    valid: 'The record meets every constraint Contour checks.',
+    validationScope:
+      'Checks cardinality, datatypes, lengths, patterns, value ranges, allowed values and IRIs. ' +
+      'Constraints kept in the “Preserved” SHACL block are not checked.',
+    issue: {
+      minCount: 'Needs at least {min} value(s).',
+      maxCount: 'Allows at most {max} value(s).',
+      datatype: 'Not a valid {datatype} value.',
+      iri: '“{value}” is not a valid IRI — use a full IRI (https://…) or a declared prefix.',
+      in: '“{value}” is not one of the allowed values.',
+      minLength: 'Needs at least {min} characters.',
+      maxLength: 'Allows at most {max} characters.',
+      pattern: 'Doesn’t match the pattern {pattern}.',
+      minInclusive: 'Must be ≥ {bound}.',
+      maxInclusive: 'Must be ≤ {bound}.',
+      minExclusive: 'Must be > {bound}.',
+      maxExclusive: 'Must be < {bound}.',
+      langRequired: 'Needs a language tag (e.g. en).',
+      langInvalid: '“{lang}” is not a valid language tag (e.g. en, pt-BR).',
+      inverseLiteral: 'An inverse path needs an IRI, not text.',
+      orTypes: 'Must be an IRI.',
+      subjectInvalid: 'The record IRI must be a full, absolute IRI (e.g. https://example.org/dataset/1).',
+      subjectDuplicate: 'Another saved record already uses this IRI.',
+    },
+    sources: {
+      title: 'Lookup sources',
+      hint: 'Auto-complete and instance fields search these, filtered by the field’s sh:class.',
+      records: { one: '{n} other saved record', other: '{n} other saved records' },
+      import: 'Vocabulary…',
+      formats: 'Import a vocabulary file (Turtle, N-Triples, TriG or N3), e.g. a SKOS concept scheme',
+      added: 'Added {name} — {terms}.',
+      error: 'Could not read {name} — {error}',
+      storageFull: 'Too large to keep in this browser — available until you reload the page.',
+    },
+  },
+  lookup: {
+    noMatches: 'No matches — you can still enter an IRI.',
+    noneOfClass: 'No {class} found in your records or vocabularies — type an IRI, or import a vocabulary.',
+    none: 'Nothing to look up yet — type an IRI, or import a vocabulary.',
+    sourceRecord: 'record · {name}',
+    sourceIn: 'allowed value',
   },
   preview: {
     generatedShacl: 'Generated SHACL (Turtle)',
@@ -271,6 +350,7 @@ const en = {
     groups: { one: '{n} group', other: '{n} groups' },
     nestedShapes: { one: '{n} nested shape', other: '{n} nested shapes' },
     fields: { one: '{n} field', other: '{n} fields' },
+    terms: { one: '{n} term', other: '{n} terms' },
   },
   // Widget catalogue display strings (ids are stable; only display localizes).
   widget: {

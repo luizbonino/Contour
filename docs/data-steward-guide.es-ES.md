@@ -44,13 +44,21 @@ Turtle a mano.
    - [Elegir una sintaxis (y exportar JSON-LD)](#elegir-una-sintaxis-y-exportar-json-ld)
    - [Editar un esquema existente es sin pérdidas](#editar-un-esquema-existente-es-sin-pérdidas)
    - [Visualizar el grafo](#visualizar-el-grafo)
-5. [Comprobar tu trabajo (el panel de Problemas)](#5-comprobar-tu-trabajo-el-panel-de-problemas)
-6. [Funciones avanzadas (modelado avanzado)](#6-funciones-avanzadas-modelado-avanzado)
-7. [Referencia](#7-referencia)
+5. [Rellenar un registro de metadatos (la pestaña Registro de metadatos)](#5-rellenar-un-registro-de-metadatos-la-pestaña-registro-de-metadatos)
+   - [Rellenar el formulario](#rellenar-el-formulario)
+   - [El IRI del registro](#el-iri-del-registro)
+   - [Comprobar el registro](#comprobar-el-registro)
+   - [Obtener el RDF](#obtener-el-rdf)
+   - [Varios registros y cómo buscarlos](#varios-registros-y-cómo-buscarlos)
+   - [Importar un registro existente](#importar-un-registro-existente)
+   - [Dónde se guardan los registros](#dónde-se-guardan-los-registros)
+6. [Comprobar tu trabajo (el panel de Problemas)](#6-comprobar-tu-trabajo-el-panel-de-problemas)
+7. [Funciones avanzadas (modelado avanzado)](#7-funciones-avanzadas-modelado-avanzado)
+8. [Referencia](#8-referencia)
    - [Catálogo de widgets](#catálogo-de-widgets)
    - [Referencia de los ajustes de propiedad](#referencia-de-los-ajustes-de-propiedad)
-8. [Recetas — patrones de modelado habituales](#8-recetas--patrones-de-modelado-habituales)
-9. [Consejos y resolución de problemas](#9-consejos-y-resolución-de-problemas)
+9. [Recetas — patrones de modelado habituales](#9-recetas--patrones-de-modelado-habituales)
+10. [Consejos y resolución de problemas](#10-consejos-y-resolución-de-problemas)
 
 ---
 
@@ -78,9 +86,9 @@ Tú lo diseñas todo de forma visual; la herramienta escribe el SHACL por ti.
 
 ![Contour con el esquema de ejemplo Dataset cargado](images/interface-overview.png)
 
-La ventana tiene tres pestañas:
+La ventana tiene cuatro pestañas:
 
-![Las tres pestañas: Código SHACL, Editor visual, Vista previa del formulario](images/tabs.png)
+![Las cuatro pestañas: Código SHACL, Editor visual, Vista previa del formulario, Registro de metadatos](images/tabs.png)
 
 - **Código SHACL** — el esquema serializado. Turtle por defecto, con
   autocompletado; las ediciones se sincronizan de vuelta con el lienzo visual.
@@ -92,6 +100,8 @@ La ventana tiene tres pestañas:
 - **Vista previa del formulario** — una representación realista del formulario
   de entrada de datos que produce tu esquema, para que pruebes la experiencia
   antes de publicar.
+- **Registro de metadatos** — rellena el formulario generado y obtén el
+  registro de metadatos en RDF (consulta el [§5](#5-rellenar-un-registro-de-metadatos-la-pestaña-registro-de-metadatos)).
 
 El **Editor visual** se divide en tres columnas:
 
@@ -103,7 +113,7 @@ El **Editor visual** se divide en tres columnas:
 
 Bajo el banco de trabajo hay una **barra de acciones** con un contador de
 propiedades/grupos, un indicador de **Problemas** (una comprobación en vivo de
-tu esquema — véase la [§5](#5-comprobar-tu-trabajo-el-panel-de-problemas)) y
+tu esquema — véase la [§6](#6-comprobar-tu-trabajo-el-panel-de-problemas)) y
 botones de Guardar / Copiar. Para ver el esquema serializado, cambia a la
 pestaña **Código SHACL**; para ver el formulario representado, cambia a **Vista
 previa del formulario**.
@@ -343,7 +353,7 @@ una caja de búsqueda que localiza instancias existentes.
 > un IRI (y reglas similares de "uno de estos tipos") mediante **Tipos de valor
 > alternativos (`sh:or`)**, o seguir una relación hacia atrás con una ruta
 > **Inversa (`^`)** — véase la
-> [§6 Funciones avanzadas](#6-funciones-avanzadas-modelado-avanzado).
+> [§7 Funciones avanzadas](#7-funciones-avanzadas-modelado-avanzado).
 
 ### Paso 10 — Modelar un subobjeto con una forma anidada
 
@@ -367,7 +377,7 @@ esto con una **forma anidada** y el widget **Detalles (anidado)**.
 > vincular forma anidada** para acuñar una nueva forma y conectarle `sh:node` en
 > un solo paso — luego solo tienes que añadir sus campos. La tarjeta de la
 > propiedad muestra el enlace al que apunta (p. ej., `→ :ContactShape`), y el
-> [panel de Problemas](#5-comprobar-tu-trabajo-el-panel-de-problemas) señala una
+> [panel de Problemas](#6-comprobar-tu-trabajo-el-panel-de-problemas) señala una
 > propiedad Detalles cuyo objetivo falta.
 
 ![Un esquema con una propiedad Detalles y una ContactShape anidada y rellena](images/nested-canvas.png)
@@ -396,8 +406,9 @@ cualquier profundidad:
 
 ![La vista previa del formulario representado, incluido un formulario de Contacto anidado en línea](images/form-preview-tab.png)
 
-Esta vista previa es de solo lectura — está para validar el diseño, no para
-capturar datos reales.
+Esta vista previa sirve para comprobar el diseño. Para rellenar un registro
+real y obtener su RDF, usa la pestaña **Registro de metadatos** (consulta el
+[§5](#5-rellenar-un-registro-de-metadatos-la-pestaña-registro-de-metadatos)).
 
 ### Paso 12 — Revisar el SHACL generado
 
@@ -507,7 +518,110 @@ de formas (y cualquier forma anidada o construcción conservada) de un vistazo.
 
 ---
 
-## 5. Comprobar tu trabajo (el panel de Problemas)
+## 5. Rellenar un registro de metadatos (la pestaña Registro de metadatos)
+
+Una vez diseñado tu esquema, la pestaña **Registro de metadatos** lo convierte
+en un formulario de entrada de datos funcional: rellénalo y Contour genera el
+**registro de metadatos en RDF**, listo para entregar, publicar o cargar en un
+triple store. Piensa en ella como una alternativa ligera a introducir metadatos
+en un FAIR Data Point — sin servidor.
+
+![La pestaña Registro de metadatos: el formulario a la izquierda, la validación y el RDF generado a la derecha](images/record-tab.png)
+
+### Rellenar el formulario
+
+El formulario es el mismo de la **Vista previa del formulario**, ahora activo:
+cada valor que escribes aparece al instante en la **Salida RDF** de la derecha.
+Usa **+ Añadir** y **×** en los campos repetibles y la pequeña casilla de idioma
+en los textos con etiqueta de idioma. Los subformularios **Detalles** se
+rellenan dentro del propio formulario y se convierten en recursos anidados, con
+la clase objetivo de la shape anidada como tipo. Los campos vacíos se omiten.
+
+Cada valor se escribe como indica el esquema: fechas como `xsd:date`, números con
+su tipo de dato, booleanos como `xsd:boolean`, campos IRI como IRIs (un IRI
+completo o un nombre con prefijo como `dct:Standard`, según los prefijos del
+esquema) y opciones de una enumeración como literal o IRI, tal como se declara
+en `sh:in`.
+
+### El IRI del registro
+
+Todo registro necesita un identificador: el sujeto de todas sus tripletas.
+Contour genera uno a partir del **IRI base**, la clase objetivo y el título — por
+ejemplo `https://example.org/dataset/calidad-del-aire-2025` — y lo mantiene
+sincronizado con el título mientras escribes. Edítalo para elegir el tuyo;
+**Regenerar** vuelve al IRI generado. Define una vez el **IRI base para nuevos
+registros** (por ejemplo, el espacio de nombres de tu organización o de tu curso)
+y se usará a partir de entonces. Contour avisa cuando el IRI no es un IRI
+absoluto válido o cuando otro registro ya lo usa.
+
+### Comprobar el registro
+
+El panel **Validación** comprueba el registro frente a tu esquema mientras
+escribes: número mínimo y máximo de valores, tipos de datos (una fecha real, un
+número entero, …), longitudes, patrones, rangos de valores, valores permitidos
+(`sh:in`), IRIs y etiquetas de idioma. Cada problema aparece también bajo su
+campo, con el **mensaje de validación** y la **severidad** propios del campo si
+los has definido (consulta el [§7](#7-funciones-avanzadas-modelado-avanzado)). Haz clic en un problema para ir al
+campo. Los valores obligatorios que faltan se muestran como una indicación
+discreta hasta que los rellenas.
+
+> Contour comprueba las restricciones que modela. Lo que queda en el bloque
+> «Preservado» de tu SHACL (por ejemplo, shapes cualificadas o rutas complejas)
+> no se comprueba — para eso, usa un validador SHACL completo o tu FAIR Data
+> Point.
+
+### Obtener el RDF
+
+Elige una **Sintaxis** — Turtle (por defecto), N-Triples, TriG, Notation3 o
+JSON-LD — y luego **Copia** o **Descarga** el registro. Solo se declaran los
+prefijos que el registro usa realmente, y los subformularios se escriben en
+línea como `[ … ]`. Si tienes varios registros del mismo esquema, **Descargar
+todos** los guarda juntos en un solo archivo.
+
+### Varios registros y cómo buscarlos
+
+El menú **Registro** muestra todos los registros que has creado para este
+esquema; **Nuevo**, **Duplicar** y **Eliminar** sirven para gestionarlos. Los
+registros guardados también se ofrecen en los campos de búsqueda. Un campo
+**Autocompletado** o **Selección de instancias** busca en:
+
+- los **registros** guardados en Contour, de cualquier esquema — rellena un
+  registro *Agent* para tu organización y elígelo como *Publisher* de un
+  registro *Dataset*;
+- los **archivos de vocabulario** que añadas en **Fuentes de búsqueda →
+  Vocabulario…** (Turtle, N-Triples, TriG o N3), como un esquema de conceptos
+  SKOS o una lista de licencias;
+- los **valores permitidos** del campo, si tiene una lista `sh:in`.
+
+Los candidatos se filtran por la **Clase** del campo (`sh:class`). Un campo
+restringido a `foaf:Agent` ofrece también recursos `foaf:Person` y
+`foaf:Organization`, además de las subclases declaradas en tus vocabularios
+(`rdfs:subClassOf`). Escribe para filtrar por etiqueta, elige con el ratón o con
+las flechas y Intro, y el campo guarda el IRI del recurso. Siempre puedes
+escribir otro IRI.
+
+![Elegir un registro Agent guardado como Publisher de un Dataset](images/record-lookup.png)
+
+### Importar un registro existente
+
+**Importar…** lee un archivo RDF (Turtle, N-Triples, TriG o N3) y carga como
+registro cada recurso con la clase objetivo del esquema como tipo, listo para
+corregirlo o completarlo. Un registro con el mismo IRI se reemplaza (Contour
+pregunta antes). Las tripletas sin campo en el formulario se cuentan y se
+omiten, para que sepas cuándo un archivo contiene más de lo que describe tu
+esquema.
+
+### Dónde se guardan los registros
+
+Los registros, los vocabularios y el IRI base se guardan en tu navegador — no se
+sube nada. Sobreviven a una recarga, pero no a borrar los datos del navegador ni
+a cambiar de navegador, así que **descarga** los registros que quieras conservar.
+Los registros pertenecen a un esquema a través de su **IRI de la shape**: vuelve
+a abrir el esquema y sus registros vuelven a estar ahí.
+
+---
+
+## 6. Comprobar tu trabajo (el panel de Problemas)
 
 A medida que construyes, Contour comprueba el esquema de forma continua y resume
 los problemas en el indicador de **Problemas** de la barra de acciones del Editor
@@ -531,7 +645,7 @@ vocabularios declarados.
 
 ---
 
-## 6. Funciones avanzadas (modelado avanzado)
+## 7. Funciones avanzadas (modelado avanzado)
 
 Más allá de los widgets y restricciones básicos, el Inspector expone algunos
 controles avanzados para esquemas más ricos. Cada uno es opcional — recurre a
@@ -591,7 +705,7 @@ la ruta con un `^` por delante.
 
 ---
 
-## 7. Referencia
+## 8. Referencia
 
 ### Catálogo de widgets
 
@@ -654,7 +768,7 @@ Controles a nivel de esquema y de grupo:
 
 ---
 
-## 8. Recetas — patrones de modelado habituales
+## 9. Recetas — patrones de modelado habituales
 
 Patrones cortos y autocontenidos que puedes aplicar sobre el tutorial.
 
@@ -717,7 +831,7 @@ Contour no modela se conserva (véase la
 
 ---
 
-## 9. Consejos y resolución de problemas
+## 10. Consejos y resolución de problemas
 
 - **Establece siempre la ruta de propiedad.** Los widgets nuevos reciben una ruta
   de marcador de posición como `:textfield`; sustitúyela por el término RDF real

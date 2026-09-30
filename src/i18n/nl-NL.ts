@@ -82,6 +82,7 @@ const nlNL = {
     definition: 'SHACL-code',
     visualEditor: 'Visuele editor',
     formPreview: 'Formuliervoorbeeld',
+    record: 'Metadatarecord',
   },
   visual: {
     calloutHtml:
@@ -90,6 +91,84 @@ const nlNL = {
       '<code>sh:property</code>. Ga naar het tabblad <strong>SHACL-code</strong> ' +
       'om de gegenereerde Turtle te bekijken of te bewerken, of naar ' +
       '<strong>Formuliervoorbeeld</strong> om het weergegeven formulier te zien.',
+  },
+  record: {
+    calloutHtml:
+      '<strong>Metadatarecord</strong> — vul het formulier in dat uit dit schema is gegenereerd ' +
+      'en krijg het record als RDF (Turtle, N-Triples, TriG, N3 of JSON-LD). Records worden in deze ' +
+      'browser bewaard; opgeslagen records en geïmporteerde vocabulaires verschijnen in opzoekvelden.',
+    record: 'Record',
+    untitled: 'Naamloos record',
+    deleteConfirm: 'Het record “{name}” verwijderen?',
+    import: 'Importeren…',
+    importTitle: 'Bestaande records importeren uit een RDF-bestand (Turtle, N-Triples, TriG of N3)',
+    importError: 'Importeren mislukt — {error}',
+    importJsonLd: 'JSON-LD importeren wordt nog niet ondersteund — gebruik Turtle, N-Triples, TriG of N3.',
+    noRecords: 'geen resource van het type {class} in het bestand.',
+    noTargetClass: 'het schema heeft geen doelklasse.',
+    replaceConfirm: '{n} geïmporteerd(e) record(s) bestaan hier al (zelfde IRI). Vervangen?',
+    imported: { one: '{n} record geïmporteerd.', other: '{n} records geïmporteerd.' },
+    unmapped: {
+      one: '{n} triple uit het bestand past niet in dit formulier en is weggelaten.',
+      other: '{n} triples uit het bestand passen niet in dit formulier en zijn weggelaten.',
+    },
+    noFields: 'Dit schema heeft nog geen velden — voeg ze toe in de Visuele editor en vul hier daarna een record in.',
+    noTargetClassHint:
+      'Het schema heeft geen doelklasse, dus records krijgen geen type (rdf:type) en kunnen niet terug worden geïmporteerd. Stel die in bij de schema-instellingen.',
+    subject: 'Record-IRI (subject)',
+    subjectAutoHint: 'Gegenereerd uit de basis-IRI, de doelklasse en de titel — pas hem aan om zelf te kiezen.',
+    subjectManualHint: 'Handmatig ingesteld. “Opnieuw genereren” gaat terug naar de gegenereerde IRI.',
+    regenerate: 'Opnieuw genereren',
+    regenerateTitle: 'De IRI genereren uit de basis-IRI, doelklasse en titel',
+    baseIri: 'Basis-IRI voor nieuwe records',
+    form: 'Recordformulier',
+    output: 'RDF-uitvoer',
+    copied: 'Gekopieerd!',
+    download: 'Downloaden',
+    downloadAll: 'Alle downloaden ({n})',
+    downloadAllTitle: 'Alle records van dit schema als één RDF-bestand downloaden',
+    validation: 'Validatie',
+    valid: 'Het record voldoet aan alle beperkingen die Contour controleert.',
+    validationScope:
+      'Controleert kardinaliteit, datatypes, lengtes, patronen, waardebereiken, toegestane waarden en IRI’s. ' +
+      'Beperkingen in het SHACL-blok “Behouden” worden niet gecontroleerd.',
+    issue: {
+      minCount: 'Heeft minstens {min} waarde(n) nodig.',
+      maxCount: 'Staat hoogstens {max} waarde(n) toe.',
+      datatype: 'Geen geldige {datatype}-waarde.',
+      iri: '“{value}” is geen geldige IRI — gebruik een volledige IRI (https://…) of een gedeclareerd prefix.',
+      in: '“{value}” is geen van de toegestane waarden.',
+      minLength: 'Heeft minstens {min} tekens nodig.',
+      maxLength: 'Staat hoogstens {max} tekens toe.',
+      pattern: 'Komt niet overeen met het patroon {pattern}.',
+      minInclusive: 'Moet ≥ {bound} zijn.',
+      maxInclusive: 'Moet ≤ {bound} zijn.',
+      minExclusive: 'Moet > {bound} zijn.',
+      maxExclusive: 'Moet < {bound} zijn.',
+      langRequired: 'Heeft een taaltag nodig (bijv. nl).',
+      langInvalid: '“{lang}” is geen geldige taaltag (bijv. en, nl-NL).',
+      inverseLiteral: 'Een omgekeerd pad heeft een IRI nodig, geen tekst.',
+      orTypes: 'Moet een IRI zijn.',
+      subjectInvalid: 'De record-IRI moet een volledige, absolute IRI zijn (bijv. https://example.org/dataset/1).',
+      subjectDuplicate: 'Een ander opgeslagen record gebruikt deze IRI al.',
+    },
+    sources: {
+      title: 'Opzoekbronnen',
+      hint: 'Autoaanvul- en instantievelden zoeken hierin, gefilterd op de sh:class van het veld.',
+      records: { one: '{n} ander opgeslagen record', other: '{n} andere opgeslagen records' },
+      import: 'Vocabulaire…',
+      formats: 'Een vocabulairebestand importeren (Turtle, N-Triples, TriG of N3), bijv. een SKOS-conceptschema',
+      added: '{name} toegevoegd — {terms}.',
+      error: '{name} kon niet worden gelezen — {error}',
+      storageFull: 'Te groot om in deze browser te bewaren — beschikbaar tot je de pagina herlaadt.',
+    },
+  },
+  lookup: {
+    noMatches: 'Geen resultaten — je kunt nog steeds een IRI invoeren.',
+    noneOfClass: 'Geen {class} gevonden in je records of vocabulaires — typ een IRI of importeer een vocabulaire.',
+    none: 'Nog niets om op te zoeken — typ een IRI of importeer een vocabulaire.',
+    sourceRecord: 'record · {name}',
+    sourceIn: 'toegestane waarde',
   },
   preview: {
     generatedShacl: 'Gegenereerde SHACL (Turtle)',
@@ -270,6 +349,7 @@ const nlNL = {
     groups: { one: '{n} groep', other: '{n} groepen' },
     nestedShapes: { one: '{n} geneste vorm', other: '{n} geneste vormen' },
     fields: { one: '{n} veld', other: '{n} velden' },
+    terms: { one: '{n} term', other: '{n} termen' },
   },
   widget: {
     TextFieldEditor: { name: 'Tekstveld', desc: 'Tekst van één regel' },

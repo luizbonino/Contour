@@ -82,6 +82,7 @@ const frFR = {
     definition: 'Code SHACL',
     visualEditor: 'Éditeur visuel',
     formPreview: 'Aperçu du formulaire',
+    record: 'Fiche de métadonnées',
   },
   visual: {
     calloutHtml:
@@ -90,6 +91,84 @@ const frFR = {
       "devient une <code>sh:property</code> SHACL. Passez à l'onglet " +
       "<strong>Code SHACL</strong> pour afficher ou modifier le Turtle généré, ou à " +
       "<strong>Aperçu du formulaire</strong> pour voir le formulaire rendu.",
+  },
+  record: {
+    calloutHtml:
+      '<strong>Fiche de métadonnées</strong> — remplissez le formulaire généré à partir de ce schéma ' +
+      'et obtenez la fiche en RDF (Turtle, N-Triples, TriG, N3 ou JSON-LD). Les fiches sont conservées ' +
+      'dans ce navigateur ; les fiches enregistrées et les vocabulaires importés sont proposés dans les champs de recherche.',
+    record: 'Fiche',
+    untitled: 'Fiche sans titre',
+    deleteConfirm: 'Supprimer la fiche « {name} » ?',
+    import: 'Importer…',
+    importTitle: 'Importer des fiches existantes depuis un fichier RDF (Turtle, N-Triples, TriG ou N3)',
+    importError: 'Import impossible — {error}',
+    importJsonLd: 'L’import JSON-LD n’est pas encore pris en charge — utilisez Turtle, N-Triples, TriG ou N3.',
+    noRecords: 'aucune ressource de type {class} dans le fichier.',
+    noTargetClass: 'le schéma n’a pas de classe cible.',
+    replaceConfirm: '{n} fiche(s) importée(s) existent déjà ici (même IRI). Les remplacer ?',
+    imported: { one: '{n} fiche importée.', other: '{n} fiches importées.' },
+    unmapped: {
+      one: '{n} triplet du fichier ne correspond pas à ce formulaire et a été ignoré.',
+      other: '{n} triplets du fichier ne correspondent pas à ce formulaire et ont été ignorés.',
+    },
+    noFields: 'Ce schéma n’a pas encore de champs — ajoutez-en dans l’Éditeur visuel, puis remplissez une fiche ici.',
+    noTargetClassHint:
+      'Le schéma n’a pas de classe cible : les fiches ne seront pas typées (rdf:type) et ne pourront pas être réimportées. Définissez-la dans les paramètres du schéma.',
+    subject: 'IRI de la fiche (sujet)',
+    subjectAutoHint: 'Générée à partir de l’IRI de base, de la classe cible et du titre — modifiez-la pour choisir la vôtre.',
+    subjectManualHint: 'Définie à la main. « Régénérer » revient à l’IRI générée.',
+    regenerate: 'Régénérer',
+    regenerateTitle: 'Générer l’IRI à partir de l’IRI de base, de la classe cible et du titre',
+    baseIri: 'IRI de base des nouvelles fiches',
+    form: 'Formulaire de la fiche',
+    output: 'Sortie RDF',
+    copied: 'Copié !',
+    download: 'Télécharger',
+    downloadAll: 'Tout télécharger ({n})',
+    downloadAllTitle: 'Télécharger toutes les fiches de ce schéma dans un seul fichier RDF',
+    validation: 'Validation',
+    valid: 'La fiche respecte toutes les contraintes vérifiées par Contour.',
+    validationScope:
+      'Vérifie la cardinalité, les types de données, les longueurs, les motifs, les plages de valeurs, les valeurs autorisées et les IRI. ' +
+      'Les contraintes du bloc SHACL « Préservé » ne sont pas vérifiées.',
+    issue: {
+      minCount: 'Nécessite au moins {min} valeur(s).',
+      maxCount: 'Autorise au plus {max} valeur(s).',
+      datatype: 'Valeur {datatype} invalide.',
+      iri: '« {value} » n’est pas une IRI valide — utilisez une IRI complète (https://…) ou un préfixe déclaré.',
+      in: '« {value} » ne fait pas partie des valeurs autorisées.',
+      minLength: 'Nécessite au moins {min} caractères.',
+      maxLength: 'Autorise au plus {max} caractères.',
+      pattern: 'Ne correspond pas au motif {pattern}.',
+      minInclusive: 'Doit être ≥ {bound}.',
+      maxInclusive: 'Doit être ≤ {bound}.',
+      minExclusive: 'Doit être > {bound}.',
+      maxExclusive: 'Doit être < {bound}.',
+      langRequired: 'Nécessite une étiquette de langue (ex. fr).',
+      langInvalid: '« {lang} » n’est pas une étiquette de langue valide (ex. en, fr-FR).',
+      inverseLiteral: 'Un chemin inverse nécessite une IRI, pas du texte.',
+      orTypes: 'Doit être une IRI.',
+      subjectInvalid: 'L’IRI de la fiche doit être une IRI complète et absolue (ex. https://example.org/dataset/1).',
+      subjectDuplicate: 'Une autre fiche enregistrée utilise déjà cette IRI.',
+    },
+    sources: {
+      title: 'Sources de recherche',
+      hint: 'Les champs d’autocomplétion et d’instances y cherchent, filtrés selon la sh:class du champ.',
+      records: { one: '{n} autre fiche enregistrée', other: '{n} autres fiches enregistrées' },
+      import: 'Vocabulaire…',
+      formats: 'Importer un fichier de vocabulaire (Turtle, N-Triples, TriG ou N3), p. ex. un schéma de concepts SKOS',
+      added: '{name} ajouté — {terms}.',
+      error: 'Impossible de lire {name} — {error}',
+      storageFull: 'Trop volumineux pour être conservé dans ce navigateur — disponible jusqu’au rechargement de la page.',
+    },
+  },
+  lookup: {
+    noMatches: 'Aucun résultat — vous pouvez quand même saisir une IRI.',
+    noneOfClass: 'Aucun {class} dans vos fiches ou vocabulaires — saisissez une IRI ou importez un vocabulaire.',
+    none: 'Rien à rechercher pour l’instant — saisissez une IRI ou importez un vocabulaire.',
+    sourceRecord: 'fiche · {name}',
+    sourceIn: 'valeur autorisée',
   },
   preview: {
     generatedShacl: 'SHACL généré (Turtle)',
@@ -270,6 +349,7 @@ const frFR = {
     groups: { one: '{n} groupe', other: '{n} groupes' },
     nestedShapes: { one: '{n} forme imbriquée', other: '{n} formes imbriquées' },
     fields: { one: '{n} champ', other: '{n} champs' },
+    terms: { one: '{n} terme', other: '{n} termes' },
   },
   widget: {
     TextFieldEditor: { name: 'Champ de texte', desc: 'Texte sur une ligne' },

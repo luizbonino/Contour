@@ -45,13 +45,21 @@ donné — un jeu de données, une étude, un échantillon, un paquet logiciel �
    - [Choisir une syntaxe (et exporter en JSON-LD)](#choisir-une-syntaxe-et-exporter-en-json-ld)
    - [L'édition d'un schéma existant se fait sans perte](#lédition-dun-schéma-existant-se-fait-sans-perte)
    - [Visualiser le graphe](#visualiser-le-graphe)
-5. [Vérifier votre travail (le panneau Problèmes)](#5-vérifier-votre-travail-le-panneau-problèmes)
-6. [Fonctionnalités avancées (modélisation avancée)](#6-fonctionnalités-avancées-modélisation-avancée)
-7. [Référence](#7-référence)
+5. [Remplir une fiche de métadonnées (l’onglet Fiche de métadonnées)](#5-remplir-une-fiche-de-métadonnées-longlet-fiche-de-métadonnées)
+   - [Remplir le formulaire](#remplir-le-formulaire)
+   - [L’IRI de la fiche](#liri-de-la-fiche)
+   - [Vérifier la fiche](#vérifier-la-fiche)
+   - [Obtenir le RDF](#obtenir-le-rdf)
+   - [Plusieurs fiches, et les retrouver](#plusieurs-fiches-et-les-retrouver)
+   - [Importer une fiche existante](#importer-une-fiche-existante)
+   - [Où les fiches sont conservées](#où-les-fiches-sont-conservées)
+6. [Vérifier votre travail (le panneau Problèmes)](#6-vérifier-votre-travail-le-panneau-problèmes)
+7. [Fonctionnalités avancées (modélisation avancée)](#7-fonctionnalités-avancées-modélisation-avancée)
+8. [Référence](#8-référence)
    - [Catalogue des widgets](#catalogue-des-widgets)
    - [Référence des paramètres de propriété](#référence-des-paramètres-de-propriété)
-8. [Recettes — schémas de modélisation courants](#8-recettes--schémas-de-modélisation-courants)
-9. [Conseils et dépannage](#9-conseils-et-dépannage)
+9. [Recettes — schémas de modélisation courants](#9-recettes--schémas-de-modélisation-courants)
+10. [Conseils et dépannage](#10-conseils-et-dépannage)
 
 ---
 
@@ -79,9 +87,9 @@ Vous concevez tout cela visuellement ; l'outil écrit le SHACL pour vous.
 
 ![Contour avec l'exemple de schéma Jeu de données chargé](images/interface-overview.png)
 
-La fenêtre comporte trois onglets :
+La fenêtre comporte quatre onglets :
 
-![Les trois onglets : Code SHACL, Éditeur visuel, Aperçu du formulaire](images/tabs.png)
+![Les quatre onglets : Code SHACL, Éditeur visuel, Aperçu du formulaire, Fiche de métadonnées](images/tabs.png)
 
 - **Code SHACL** — le schéma sérialisé. Turtle par défaut, avec autocomplétion ;
   les modifications sont synchronisées vers la zone de travail visuelle. Un
@@ -92,6 +100,8 @@ La fenêtre comporte trois onglets :
   que se déroule l'essentiel de votre travail.
 - **Aperçu du formulaire** — un rendu réaliste du formulaire de saisie que
   produit votre schéma, pour tester l'expérience avant publication.
+- **Fiche de métadonnées** — remplissez le formulaire généré et obtenez la
+  fiche de métadonnées en RDF (voir [§5](#5-remplir-une-fiche-de-métadonnées-longlet-fiche-de-métadonnées)).
 
 L'**Éditeur visuel** est divisé en trois colonnes :
 
@@ -103,7 +113,7 @@ L'**Éditeur visuel** est divisé en trois colonnes :
 
 Sous l'atelier se trouve une **barre d'actions** comportant un compteur de
 propriétés/groupes, un indicateur **Problèmes** (une vérification en direct de
-votre schéma — voir la [§5](#5-vérifier-votre-travail-le-panneau-problèmes)) et
+votre schéma — voir la [§6](#6-vérifier-votre-travail-le-panneau-problèmes)) et
 des boutons Enregistrer / Copier. Pour voir le schéma sérialisé, basculez vers
 l'onglet **Code SHACL** ; pour voir le formulaire rendu, basculez vers **Aperçu
 du formulaire**.
@@ -353,7 +363,7 @@ recherche les instances existantes.
 > (et des règles similaires du type « l'un de ces types ») via **Types de valeur
 > alternatifs (`sh:or`)**, ou suivre une relation à l'envers avec un chemin
 > **Inverse (`^`)** — voir la
-> [§6 Fonctionnalités avancées](#6-fonctionnalités-avancées-modélisation-avancée).
+> [§7 Fonctionnalités avancées](#7-fonctionnalités-avancées-modélisation-avancée).
 
 ### Étape 10 — Modéliser un sous-objet avec une forme imbriquée
 
@@ -378,7 +388,7 @@ une **forme imbriquée** et le widget **Détails (imbriqué)**.
 > `sh:node` en une seule étape — puis il ne reste qu'à ajouter ses champs. La
 > carte de propriété affiche le lien vers lequel elle pointe (p. ex.
 > `→ :ContactShape`), et le
-> [panneau Problèmes](#5-vérifier-votre-travail-le-panneau-problèmes) signale une
+> [panneau Problèmes](#6-vérifier-votre-travail-le-panneau-problèmes) signale une
 > propriété Détails dont la cible est manquante.
 
 ![Un schéma avec une propriété Détails et une ContactShape imbriquée renseignée](images/nested-canvas.png)
@@ -408,8 +418,8 @@ d'imbrication :
 
 ![L'aperçu du formulaire rendu, incluant un formulaire de Contact imbriqué en ligne](images/form-preview-tab.png)
 
-Cet aperçu est en lecture seule — il sert à valider la conception, non à saisir
-des données réelles.
+Cet aperçu sert à vérifier la conception. Pour remplir une vraie fiche et
+obtenir son RDF, utilisez l'onglet **Fiche de métadonnées** (voir [§5](#5-remplir-une-fiche-de-métadonnées-longlet-fiche-de-métadonnées)).
 
 ### Étape 12 — Examiner le SHACL généré
 
@@ -529,7 +539,111 @@ toute forme imbriquée ou construction préservée) en un coup d'œil.
 
 ---
 
-## 5. Vérifier votre travail (le panneau Problèmes)
+## 5. Remplir une fiche de métadonnées (l’onglet Fiche de métadonnées)
+
+Une fois votre schéma conçu, l'onglet **Fiche de métadonnées** en fait un
+formulaire de saisie opérationnel : remplissez-le et Contour produit la **fiche
+de métadonnées en RDF**, prête à être rendue, publiée ou chargée dans un triple
+store. Voyez-le comme un substitut léger à la saisie de métadonnées dans un FAIR
+Data Point — sans serveur.
+
+![L'onglet Fiche de métadonnées : le formulaire à gauche, la validation et le RDF généré à droite](images/record-tab.png)
+
+### Remplir le formulaire
+
+Le formulaire est celui de l'**Aperçu du formulaire**, désormais actif : chaque
+valeur saisie apparaît aussitôt dans la **Sortie RDF** à droite. Utilisez
+**+ Ajouter** et **×** pour les champs répétables, et la petite zone de langue
+pour les textes avec étiquette de langue. Les sous-formulaires **Détails** se
+remplissent directement dans le formulaire et deviennent des ressources
+imbriquées, typées avec la classe cible de la shape imbriquée. Les champs vides
+sont omis.
+
+Chaque valeur est écrite comme le schéma l'indique : les dates en `xsd:date`, les
+nombres avec leur type de données, les booléens en `xsd:boolean`, les champs IRI
+en IRI (une IRI complète, ou un nom préfixé comme `dct:Standard` selon les
+préfixes du schéma) et les choix d'une énumération en littéral ou en IRI, comme
+déclaré dans `sh:in`.
+
+### L’IRI de la fiche
+
+Chaque fiche a besoin d'un identifiant : le sujet de tous ses triplets. Contour
+en génère un à partir de l'**IRI de base**, de la classe cible et du titre — par
+exemple `https://example.org/dataset/qualite-de-l-air-2025` — et le garde
+aligné sur le titre pendant la saisie. Modifiez-le pour choisir le vôtre ;
+**Régénérer** revient à l'IRI générée. Définissez une fois l'**IRI de base des
+nouvelles fiches** (par exemple l'espace de noms de votre organisation ou de
+votre cours) et elle sera utilisée ensuite. Contour vous avertit si l'IRI n'est
+pas une IRI absolue valide ou si une autre fiche l'utilise déjà.
+
+### Vérifier la fiche
+
+Le panneau **Validation** vérifie la fiche par rapport à votre schéma pendant la
+saisie : nombres minimum et maximum, types de données (une vraie date, un nombre
+entier, …), longueurs, motifs, plages de valeurs, valeurs autorisées (`sh:in`),
+IRI et étiquettes de langue. Chaque problème apparaît aussi sous le champ, avec
+le **message de validation** et la **sévérité** propres au champ si vous les avez
+définis (voir [§7](#7-fonctionnalités-avancées-modélisation-avancée)). Cliquez sur un problème pour atteindre le champ. Les
+valeurs obligatoires manquantes s'affichent comme une indication discrète
+jusqu'à ce que vous les remplissiez.
+
+> Contour vérifie les contraintes qu'il modélise. Ce qui reste dans le bloc
+> « Préservé » de votre SHACL (par exemple des shapes qualifiées ou des chemins
+> complexes) n'est pas vérifié — utilisez pour cela un validateur SHACL complet
+> ou votre FAIR Data Point.
+
+### Obtenir le RDF
+
+Choisissez une **Syntaxe** — Turtle (par défaut), N-Triples, TriG, Notation3 ou
+JSON-LD — puis **Copiez** ou **Téléchargez** la fiche. Seuls les préfixes
+réellement utilisés sont déclarés, et les sous-formulaires sont écrits en ligne
+sous forme `[ … ]`. Avec plusieurs fiches pour le même schéma, **Tout
+télécharger** les enregistre ensemble dans un seul fichier.
+
+### Plusieurs fiches, et les retrouver
+
+Le menu **Fiche** liste toutes les fiches créées pour ce schéma ; **Nouveau**,
+**Dupliquer** et **Supprimer** permettent de les gérer. Les fiches enregistrées
+sont aussi proposées dans les champs de recherche. Un champ **Saisie semi-automatique**
+ou **Sélection d'instances** cherche dans :
+
+- les **fiches** enregistrées dans Contour, de n'importe quel schéma — remplissez
+  une fiche *Agent* pour votre organisation, puis choisissez-la comme
+  *Publisher* d'une fiche *Dataset* ;
+- les **fichiers de vocabulaire** ajoutés via **Sources de recherche →
+  Vocabulaire…** (Turtle, N-Triples, TriG ou N3), comme un schéma de concepts
+  SKOS ou une liste de licences ;
+- les **valeurs autorisées** du champ, s'il a une liste `sh:in`.
+
+Les candidats sont filtrés selon la **Classe** du champ (`sh:class`). Un champ
+limité à `foaf:Agent` propose aussi les ressources `foaf:Person` et
+`foaf:Organization`, ainsi que les sous-classes déclarées dans vos vocabulaires
+(`rdfs:subClassOf`). Tapez pour filtrer par libellé, choisissez à la souris ou
+avec les flèches et Entrée, et le champ enregistre l'IRI de la ressource. Vous
+pouvez toujours saisir une autre IRI.
+
+![Choisir une fiche Agent enregistrée comme Publisher d'un Dataset](images/record-lookup.png)
+
+### Importer une fiche existante
+
+**Importer…** lit un fichier RDF (Turtle, N-Triples, TriG ou N3) et charge comme
+fiche chaque ressource typée avec la classe cible du schéma, prête à être
+corrigée ou complétée. Une fiche ayant la même IRI est remplacée (Contour
+demande d'abord). Les triplets sans champ correspondant sont comptés et
+ignorés : vous savez ainsi quand un fichier contient plus que ce que décrit
+votre schéma.
+
+### Où les fiches sont conservées
+
+Les fiches, les vocabulaires et l'IRI de base sont conservés dans votre
+navigateur — rien n'est envoyé. Ils résistent à un rechargement, mais pas à
+l'effacement des données du navigateur ni à un changement de navigateur :
+**téléchargez** donc les fiches à garder. Les fiches sont rattachées à un schéma
+par son **IRI de shape** : rouvrez le schéma et ses fiches reviennent.
+
+---
+
+## 6. Vérifier votre travail (le panneau Problèmes)
 
 À mesure que vous construisez, Contour vérifie le schéma en continu et résume les
 problèmes dans l'indicateur **Problèmes** de la barre d'actions de l'Éditeur
@@ -554,7 +668,7 @@ que des vocabulaires déclarés.
 
 ---
 
-## 6. Fonctionnalités avancées (modélisation avancée)
+## 7. Fonctionnalités avancées (modélisation avancée)
 
 Au-delà des widgets et contraintes de base, l'Inspecteur expose quelques
 contrôles avancés pour des schémas plus riches. Chacun est facultatif — utilisez-les
@@ -614,7 +728,7 @@ carte de propriété affiche le chemin avec un `^` en tête.
 
 ---
 
-## 7. Référence
+## 8. Référence
 
 ### Catalogue des widgets
 
@@ -677,7 +791,7 @@ Contrôles au niveau du schéma et du groupe :
 
 ---
 
-## 8. Recettes — schémas de modélisation courants
+## 9. Recettes — schémas de modélisation courants
 
 Des schémas courts et autonomes que vous pouvez appliquer en complément du
 tutoriel.
@@ -740,7 +854,7 @@ que Contour ne modélise pas est préservé (voir la
 
 ---
 
-## 9. Conseils et dépannage
+## 10. Conseils et dépannage
 
 - **Définissez toujours le chemin de propriété.** Les nouveaux widgets reçoivent
   un chemin d'espace réservé comme `:textfield` ; remplacez-le par le terme RDF

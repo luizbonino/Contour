@@ -9,6 +9,7 @@
 // One-time setup (Playwright is NOT a project dependency, to keep `npm ci` lean):
 //   npm i -D playwright && npx playwright install chromium
 // Then:  npm run build  &&  node scripts/shoot.mjs [locale]
+// (PW_CHANNEL=chrome uses an installed Chrome instead of Playwright's Chromium.)
 //
 // Selectors are locale-independent (indices / CSS classes / literal
 // placeholders) so the same script drives the UI in any language. The only
@@ -46,7 +47,7 @@ const ok = [];
 const fail = [];
 
 async function run() {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ channel: process.env.PW_CHANNEL || undefined });
   const page = await browser.newPage({ viewport: VIEWPORT, deviceScaleFactor: 2 });
   page.on('dialog', (d) => d.accept());
   await page.goto(APP, { waitUntil: 'networkidle' });
@@ -167,6 +168,37 @@ async function run() {
   await pickField('Publisher');
   await page.getByRole('button', { name: /sh:or/ }).first().click(); await wait(200);
   await snapSection('alt-types', 1); // Constraints
+
+  // ── §5 Metadata Record tab ─────────────────────────────────────────────────
+  // An Agent record first, so the Dataset's Publisher lookup has something to offer.
+  const rec = (loc) => page.locator(`.record-form [data-loc="${loc}"]`);
+  await openExamples();
+  await page.locator('.ex-menu__item').nth(1).click(); await wait(400); // Agent
+  await tab(3);
+  await rec('foaf:name').locator('input').first().fill('University of Twente');
+  await rec('foaf:homepage').locator('input').first().fill('https://www.utwente.nl/');
+  await wait(300);
+  await loadDataset(); await tab(3);
+  await rec('dct:title').locator('input').first().fill('Air quality Enschede 2025');
+  await rec('dct:description').locator('textarea').first().fill('Hourly air-quality measurements from sensors in Enschede.');
+  await rec('dct:issued').locator('input').first().fill('2025-03-01');
+  await rec('dcat:keyword').locator('input').first().fill('air quality');
+  await rec('dct:accessRights').locator('select').first().selectOption('public');
+  await rec('dcat:contactPoint/0/vcard:fn').locator('input').first().fill('Jane Doe');
+  await rec('dcat:contactPoint/0/vcard:hasEmail').locator('input').first().fill('mailto:jane.doe@example.org');
+  const pub = rec('dct:publisher').locator('input').first();
+  await pub.click(); await pub.type('Twente'); await wait(250);
+  try {
+    const box = await rec('dct:publisher').boundingBox();
+    await page.screenshot({
+      path: path.join(IMG, 'record-lookup.png'),
+      clip: { x: box.x - 12, y: box.y - 10, width: box.width + 24, height: box.height + 110 },
+    });
+    ok.push('record-lookup');
+  } catch (e) { fail.push(`record-lookup: ${e.message.split('\n')[0]}`); }
+  await pub.press('Enter'); await wait(250);
+  await page.evaluate(() => window.scrollTo(0, 0)); await wait(150);
+  await shot('record-tab', 'page');
 
   // ── EN guide only: a Portuguese interface overview ─────────────────────────
   if (LOCALE === 'en') {
