@@ -689,6 +689,8 @@ export interface RecordImportResult {
   records: ImportedRecord[];
   /** Triples in the file that the form has no place for. */
   unmapped: number;
+  /** Those triples themselves, so a caller can keep them (FDPlight writes them back). */
+  unmappedQuads: Quad[];
   error: string | null;
 }
 
@@ -700,11 +702,11 @@ function shortenForEnum(iri: string, field: Field, prefixes: Prefix[]): string {
 /** Map RDF text back to records: one per subject typed with the target class. */
 export function importRecords(text: string, syntaxId: string, schema: Schema): RecordImportResult {
   const parsed = parseRdf(text, syntaxId);
-  if (parsed.error) return { records: [], unmapped: 0, error: parsed.error };
+  if (parsed.error) return { records: [], unmapped: 0, unmappedQuads: [], error: parsed.error };
   const quads = parsed.quads;
   const prefixes = schema.prefixes;
   const cls = schema.targetClass ? expandTerm(schema.targetClass, prefixes) : null;
-  if (!cls) return { records: [], unmapped: quads.length, error: 'noTargetClass' };
+  if (!cls) return { records: [], unmapped: quads.length, unmappedQuads: [...quads], error: 'noTargetClass' };
 
   const consumed = new Set<Quad>();
   const out = (s: Term) => quads.filter((q) => q.subject.equals(s));
@@ -762,6 +764,6 @@ export function importRecords(text: string, syntaxId: string, schema: Schema): R
       values,
     });
   }
-  const unmapped = quads.filter((q) => !consumed.has(q)).length;
-  return { records, unmapped, error: records.length ? null : 'noRecords' };
+  const unmappedQuads = quads.filter((q) => !consumed.has(q));
+  return { records, unmapped: unmappedQuads.length, unmappedQuads, error: records.length ? null : 'noRecords' };
 }

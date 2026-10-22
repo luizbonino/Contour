@@ -55,15 +55,18 @@ function termId(t: EngineTerm): string {
 /**
  * Validate a record. `extra` adds context the record itself doesn't carry —
  * the rdf:type of linked resources and rdfs:subClassOf links — so sh:class
- * constraints on references can be checked.
+ * constraints on references can be checked. `shapesGraph` validates against
+ * those shapes instead of the ones generated from `schema` (FDPlight passes
+ * the shapes served by the FDP); `schema` still maps findings to fields.
  */
 export async function checkRecordShacl(
   schema: Schema,
   subjectIri: string,
   values: RecordNode,
   extra: Quad[] = [],
+  shapesGraph?: Quad[],
 ): Promise<ShaclCheckResult> {
-  const shapes = parseRdf(serializeSchema(schema, 'turtle'), 'turtle');
+  const shapes = shapesGraph ? { quads: shapesGraph, error: null } : parseRdf(serializeSchema(schema, 'turtle'), 'turtle');
   if (shapes.error) throw new Error(shapes.error);
   const nodes: NodeLocations = new Map();
   const data = [...recordToQuads(schema, subjectIri, values, nodes), ...extra];
