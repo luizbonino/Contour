@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DataFactory } from '@fairdatateam/record-core/rdf';
+import { DataFactory } from '../rdf';
 import { parseShacl } from '../shacl';
 import { normalizeRecord, validateRecord } from '../record';
 import { checkRecordShacl } from '../shaclCheck';

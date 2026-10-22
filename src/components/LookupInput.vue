@@ -6,7 +6,7 @@
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue';
 import type { Field } from '@fairdatateam/record-core/types';
 import type { LookupItem } from '@fairdatateam/record-core/lookup';
-import type { RecordValue } from '../record';
+import type { RecordValue } from '@fairdatateam/record-core/record';
 import { MIN_REMOTE_CHARS, RemoteLookupError, SERVICE_LABELS } from '@fairdatateam/record-core/remote';
 import { FILL_CONTEXT } from '../composables/useFillContext';
 import { useI18n } from '../composables/useI18n';

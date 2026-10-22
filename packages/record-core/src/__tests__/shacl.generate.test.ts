@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateShacl } from '../shacl';
-import type { Schema } from '@fairdatateam/record-core/types';
+import type { Schema } from '../types';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 

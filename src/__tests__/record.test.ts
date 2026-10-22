@@ -13,7 +13,7 @@ import {
   slugify,
   validateRecord,
   type RecordNode,
-} from '../record';
+} from '@fairdatateam/record-core/record';
 
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
 const dataset = (): Schema => clone(EXAMPLES.find((e) => e.id === 'dataset')!.schema);

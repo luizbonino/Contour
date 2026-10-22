@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { EXAMPLES } from '../data';
-import { generateShacl, parseShacl, serializeSchema } from '../shacl';
+import { generateShacl, parseShacl, serializeSchema } from '@fairdatateam/record-core/shacl';
 import { parseRdf } from '@fairdatateam/record-core/rdf';
 import type { Schema } from '@fairdatateam/record-core/types';
 
