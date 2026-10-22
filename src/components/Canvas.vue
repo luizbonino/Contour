@@ -6,7 +6,7 @@ import { useDrag } from '../composables/useDrag';
 import { useI18n } from '../composables/useI18n';
 import { track } from '../analytics';
 import type { Field, Group, Mutator, Schema, SelectedKind } from '@fairdatateam/record-core/types';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 import FieldCard from './FieldCard.vue';
 
 // Mint a stable, unique IRI for a new group (kept fixed across later renames).

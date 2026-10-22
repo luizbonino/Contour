@@ -6,7 +6,7 @@ import { computed, reactive } from 'vue';
 import { DATATYPES, NODE_KINDS } from '../data';
 import { useI18n } from '../composables/useI18n';
 import type { OrType } from '@fairdatateam/record-core/types';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 
 const { t } = useI18n();
 

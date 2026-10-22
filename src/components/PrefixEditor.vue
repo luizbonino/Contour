@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import type { Prefix } from '@fairdatateam/record-core/types';
 import { useI18n } from '../composables/useI18n';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 
 const { t } = useI18n();
 

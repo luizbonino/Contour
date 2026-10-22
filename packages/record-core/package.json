@@ -11,6 +11,7 @@
     "directory": "packages/record-core"
   },
   "exports": {
+    "./components/*.vue": "./src/components/*.vue",
     "./*": "./src/*.ts"
   },
   "files": [
@@ -20,5 +21,8 @@
   "dependencies": {
     "n3": "^2.0.4",
     "shacl-engine": "^1.1.2"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.13"
   }
 }

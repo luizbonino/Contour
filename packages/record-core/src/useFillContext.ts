@@ -2,9 +2,9 @@
 // by RecordPane, injected by PreviewField / FieldInput / LookupInput; absent in
 // the plain Form Preview, which keeps those components stateless.
 import type { InjectionKey } from 'vue';
-import type { Field } from '@fairdatateam/record-core/types';
-import type { LookupItem } from '@fairdatateam/record-core/lookup';
-import type { RecordIssue, RecordValue } from '@fairdatateam/record-core/record';
+import type { Field } from './types';
+import type { LookupItem } from './lookup';
+import type { RecordIssue, RecordValue } from './record';
 
 export interface FillContext {
   /** Lookup candidates for a reference field, filtered by its sh:class. */
@@ -19,4 +19,4 @@ export interface FillContext {
   newEntry(field: Field): RecordValue;
 }
 
-export const FILL_CONTEXT: InjectionKey<FillContext> = Symbol('contour.fill');
+export const FILL_CONTEXT: InjectionKey<FillContext> = Symbol('record-core.fill');
