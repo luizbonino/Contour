@@ -24,3 +24,22 @@ import { parseRdf } from '@fairdatateam/record-core/rdf';
 ```
 
 Extraction plan: FDPlight `docs/shared-core.md`.
+
+## Install
+
+```sh
+npm install @fairdatateam/record-core
+```
+
+## Releasing
+
+Releases go to npm from GitHub Actions with trusted publishing
+(`.github/workflows/publish-record-core.yml`), so no npm token is stored.
+
+1. Bump `version` in `packages/record-core/package.json` in a PR and merge it.
+2. Tag the merge commit `record-core-v{version}` and push the tag, e.g.
+   `git tag record-core-v0.2.1 && git push origin record-core-v0.2.1`.
+3. The workflow checks that the tag matches the version, runs the package's
+   tests and publishes with a provenance attestation.
+
+The app's own releases use `v*` tags and are unaffected.

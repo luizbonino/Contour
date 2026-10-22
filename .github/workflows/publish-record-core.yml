@@ -1,0 +1,36 @@
+name: Publish record-core
+
+# When a tag record-core-vX.Y.Z is pushed, test and publish
+# @fairdatateam/record-core X.Y.Z to npm with trusted publishing (OIDC): no
+# npm token is stored, and npm adds a provenance attestation. The app's own
+# releases use v* tags (release.yml).
+on:
+  push:
+    tags: ['record-core-v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Trusted publishing needs Node >= 22.14 and npm >= 11.5.1.
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm install -g npm@^11.5.1
+      - run: npm ci
+      - name: Tag matches the package version
+        run: |
+          version=$(node -p "require('./packages/record-core/package.json').version")
+          if [ "${GITHUB_REF_NAME}" != "record-core-v${version}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package version ${version}" >&2
+            exit 1
+          fi
+      - run: npx vitest run packages/record-core
+      - run: npm publish --workspace packages/record-core

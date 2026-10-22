@@ -1,7 +1,6 @@
 {
   "name": "@fairdatateam/record-core",
   "version": "0.2.0",
-  "private": true,
   "type": "module",
   "description": "Record engine shared by Contour and FDPlight: RDF parsing and serialisation, lookups, SHACL-driven records and forms",
   "license": "MIT",
@@ -25,5 +24,8 @@
   },
   "peerDependencies": {
     "vue": "^3.5.13"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
