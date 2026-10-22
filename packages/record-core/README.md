@@ -13,6 +13,8 @@ and `components/{PreviewField,FieldInput,LookupInput,Icon}.vue`.
   NodeShapes an FDP serves for a type (`GET /{prefix}/spec`).
 - The renderer translates through the `RECORD_I18N` injection key
   (`i18n.ts`), with English defaults.
+- Its styles are in `renderer.css` (import once in the host app). Design
+  tokens default to Contour's values; define them on `:root` to restyle.
 
 The package ships TypeScript (and later `.vue`) sources. Consumers compile it
 with Vite and `@vitejs/plugin-vue`. Import modules by path, for example

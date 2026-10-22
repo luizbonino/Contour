@@ -1,6 +1,6 @@
 {
   "name": "@fairdatateam/record-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Record engine shared by Contour and FDPlight: RDF parsing and serialisation, lookups, SHACL-driven records and forms",
@@ -11,6 +11,7 @@
     "directory": "packages/record-core"
   },
   "exports": {
+    "./renderer.css": "./src/renderer.css",
     "./components/*.vue": "./src/components/*.vue",
     "./*": "./src/*.ts"
   },
