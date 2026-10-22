@@ -8,7 +8,7 @@ import { shorten } from '@fairdatateam/record-core/rdf';
 import type { Quad } from '@fairdatateam/record-core/rdf';
 import type { Prefix } from '@fairdatateam/record-core/types';
 import { useI18n } from '../composables/useI18n';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 
 const props = defineProps<{ quads: Quad[]; prefixes: Prefix[] }>();
 const emit = defineEmits<{ close: [] }>();

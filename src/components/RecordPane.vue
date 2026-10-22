@@ -28,10 +28,10 @@ import { checkRecordShacl, type ShaclFinding } from '@fairdatateam/record-core/s
 import { DataFactory } from '@fairdatateam/record-core/rdf';
 import { newId } from '../data';
 import { useRecords, useLookupIndex } from '../composables/useRecords';
-import { FILL_CONTEXT } from '../composables/useFillContext';
+import { FILL_CONTEXT } from '@fairdatateam/record-core/useFillContext';
 import { useI18n } from '../composables/useI18n';
 import FormPreview from './FormPreview.vue';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 
 const props = defineProps<{ schema: Schema }>();
 const { t, plural, locale } = useI18n();

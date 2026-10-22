@@ -5,7 +5,7 @@ import { useI18n } from '../composables/useI18n';
 import type { Field, Group, LookupConfig, LookupService, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '@fairdatateam/record-core/types';
 import { CONTOUR_NS } from '@fairdatateam/record-core/shacl';
 import { OLS_DEFAULT } from '@fairdatateam/record-core/remote';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
 import InValuesEditor from './InValuesEditor.vue';
 import OrTypesEditor from './OrTypesEditor.vue';

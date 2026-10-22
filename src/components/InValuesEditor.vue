@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from '../composables/useI18n';
 import type { InValue } from '@fairdatateam/record-core/types';
-import Icon from './Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 
 const { t } = useI18n();
 

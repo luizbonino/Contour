@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Field } from '@fairdatateam/record-core/types';
-import type { RecordValue } from '@fairdatateam/record-core/record';
-import { useI18n } from '../composables/useI18n';
+import type { Field } from '../types';
+import type { RecordValue } from '../record';
+import { useRecordI18n } from '../i18n';
 import LookupInput from './LookupInput.vue';
 
 // `entry` is set only in the Record tab: the input is then bound to that
 // value. Without it (Form Preview) the inputs stay uncontrolled mock-ups.
 const props = defineProps<{ field: Field; entry?: RecordValue; invalid?: boolean }>();
-const { t } = useI18n();
+const { t } = useRecordI18n();
 
 // Reflect SHACL constraints onto the preview inputs so the rendered form
 // behaves like the real one (required, length, pattern, range).

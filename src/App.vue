@@ -10,7 +10,7 @@ import { loadDraft, saveDraft, clearDraft, listRecent, addRecent, type RecentEnt
 import { WIDGET_BY_ID, blankSchema, newId, EXAMPLES } from './data';
 import type { SchemaExample } from './data';
 import type { SelectedKind, Widget } from '@fairdatateam/record-core/types';
-import Icon from './components/Icon.vue';
+import Icon from '@fairdatateam/record-core/components/Icon.vue';
 import Palette from './components/Palette.vue';
 import Canvas from './components/Canvas.vue';
 import Inspector from './components/Inspector.vue';
