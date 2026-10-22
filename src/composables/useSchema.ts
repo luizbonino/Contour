@@ -1,6 +1,6 @@
 import { reactive, readonly, ref, toRaw } from 'vue';
 import { blankSchema, newId } from '../data';
-import type { Field, Mutator, Schema, Widget } from '../types';
+import type { Field, Mutator, Schema, Widget } from '@fairdatateam/record-core/types';
 
 function deepClone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;

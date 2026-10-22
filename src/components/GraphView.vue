@@ -4,9 +4,9 @@
 // styled in Contour's palette. Two toggles tame the noise: collapse RDF lists
 // (sh:in / sh:or) into a single chip, and hide annotation/plumbing predicates.
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue';
-import { shorten } from '../rdf';
-import type { Quad } from '../rdf';
-import type { Prefix } from '../types';
+import { shorten } from '@fairdatateam/record-core/rdf';
+import type { Quad } from '@fairdatateam/record-core/rdf';
+import type { Prefix } from '@fairdatateam/record-core/types';
 import { useI18n } from '../composables/useI18n';
 import Icon from './Icon.vue';
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Field } from '../types';
+import type { Field } from '@fairdatateam/record-core/types';
 import type { RecordValue } from '../record';
 import { useI18n } from '../composables/useI18n';
 import LookupInput from './LookupInput.vue';

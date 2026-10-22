@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "description": "Contour — visual SHACL schema editor for the FAIR Data Point ecosystem",
   "scripts": {
     "dev": "vite",

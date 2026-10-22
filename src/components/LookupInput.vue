@@ -4,10 +4,10 @@
 // filtered by the field's sh:class — and, when the field declares a remote
 // lookup source, results from that service. Stores the chosen item's IRI.
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue';
-import type { Field } from '../types';
-import type { LookupItem } from '../lookup';
+import type { Field } from '@fairdatateam/record-core/types';
+import type { LookupItem } from '@fairdatateam/record-core/lookup';
 import type { RecordValue } from '../record';
-import { MIN_REMOTE_CHARS, RemoteLookupError, SERVICE_LABELS } from '../remote';
+import { MIN_REMOTE_CHARS, RemoteLookupError, SERVICE_LABELS } from '@fairdatateam/record-core/remote';
 import { FILL_CONTEXT } from '../composables/useFillContext';
 import { useI18n } from '../composables/useI18n';
 

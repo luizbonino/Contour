@@ -4,11 +4,11 @@
 // Results are mapped back to form locations so the UI can point at the field.
 import N3 from 'n3';
 import { Validator } from 'shacl-engine';
-import type { Quad } from './rdf';
-import { parseRdf } from './rdf';
+import type { Quad } from '@fairdatateam/record-core/rdf';
+import { parseRdf } from '@fairdatateam/record-core/rdf';
 import { serializeSchema } from './shacl';
 import { expandTerm, fieldKey, localName, recordToQuads, type NodeLocations, type RecordIssueSeverity, type RecordNode } from './record';
-import type { Schema } from './types';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 const SH = 'http://www.w3.org/ns/shacl#';
 const RDFS_SUBCLASS = 'http://www.w3.org/2000/01/rdf-schema#subClassOf';

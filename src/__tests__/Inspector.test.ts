@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Inspector from '../components/Inspector.vue';
-import type { Schema } from '../types';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 

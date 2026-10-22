@@ -3,7 +3,7 @@
 // each a { lang, value } pair. Emits the full list on every change.
 import { computed, reactive } from 'vue';
 import { useI18n } from '../composables/useI18n';
-import type { LangValue } from '../types';
+import type { LangValue } from '@fairdatateam/record-core/types';
 import Icon from './Icon.vue';
 
 const { t } = useI18n();

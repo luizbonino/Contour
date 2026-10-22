@@ -1,7 +1,7 @@
 // Live schema linter — pure model analysis surfaced in the editor so a steward
 // can't silently produce broken or invalid SHACL. Returns issues with enough
 // targeting info for the UI to focus the offending element.
-import type { Field, Schema } from './types';
+import type { Field, Schema } from '@fairdatateam/record-core/types';
 
 export type IssueSeverity = 'error' | 'warning';
 

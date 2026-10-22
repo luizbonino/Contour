@@ -2,7 +2,7 @@
 // and a small list of recently saved schemas. Consistent with Contour's
 // zero-backend design — everything lives in localStorage and degrades silently
 // when storage is unavailable (file://, privacy mode).
-import type { Schema } from './../types';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 const DRAFT_KEY = 'contour.draft';
 const RECENT_KEY = 'contour.recent';

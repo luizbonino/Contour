@@ -5,10 +5,10 @@
 //
 // Values are keyed by property path (`fieldKey`), not field id: ids are
 // re-minted whenever the SHACL code is re-parsed, paths are stable.
-import { DataFactory, parseRdf, serializeQuads, SYNTAX_BY_ID, DEFAULT_SYNTAX } from './rdf';
-import type { Quad } from './rdf';
-import { serializeJsonLd } from './jsonld';
-import type { Field, NestedShape, Prefix, Schema } from './types';
+import { DataFactory, parseRdf, serializeQuads, SYNTAX_BY_ID, DEFAULT_SYNTAX } from '@fairdatateam/record-core/rdf';
+import type { Quad } from '@fairdatateam/record-core/rdf';
+import { serializeJsonLd } from '@fairdatateam/record-core/jsonld';
+import type { Field, NestedShape, Prefix, Schema } from '@fairdatateam/record-core/types';
 
 const { namedNode, blankNode, literal, quad } = DataFactory;
 type Term = Quad['object'];

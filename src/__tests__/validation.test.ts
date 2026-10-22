@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateSchema } from '../validation';
-import type { Schema } from '../types';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 function field(overrides = {}): Schema['groups'][0]['fields'][0] {
   return {

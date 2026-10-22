@@ -6,7 +6,7 @@
 //  - Record tab (`node` set): bound to the record's values for this field,
 //    with per-value add/remove and inline validation issues.
 import { computed, inject, ref } from 'vue';
-import type { Field, NestedShape, Schema } from '../types';
+import type { Field, NestedShape, Schema } from '@fairdatateam/record-core/types';
 import { fieldKey, type RecordNode, type RecordValue } from '../record';
 import { FILL_CONTEXT } from '../composables/useFillContext';
 import { useI18n } from '../composables/useI18n';

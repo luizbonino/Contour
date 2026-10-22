@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { EXAMPLES } from '../data';
 import { parseShacl, serializeSchema, CONTOUR_NS } from '../shacl';
-import { remoteSearch, sparqlQuery, RemoteLookupError, type FetchLike } from '../remote';
-import type { Schema } from '../types';
+import { remoteSearch, sparqlQuery, RemoteLookupError, type FetchLike } from '@fairdatateam/record-core/remote';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
-import type { Prefix } from '../types';
+import type { Prefix } from '@fairdatateam/record-core/types';
 import { useI18n } from '../composables/useI18n';
 import Icon from './Icon.vue';
 
