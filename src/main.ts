@@ -13,6 +13,8 @@ import '@fontsource/ibm-plex-mono/latin-400.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
 import '@fontsource/ibm-plex-mono/latin-600.css';
 
+// The shared form renderer's styles, then Contour's own (same order as FDPlight).
+import '@fairdatateam/record-core/renderer.css';
 import './style.css';
 
 // The shared form renderer translates through Contour's i18n (same keys, all

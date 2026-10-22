@@ -1,7 +1,8 @@
 /* Form renderer styles of @fairdatateam/record-core.
  *
- * Copied verbatim from Contour's src/style.css (the rules for .form-row,
- * .form-preview*, .record-issue and .lookup*). Import once in the host app:
+ * The rules for .form-row, .form-preview*, .record-issue and .lookup*, taken
+ * from Contour's src/style.css; Contour and FDPlight both import this file
+ * now. Import once in the host app, before its own styles:
  *   import '@fairdatateam/record-core/renderer.css';
  *
  * Design tokens: the defaults below are Contour's values with zero
