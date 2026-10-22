@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { DATATYPES, NODE_KINDS, VOCAB_TERMS, VOCAB_CLASSES, WIDGET_BY_ID, newId } from '../data';
 import { useI18n } from '../composables/useI18n';
 import type { Field, Group, LookupConfig, LookupService, Mutator, NestedShape, Prefix, Schema, SelectedKind } from '@fairdatateam/record-core/types';
-import { CONTOUR_NS } from '../shacl';
+import { CONTOUR_NS } from '@fairdatateam/record-core/shacl';
 import { OLS_DEFAULT } from '@fairdatateam/record-core/remote';
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';

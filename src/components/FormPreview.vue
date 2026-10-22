@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Schema } from '@fairdatateam/record-core/types';
-import type { RecordNode } from '../record';
+import type { RecordNode } from '@fairdatateam/record-core/record';
 import { useI18n } from '../composables/useI18n';
 import PreviewField from './PreviewField.vue';
 

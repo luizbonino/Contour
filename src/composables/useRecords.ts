@@ -3,8 +3,8 @@
 // vocabulary files, and the base IRI for new records. Module-level state,
 // autosaved to localStorage; degrades silently when storage is unavailable.
 import { computed, ref, watch } from 'vue';
-import type { MetadataRecord } from '../record';
-import { DEFAULT_BASE_IRI, recordHasContent } from '../record';
+import type { MetadataRecord } from '@fairdatateam/record-core/record';
+import { DEFAULT_BASE_IRI, recordHasContent } from '@fairdatateam/record-core/record';
 import { parseRdf } from '@fairdatateam/record-core/rdf';
 import type { Quad } from '@fairdatateam/record-core/rdf';
 import {

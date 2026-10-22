@@ -20,11 +20,11 @@ import {
   validateRecord,
   type MetadataRecord,
   type RecordIssue,
-} from '../record';
+} from '@fairdatateam/record-core/record';
 import { OUTPUT_SYNTAXES, RDF_FILE_ACCEPT, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf, serializeQuads } from '@fairdatateam/record-core/rdf';
 import { indexQuads, searchLookup, type LookupItem } from '@fairdatateam/record-core/lookup';
 import { remoteSearch } from '@fairdatateam/record-core/remote';
-import { checkRecordShacl, type ShaclFinding } from '../shaclCheck';
+import { checkRecordShacl, type ShaclFinding } from '@fairdatateam/record-core/shaclCheck';
 import { DataFactory } from '@fairdatateam/record-core/rdf';
 import { newId } from '../data';
 import { useRecords, useLookupIndex } from '../composables/useRecords';

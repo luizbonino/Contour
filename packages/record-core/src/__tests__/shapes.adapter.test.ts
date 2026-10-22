@@ -6,7 +6,7 @@ import {
   generateFromShapes,
   parseShacl,
 } from '../shacl';
-import type { Schema } from '@fairdatateam/record-core/types';
+import type { Schema } from '../types';
 
 function field(overrides = {}): Schema['groups'][0]['fields'][0] {
   return {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSchemaStore, fieldFromWidget } from './composables/useSchema';
-import { serializeSchema, parseShacl } from './shacl';
+import { serializeSchema, parseShacl } from '@fairdatateam/record-core/shacl';
 import { OUTPUT_SYNTAXES, RDF_FILE_ACCEPT, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf } from '@fairdatateam/record-core/rdf';
 import type { Quad } from '@fairdatateam/record-core/rdf';
 import { validateSchema } from './validation';

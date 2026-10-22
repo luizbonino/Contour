@@ -4,7 +4,7 @@
 import type { InjectionKey } from 'vue';
 import type { Field } from '@fairdatateam/record-core/types';
 import type { LookupItem } from '@fairdatateam/record-core/lookup';
-import type { RecordIssue, RecordValue } from '../record';
+import type { RecordIssue, RecordValue } from '@fairdatateam/record-core/record';
 
 export interface FillContext {
   /** Lookup candidates for a reference field, filtered by its sh:class. */
