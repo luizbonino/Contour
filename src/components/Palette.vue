@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { WIDGETS } from '../data';
 import { useDrag } from '../composables/useDrag';
 import { useI18n } from '../composables/useI18n';
-import type { Widget } from '../types';
+import type { Widget } from '@fairdatateam/record-core/types';
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
 

@@ -2,8 +2,8 @@
 // by RecordPane, injected by PreviewField / FieldInput / LookupInput; absent in
 // the plain Form Preview, which keeps those components stateless.
 import type { InjectionKey } from 'vue';
-import type { Field } from '../types';
-import type { LookupItem } from '../lookup';
+import type { Field } from '@fairdatateam/record-core/types';
+import type { LookupItem } from '@fairdatateam/record-core/lookup';
 import type { RecordIssue, RecordValue } from '../record';
 
 export interface FillContext {

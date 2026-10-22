@@ -2,14 +2,14 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useSchemaStore, fieldFromWidget } from './composables/useSchema';
 import { serializeSchema, parseShacl } from './shacl';
-import { OUTPUT_SYNTAXES, RDF_FILE_ACCEPT, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf } from './rdf';
-import type { Quad } from './rdf';
+import { OUTPUT_SYNTAXES, RDF_FILE_ACCEPT, SYNTAX_BY_ID, DEFAULT_SYNTAX, detectSyntax, parseRdf } from '@fairdatateam/record-core/rdf';
+import type { Quad } from '@fairdatateam/record-core/rdf';
 import { validateSchema } from './validation';
 import GraphView from './components/GraphView.vue';
 import { loadDraft, saveDraft, clearDraft, listRecent, addRecent, type RecentEntry } from './composables/usePersistence';
 import { WIDGET_BY_ID, blankSchema, newId, EXAMPLES } from './data';
 import type { SchemaExample } from './data';
-import type { SelectedKind, Widget } from './types';
+import type { SelectedKind, Widget } from '@fairdatateam/record-core/types';
 import Icon from './components/Icon.vue';
 import Palette from './components/Palette.vue';
 import Canvas from './components/Canvas.vue';

@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import type { Widget } from '../types';
+import type { Widget } from '@fairdatateam/record-core/types';
 
 export type DragPayload =
   | { type: 'palette'; widget: Widget }

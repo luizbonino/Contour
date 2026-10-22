@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { WIDGET_BY_ID } from '../data';
 import { useI18n } from '../composables/useI18n';
-import type { Field } from '../types';
+import type { Field } from '@fairdatateam/record-core/types';
 import Icon from './Icon.vue';
 import WidgetIcon from './WidgetIcon.vue';
 

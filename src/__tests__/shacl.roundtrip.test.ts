@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { parseShacl, generateShacl } from '../shacl';
-import type { Schema } from '../types';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 function roundtrip(schema: Schema): Schema {
   const turtle = generateShacl(schema);

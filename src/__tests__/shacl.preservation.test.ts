@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseShacl, generateShacl, serializeSchema } from '../shacl';
-import { detectSyntax } from '../rdf';
+import { detectSyntax } from '@fairdatateam/record-core/rdf';
 
 const PREFIXES = `@prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix dash: <http://datashapes.org/dash#> .

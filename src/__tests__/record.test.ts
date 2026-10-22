@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { EXAMPLES } from '../data';
-import { parseRdf } from '../rdf';
-import type { Schema } from '../types';
+import { parseRdf } from '@fairdatateam/record-core/rdf';
+import type { Schema } from '@fairdatateam/record-core/types';
 import {
   expandTerm,
   importRecords,

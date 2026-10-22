@@ -1,4 +1,4 @@
-import type { Field, InValue, Prefix, Schema, Widget } from './types';
+import type { Field, InValue, Prefix, Schema, Widget } from '@fairdatateam/record-core/types';
 
 // Concise constructor for literal sh:in members in the static catalogue/examples.
 const lit = (value: string): InValue => ({ value, kind: 'literal' });

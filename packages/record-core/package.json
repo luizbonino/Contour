@@ -1,0 +1,23 @@
+{
+  "name": "@fairdatateam/record-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Record engine shared by Contour and FDPlight: RDF parsing and serialisation, lookups, SHACL-driven records and forms",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luizbonino/Contour.git",
+    "directory": "packages/record-core"
+  },
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "files": [
+    "src",
+    "!src/__tests__"
+  ],
+  "dependencies": {
+    "n3": "^2.0.4"
+  }
+}

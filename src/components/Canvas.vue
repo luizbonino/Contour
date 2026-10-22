@@ -5,7 +5,7 @@ import { fieldFromWidget } from '../composables/useSchema';
 import { useDrag } from '../composables/useDrag';
 import { useI18n } from '../composables/useI18n';
 import { track } from '../analytics';
-import type { Field, Group, Mutator, Schema, SelectedKind } from '../types';
+import type { Field, Group, Mutator, Schema, SelectedKind } from '@fairdatateam/record-core/types';
 import Icon from './Icon.vue';
 import FieldCard from './FieldCard.vue';
 

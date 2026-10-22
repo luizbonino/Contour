@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { EXAMPLES } from '../data';
-import { detectSyntax, parseRdf } from '../rdf';
-import type { Quad } from '../rdf';
+import { detectSyntax, parseRdf } from '@fairdatateam/record-core/rdf';
+import type { Quad } from '@fairdatateam/record-core/rdf';
 import { parseShacl, serializeSchema } from '../shacl';
 import { normalizeRecord, serializeRecord, recordToQuads, importRecords } from '../record';
-import type { Schema } from '../types';
+import type { Schema } from '@fairdatateam/record-core/types';
 
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
 const dataset = (): Schema => clone(EXAMPLES.find((e) => e.id === 'dataset')!.schema);

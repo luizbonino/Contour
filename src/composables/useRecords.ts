@@ -5,15 +5,15 @@
 import { computed, ref, watch } from 'vue';
 import type { MetadataRecord } from '../record';
 import { DEFAULT_BASE_IRI, recordHasContent } from '../record';
-import { parseRdf } from '../rdf';
-import type { Quad } from '../rdf';
+import { parseRdf } from '@fairdatateam/record-core/rdf';
+import type { Quad } from '@fairdatateam/record-core/rdf';
 import {
   BUILTIN_SUBCLASSES,
   indexQuads,
   subclassPairs,
   superclassMap,
   type LookupItem,
-} from '../lookup';
+} from '@fairdatateam/record-core/lookup';
 
 const RECORDS_KEY = 'contour.records';
 const VOCABS_KEY = 'contour.vocabularies';
