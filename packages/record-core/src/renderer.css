@@ -195,7 +195,8 @@
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
-  color: var(--color-text-lighter);
+  /* default text colour: the lighter one is below 4.5:1 on the highlight */
+  color: var(--color-text-default);
   background: var(--color-bg-highlight);
   border-radius: var(--radius-pill);
   padding: 1px 7px;

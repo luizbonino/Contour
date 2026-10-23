@@ -7,7 +7,9 @@ import LookupInput from './LookupInput.vue';
 
 // `entry` is set only in the Record tab: the input is then bound to that
 // value. Without it (Form Preview) the inputs stay uncontrolled mock-ups.
-const props = defineProps<{ field: Field; entry?: RecordValue; invalid?: boolean }>();
+// `labelId` is the id of the field's visible label, which names every control
+// for assistive technology (aria-labelledby).
+const props = defineProps<{ field: Field; entry?: RecordValue; invalid?: boolean; labelId?: string }>();
 const { t } = useRecordI18n();
 
 // Reflect SHACL constraints onto the preview inputs so the rendered form
@@ -41,6 +43,7 @@ const bind = computed(() =>
     ? {
         value: props.entry.value,
         class: { 'is-invalid': props.invalid },
+        'aria-invalid': props.invalid || undefined,
         onInput: (e: Event) => { props.entry!.value = (e.target as HTMLInputElement).value; },
       }
     : {},
@@ -57,29 +60,31 @@ function setDateTime(date: string, time: string) {
 
 <template>
   <template v-if="field.widgetId === 'TextAreaEditor' || field.widgetId === 'RichTextEditor'">
-    <textarea v-bind="bind" :placeholder="entry ? '' : field.defaultValue || ''" :required="required" :maxlength="maxlength" />
+    <textarea :aria-labelledby="labelId" v-bind="bind" :placeholder="entry ? '' : field.defaultValue || ''" :required="required" :maxlength="maxlength" />
   </template>
   <template v-else-if="field.widgetId === 'BooleanSelectEditor'">
-    <select v-bind="bind" :required="required">
+    <select :aria-labelledby="labelId" v-bind="bind" :required="required">
       <option value="">{{ t('fieldInput.select') }}</option>
       <option value="true">true</option>
       <option value="false">false</option>
     </select>
   </template>
   <template v-else-if="field.widgetId === 'EnumSelectEditor'">
-    <select v-bind="bind" :required="required">
+    <select :aria-labelledby="labelId" v-bind="bind" :required="required">
       <option value="">{{ t('fieldInput.select') }}</option>
       <option v-for="(v, i) in field.inValues || []" :key="i" :value="v.value">{{ v.value }}</option>
     </select>
   </template>
   <template v-else-if="field.widgetId === 'DatePickerEditor'">
-    <input v-bind="bind" type="date" :required="required" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
+    <input :aria-labelledby="labelId" v-bind="bind" type="date" :required="required" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
   </template>
   <template v-else-if="field.widgetId === 'DateTimePickerEditor'">
     <div v-if="entry" class="form-preview__datetime">
       <input
+        :aria-labelledby="labelId"
         type="date"
         :class="{ 'is-invalid': invalid }"
+        :aria-invalid="invalid || undefined"
         :value="dtDate"
         :required="required"
         :min="field.minInclusive || undefined"
@@ -87,20 +92,23 @@ function setDateTime(date: string, time: string) {
         @input="setDateTime(($event.target as HTMLInputElement).value, dtTime)"
       />
       <input
+        :aria-labelledby="labelId"
         type="time"
         step="1"
         :class="{ 'is-invalid': invalid }"
+        :aria-invalid="invalid || undefined"
         :value="dtTime"
         @input="setDateTime(dtDate, ($event.target as HTMLInputElement).value)"
       />
     </div>
     <div v-else class="form-preview__datetime">
-      <input type="date" :required="required" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
-      <input type="time" />
+      <input :aria-labelledby="labelId" type="date" :required="required" :min="field.minInclusive || undefined" :max="field.maxInclusive || undefined" />
+      <input :aria-labelledby="labelId" type="time" />
     </div>
   </template>
   <template v-else-if="field.widgetId === 'NumberFieldEditor'">
     <input
+      :aria-labelledby="labelId"
       v-bind="bind"
       type="number"
       :required="required"
@@ -110,10 +118,11 @@ function setDateTime(date: string, time: string) {
     />
   </template>
   <template v-else-if="isLookup && entry">
-    <LookupInput :field="field" :entry="entry" :invalid="invalid" />
+    <LookupInput :field="field" :label-id="labelId" :entry="entry" :invalid="invalid" />
   </template>
   <template v-else-if="isReference">
     <input
+      :aria-labelledby="labelId"
       v-bind="bind"
       type="text"
       class="mono"
@@ -123,6 +132,7 @@ function setDateTime(date: string, time: string) {
   </template>
   <template v-else>
     <input
+      :aria-labelledby="labelId"
       v-bind="bind"
       type="text"
       :placeholder="entry ? '' : field.defaultValue || ''"
