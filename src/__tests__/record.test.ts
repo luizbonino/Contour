@@ -234,6 +234,17 @@ describe('record import', () => {
     expect(recordToQuads(s, 'https://x.org/a', r.values).some((q) => q.object.value === 'http://fairdatapoint.org/public')).toBe(true);
   });
 
+  it('keeps an imported IRI that is not in the sh:in list an IRI', () => {
+    const s = dataset();
+    const ar = s.groups[1].fields.find((f) => f.path === 'dct:accessRights')!;
+    ar.nodeKind = 'sh:IRI';
+    ar.inValues = [{ value: ':public', kind: 'iri' }, { value: ':private', kind: 'iri' }];
+    const ttl = `<https://x.org/a> a <http://www.w3.org/ns/dcat#Dataset> ; <http://purl.org/dc/terms/accessRights> <https://example.org/deprecated> .`;
+    const r = importRecords(ttl, 'turtle', s).records[0];
+    const q = recordToQuads(s, 'https://x.org/a', r.values).find((x) => x.predicate.value === 'http://purl.org/dc/terms/accessRights')!;
+    expect([q.object.termType, q.object.value]).toEqual(['NamedNode', 'https://example.org/deprecated']);
+  });
+
   it('reports files without matching records', () => {
     expect(importRecords('<a:b> <a:c> "x" .', 'turtle', schema).error).toBe('noRecords');
     expect(importRecords('this is not turtle', 'turtle', schema).error).toBeTruthy();
