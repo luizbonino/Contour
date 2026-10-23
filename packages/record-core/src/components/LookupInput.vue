@@ -11,7 +11,7 @@ import { MIN_REMOTE_CHARS, RemoteLookupError, SERVICE_LABELS } from '../remote';
 import { FILL_CONTEXT } from '../useFillContext';
 import { useRecordI18n } from '../i18n';
 
-const props = defineProps<{ field: Field; entry: RecordValue; invalid?: boolean }>();
+const props = defineProps<{ field: Field; entry: RecordValue; invalid?: boolean; labelId?: string }>();
 const fill = inject(FILL_CONTEXT)!;
 const { t } = useRecordI18n();
 
@@ -123,8 +123,10 @@ function onKeydown(e: KeyboardEvent) {
   <div class="lookup">
     <input
       type="text"
+      :aria-labelledby="labelId"
       class="mono"
       :class="{ 'is-invalid': invalid }"
+      :aria-invalid="invalid || undefined"
       role="combobox"
       :aria-expanded="open"
       :value="entry.value"

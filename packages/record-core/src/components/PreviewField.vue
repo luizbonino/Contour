@@ -5,7 +5,7 @@
 //    value-count and tooltip state so repeated instances are independent.
 //  - Record tab (`node` set): bound to the record's values for this field,
 //    with per-value add/remove and inline validation issues.
-import { computed, inject, ref } from 'vue';
+import { computed, inject, ref, useId } from 'vue';
 import type { Field, NestedShape, Schema } from '../types';
 import { fieldKey, type RecordNode, type RecordValue } from '../record';
 import { FILL_CONTEXT } from '../useFillContext';
@@ -18,6 +18,8 @@ const { t } = useRecordI18n();
 const fill = inject(FILL_CONTEXT, null);
 
 const tipOpen = ref(false);
+// Names the field's controls (aria-labelledby in FieldInput).
+const labelId = useId();
 
 const filling = computed(() => !!props.node && !!fill);
 const key = computed(() => fieldKey(props.field));
@@ -105,7 +107,7 @@ function labelFromPath(path: string): string {
 <template>
   <div class="form-row" :data-loc="filling ? fieldLoc : undefined">
     <div class="form-preview__label-row">
-      <label :class="{ required }">{{ field.name || labelFromPath(field.path) }}</label>
+      <label :id="labelId" :class="{ required }">{{ field.name || labelFromPath(field.path) }}</label>
       <span v-if="cardinality" class="form-preview__card">{{ cardinality }}</span>
       <button
         v-if="field.description"
@@ -158,8 +160,9 @@ function labelFromPath(path: string): string {
               :field="field"
               :entry="entries[i - 1]"
               :invalid="valueIssues(i - 1).some((x) => x.severity === 'error')"
+              :label-id="labelId"
             />
-            <FieldInput v-else :field="field" />
+            <FieldInput v-else :field="field" :label-id="labelId" />
           </div>
           <input
             v-if="isLangTagged && filling"
