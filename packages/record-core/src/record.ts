@@ -257,10 +257,12 @@ function interpret(field: Field, e: RecordValue, prefixes: Prefix[]): Interprete
   }
   const v = e.value.trim();
   let asIri = false;
+  const listed = field.widgetId === 'EnumSelectEditor' ? field.inValues?.find((iv) => iv.value === v) : undefined;
   if (IRI_WIDGETS.has(field.widgetId)) asIri = true;
-  else if (field.widgetId === 'EnumSelectEditor' && field.inValues?.length) {
-    asIri = field.inValues.find((iv) => iv.value === v)?.kind === 'iri';
-  } else if (field.nodeKind === 'sh:IRI' || field.nodeKind === 'sh:BlankNodeOrIRI') asIri = true;
+  else if (listed) asIri = listed.kind === 'iri';
+  // A value outside the list (e.g. imported, or a deprecated term) follows the
+  // field's node kind, so an IRI is never turned into a string.
+  else if (field.nodeKind === 'sh:IRI' || field.nodeKind === 'sh:BlankNodeOrIRI') asIri = true;
   else if (field.nodeKind === 'sh:IRIOrLiteral' || field.orTypes?.some((o) => o.nodeKind === 'sh:IRI' || o.class)) {
     asIri = looksLikeIri(v, prefixes);
   }
